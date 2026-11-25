@@ -4,6 +4,7 @@ Um processo, uma conexão por vez. Se a categorização estiver gravando no banc
 uma cópia e as escritas devolvem 503 com uma mensagem legível.
 """
 
+import json
 import os
 import shutil
 import tempfile
@@ -21,14 +22,26 @@ from starlette.requests import Request
 from starlette.responses import FileResponse, JSONResponse
 from starlette.routing import Route
 
-from mpe import avaliador, desfechos, duvidas, hipoteses, motor, painel, playbook, video
+from mpe import (
+    acompanhamento,
+    avaliador,
+    desfechos,
+    duvidas,
+    gravacao,
+    hipoteses,
+    motor,
+    painel,
+    playbook,
+    video,
+)
 from mpe.agente import executar
-from mpe.ambiente import DADOS, RAIZ
+from mpe.ambiente import DADOS, RAIZ, chave
 from mpe.banco import ESQUEMA
 from mpe.consulta import base_completa
 from mpe.contrato import Entrada
 from mpe.feita import llm
 from mpe.gemini import CotaEsgotada
+from mpe.youtube import YouTube
 
 PAGINA = Path(__file__).with_name("app.html")  # tela anterior, em /antigo
 INICIO = Path(__file__).with_name("criar.html")
@@ -401,6 +414,115 @@ def arquivo_video(request: Request):
     return FileResponse(arquivo, media_type="video/mp4")
 
 
+@protegido
+def api_gravacoes(request: Request):
+    return JSONResponse({"gravacoes": gravacao.listar(request.query_params.get("run_id"))})
+
+
+def arquivo_gravacao(request: Request):
+    nome = Path(request.path_params["nome"])
+    arquivo = gravacao.caminho(nome.stem)
+    if arquivo is None or arquivo.name != nome.name:
+        return erro("Gravação não encontrada.", 404)
+    tipo = next(t for t, e in gravacao.TIPOS.items() if e == arquivo.suffix)
+    return FileResponse(arquivo, media_type=tipo)
+
+
+def _criativo(run_id: str, versao: int) -> dict:
+    with banco() as con:
+        linha = con.execute("SELECT saida FROM execucoes WHERE run_id = ?", [run_id]).fetchone()
+    feitos = json.loads(linha[0])["creatives"] if linha else []
+    if not 0 <= versao < len(feitos):
+        raise ValueError("Não achei o roteiro desta gravação.")
+    return feitos[versao]
+
+
+async def api_gravacao(request: Request):
+    """Recebe o vídeo no corpo. O tipo video/* obriga o navegador a pedir licença de outra origem,
+    que aqui nunca é dada: só a própria plataforma consegue enviar."""
+    tipo = request.headers.get("content-type", "").split(";")[0]
+    if tipo not in gravacao.TIPOS:
+        return erro("Envie um vídeo em MP4, MOV ou WebM.", 415)
+    run_id, versao = request.query_params.get("run_id", ""), request.query_params.get("versao", "0")
+    if not versao.isdigit():
+        return erro("Versão inválida.")
+    gravacao.PASTA.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(dir=gravacao.PASTA, suffix=".parte", delete=False) as f:
+        temporario, recebido = Path(f.name), 0
+        try:
+            async for pedaco in request.stream():
+                recebido += len(pedaco)
+                if recebido > gravacao.LIMITE:
+                    raise OverflowError
+                f.write(pedaco)
+        except OverflowError:
+            temporario.unlink()
+            return erro("O vídeo passa de 300 MB. Envie uma versão menor.", 413)
+        except BaseException:  # envio interrompido: não deixa pedaço para trás
+            temporario.unlink(missing_ok=True)
+            raise
+
+    def trabalho(_):
+        try:
+            criativo = _criativo(run_id, int(versao))
+            return JSONResponse(
+                gravacao.registrar(temporario, tipo, run_id, int(versao), criativo)
+            )
+        finally:
+            temporario.unlink(missing_ok=True)
+
+    return await run_in_threadpool(protegido(trabalho), request)
+
+
+@cache
+def youtube():
+    return YouTube(chave("YOUTUBE_API_KEY"))
+
+
+def _acompanhado(r: dict) -> dict:
+    m = dados()
+    df = m["df"]
+    if "todos_firmes" not in m:
+        m["todos_firmes"] = acompanhamento.firmes_de(df)
+    topo = df.loc[df["top_tapi"], "engajamento"]
+    return {
+        **{k: v for k, v in r.items() if k != "classes"},
+        **acompanhamento.analisar(r, float(topo.min()) if len(topo) else None),
+        "vies": acompanhamento.vies(df, r["id"], m["todos_firmes"]),
+    }
+
+
+def pagina_acompanhar(request: Request):
+    return FileResponse(INICIO.with_name("acompanhar.html"))
+
+
+@protegido
+def api_acompanhados(request: Request):
+    feitos = acompanhamento.listar(request.query_params.get("run_id"))
+    return JSONResponse({"videos": [_acompanhado(r) for r in feitos]})
+
+
+def api_acompanhar(corpo: dict):
+    run_id, versao = str(corpo.get("run_id", "")), corpo.get("versao", 0)
+    if not isinstance(versao, int):
+        return erro("Versão inválida.")
+    if run_id:
+        _criativo(run_id, versao)  # o roteiro, se for dito, precisa existir
+    link = str(corpo.get("link", ""))
+    antes = acompanhamento.leitura_da_base(dados()["df"], acompanhamento.id_do_link(link))
+    r = acompanhamento.adicionar(link, run_id, versao, youtube(), modelo, antes)
+    return JSONResponse(_acompanhado(r))
+
+
+def api_acompanhar_ler(corpo: dict):
+    r = acompanhamento.atualizar(str(corpo.get("id", "")), youtube(), modelo)
+    return JSONResponse(_acompanhado(r))
+
+
+def api_acompanhar_parar(corpo: dict):
+    return JSONResponse(_acompanhado(acompanhamento.parar(str(corpo.get("id", "")))))
+
+
 def acao(funcao):
     """Rota POST: lê o JSON e roda a função (que usa o banco) fora do laço de eventos."""
 
@@ -440,6 +562,14 @@ rotas = [
     Route("/api/video/{id}", api_video),
     Route("/api/videos", api_videos),
     Route("/videos/{nome}", arquivo_video),
+    Route("/api/gravacoes", api_gravacoes),
+    Route("/api/gravacao", api_gravacao, methods=["POST"]),
+    Route("/gravacoes/{nome}", arquivo_gravacao),
+    Route("/acompanhar", pagina_acompanhar),
+    Route("/api/acompanhados", api_acompanhados),
+    Route("/api/acompanhar", acao(api_acompanhar), methods=["POST"]),
+    Route("/api/acompanhar/ler", acao(api_acompanhar_ler), methods=["POST"]),
+    Route("/api/acompanhar/parar", acao(api_acompanhar_parar), methods=["POST"]),
     Route("/api/molde", api_molde),
     Route("/moldes/{nome}", arquivo_molde),
     Route("/api/hipoteses/propor", acao(api_propor), methods=["POST"]),
@@ -450,6 +580,7 @@ app = Starlette(routes=rotas)
 
 
 def main():
+    acompanhamento.ligar(youtube, modelo)
     uvicorn.run(app, host="127.0.0.1", port=int(os.environ.get("MPE_PORTA", "8010")))
 
 

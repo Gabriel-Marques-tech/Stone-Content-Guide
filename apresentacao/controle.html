@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#1D2422">
+<title>Controle Lapida</title>
+<link rel="icon" href="logo.svg">
+<link rel="stylesheet" href="fontes/fontes.css">
+<style>
+:root{--noite:#1D2422;--noite2:#2A3330;--nevoa:#B7C4BD;--lima:#B9F24B;--verde:#00D568;--txt:#15201A}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}[hidden]{display:none!important}
+html,body{height:100%}body{margin:0;background:var(--noite);color:#fff;font:600 16px/1.3 Figtree,system-ui,sans-serif;touch-action:manipulation;-webkit-user-select:none;user-select:none;overscroll-behavior:none}
+#app{height:100dvh;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;gap:12px;padding:max(14px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom))}
+button{font:inherit;color:inherit;border:0;cursor:pointer;touch-action:manipulation}button:active{transform:scale(.97)}button:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.topo{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.lig{display:flex;align-items:center;gap:8px;color:var(--nevoa)}.lig i{width:11px;height:11px;border-radius:50%;background:#FF6B57}.lig.on i{background:var(--verde)}
+#relogio{background:var(--noite2);border-radius:99px;min-height:46px;padding:0 18px;font-weight:800;font-size:21px;font-variant-numeric:tabular-nums}#relogio.perto{background:#FFC53D;color:var(--txt)}#relogio.fim{background:#FF6B57;color:var(--txt)}
+.agora{background:var(--noite2);border-radius:22px;padding:14px 18px}.agora small{color:var(--nevoa);display:block}.agora b{display:block;font-size:20px;line-height:1.15;margin:2px 0 6px}
+.grande{display:grid;grid-template-rows:minmax(0,1fr) minmax(0,.42fr);gap:12px}
+.ir{background:var(--lima);color:var(--txt);border-radius:30px;font-weight:800;font-size:34px}.volta{background:var(--noite2);border-radius:26px;font-size:22px}
+.mais{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.mais button{background:var(--noite2);border-radius:18px;min-height:64px;font-size:14px;padding:4px}.mais button[aria-pressed=true]{background:#fff;color:var(--txt)}
+dialog{border:0;border-radius:26px;background:var(--noite2);color:#fff;width:calc(100% - 28px);max-width:520px;max-height:82dvh;padding:16px;overflow-y:auto}dialog::backdrop{background:rgb(0 0 0/.7)}
+#lista{display:grid;gap:8px;margin-top:12px}#lista button{text-align:left;background:var(--noite);border-radius:16px;min-height:52px;padding:8px 14px}#lista .aqui{background:var(--lima);color:var(--txt)}
+.fechar{background:var(--noite);border-radius:99px;min-height:46px;padding:0 20px;width:100%}
+#par{height:100dvh;display:grid;place-content:center;gap:14px;padding:24px;text-align:center}#par input{font:800 30px/1 Figtree,sans-serif;text-align:center;letter-spacing:.14em;text-transform:uppercase;border:0;border-radius:18px;padding:18px;width:100%;color:var(--txt);background:#fff}#par button{background:var(--lima);color:var(--txt);border-radius:99px;min-height:58px;font-weight:800;font-size:20px}
+</style>
+</head>
+<body>
+<form id="par" hidden><img src="logo.svg" alt="Lapida" width="84" style="margin:auto"><label for="cod">Código do controle</label><input id="cod" maxlength="8" autocomplete="off" autocapitalize="characters"><button>Conectar</button></form>
+<main id="app" hidden>
+  <div class="topo"><span class="lig" id="lig" role="status"><i></i><span id="ligt">Procurando o telão</span></span><button type="button" id="relogio" aria-label="Cronômetro: toque para iniciar ou pausar, segure para zerar">0:00</button></div>
+  <div class="agora"><small id="num">Slide</small><b id="tit">…</b><small id="prox"></small></div>
+  <div class="grande"><button type="button" class="ir" data-c="avancar">Avançar</button><button type="button" class="volta" data-c="voltar">Voltar</button></div>
+  <div class="mais"><button type="button" data-c="pausar" id="bp">Pausar demo</button><button type="button" data-c="som" id="bs">Tirar som</button><button type="button" data-c="preta" id="bb">Tela preta</button><button type="button" id="abre">Slides</button><button type="button" data-c="extras">Extras</button></div>
+</main>
+<dialog id="dlg" aria-label="Slides"><button type="button" class="fechar" id="fecha">Fechar</button><div id="lista"></div></dialog>
+<script>
+const $ = (i) => document.getElementById(i), guarda = (f) => { try { return f(); } catch { return null; } };
+let sala = location.hash.slice(1).toUpperCase() || guarda(() => localStorage.getItem("lapida-sala")) || "", est = null, toques = [], enviando = false, TIT = [];
+const boa = (s) => /^[A-Z2-9]{8}$/.test(s);
+function entrar() { guarda(() => localStorage.setItem("lapida-sala", sala)); $("par").hidden = true; $("app").hidden = false; ler(); acordado(); }
+$("par").addEventListener("submit", (e) => { e.preventDefault(); sala = $("cod").value.trim().toUpperCase(); if (boa(sala)) entrar(); else { $("cod").value = ""; $("cod").placeholder = "8 letras"; } });
+const api = () => "/api/controle?sala=" + sala;
+const novoId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7).padEnd(5, "0");
+function mandar(cmd, extra = {}) {
+  navigator.vibrate?.(18);
+  if (cmd === "avancar" && !ini && !acum) correr();
+  toques = [...toques, { cmd, id: novoId(), t: Date.now(), ...extra }].slice(-8);
+  enviar();
+}
+// manda os últimos toques até o telão confirmar; o telão ignora os que já fez
+const pendente = () => { const u = toques.at(-1); return u && u.id !== est?.ult && Date.now() - u.t < 6000; };
+async function enviar() {
+  if (enviando) return;
+  enviando = true;
+  while (pendente()) {
+    const ate = toques.at(-1).id, fila = toques.map(({ t, ...x }) => ({ ...x, idade: Math.min(60000, Math.max(0, Date.now() - t)) }));
+    try { await fetch(api(), { method: "POST", body: JSON.stringify({ fila }), signal: AbortSignal.timeout(3500) }); }
+    catch { $("lig").classList.remove("on"); $("ligt").textContent = "Sem internet"; }
+    for (let k = 0; k < 6 && pendente() && toques.at(-1).id === ate; k++) await new Promise((r) => setTimeout(r, 100));
+  }
+  enviando = false;
+}
+document.addEventListener("click", (e) => {
+  const c = e.target.closest("[data-c]"), s = e.target.closest("[data-i]");
+  if (c) mandar(c.dataset.c);
+  if (s) { mandar("ir", { i: +s.dataset.i }); $("dlg").close(); }
+});
+$("abre").onclick = () => { listar(); $("dlg").showModal(); }; $("fecha").onclick = () => $("dlg").close();
+function listar() {
+  $("lista").replaceChildren(...TIT.map((t, i) => { const b = document.createElement("button"); b.type = "button"; b.dataset.i = i; b.textContent = i + ". " + t; b.className = est?.i === i ? "aqui" : ""; return b; }));
+}
+function pintar(ligado) {
+  $("lig").classList.toggle("on", ligado); $("ligt").textContent = ligado ? "Telão conectado" : "Procurando o telão";
+  if (!est) return;
+  $("num").textContent = "Slide " + est.i + (est.n ? " · parte " + (est.p + 1) + " de " + (est.n + 1) : "");
+  $("tit").textContent = TIT[est.i] || "";
+  $("prox").textContent = est.p < est.n ? "Depois: continua neste slide" : TIT[est.i + 1] ? "Depois: " + TIT[est.i + 1] : "";
+  $("bp").textContent = est.tocando ? "Pausar demo" : "Tocar demo"; $("bs").textContent = est.mudo ? "Pôr som" : "Tirar som"; $("bs").setAttribute("aria-pressed", est.mudo); $("bb").setAttribute("aria-pressed", est.preta);
+}
+async function ler() {
+  if (!document.hidden) {
+    try { const r = await (await fetch(api(), { cache: "no-store", signal: AbortSignal.timeout(4000) })).json(); if (r.estado && r.estado.t >= (est?.t || 0)) est = r.estado; pintar(!!est && r.agora - est.t < 8000); }
+    catch { pintar(false); $("ligt").textContent = "Sem internet"; }
+  }
+  setTimeout(ler, 450);
+}
+// cronômetro de 5 minutos
+let ini = 0, acum = 0, segura;
+const correr = () => { ini = Date.now(); };
+$("relogio").onclick = () => { if (ini) { acum += Date.now() - ini; ini = 0; } else correr(); };
+$("relogio").addEventListener("pointerdown", () => { segura = setTimeout(() => { ini = 0; acum = 0; navigator.vibrate?.(60); $("relogio").addEventListener("click", (e) => { e.stopImmediatePropagation(); }, { once: true, capture: true }); }, 700); });
+for (const t of ["pointerup", "pointerleave", "pointercancel"]) $("relogio").addEventListener(t, () => clearTimeout(segura));
+setInterval(() => { const s = Math.floor((acum + (ini ? Date.now() - ini : 0)) / 1000); $("relogio").textContent = Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); $("relogio").className = s >= 300 ? "fim" : s >= 255 ? "perto" : ""; }, 250);
+// tela acesa
+let trava;
+async function acordado() { try { trava = await navigator.wakeLock?.request("screen"); } catch { /* sem suporte */ } }
+document.addEventListener("visibilitychange", () => { if (!document.hidden && boa(sala)) acordado(); });
+// títulos: lidos do próprio deck
+fetch("/").then((r) => r.text()).then((t) => {
+  const d = new DOMParser().parseFromString(t, "text/html");
+  TIT = [...d.querySelectorAll(".slide")].map((s, i) => { const h = s.querySelector(".h1,.h2,.cond,.baque"); return ((s.classList.contains("s-demo") ? "Demo (vídeo)" : "") || s.dataset.titulo || (h ? h.textContent.replace(/\s+/g, " ").trim().slice(0, 60) : "") || "Slide " + i); });
+  pintar($("lig").classList.contains("on"));
+}).catch(() => {});
+if (boa(sala)) entrar(); else $("par").hidden = false;
+</script>
+</body>
+</html>

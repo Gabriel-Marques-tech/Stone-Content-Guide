@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lapida · Inteli Academy × Stone</title>
-<link rel="icon" href="data:,">
+<link rel="icon" href="logo.svg">
 <link href="fontes/fontes.css" rel="stylesheet">
 <style>
 :root{--noite:#1D2422;--noite2:#2A3531;--lima:#B9F24B;--verde:#00D568;--txt:#15201A;--nevoa:#B7C4BD;--claro:#F4F7F5;
@@ -52,6 +52,12 @@ em{font-style:normal;color:var(--lima)}
 .ideia .m{text-align:center}.ideia .h1{font-size:calc(var(--u)*8.6)}
 .pil{display:flex;gap:calc(var(--u)*.8);justify-content:center;align-items:center;flex-wrap:wrap;margin-top:calc(var(--u)*2.4);font-weight:700;font-size:calc(var(--u)*1.5)}
 .pil span{background:var(--noite2);border-radius:999px;padding:calc(var(--u)*.8) calc(var(--u)*1.6)}.pil .a{background:var(--lima);color:var(--txt)}.pil u{text-decoration:none;color:var(--nevoa)}
+.logo polygon{stroke-width:1.2;stroke-linejoin:round;stroke:none}.logo.mini{width:calc(var(--u)*2.2);height:auto;flex:none}
+.s-nome .logo{width:calc(var(--u)*23);height:auto;overflow:visible}.s-nome polygon{opacity:0;transform-box:view-box;transform-origin:100px 100px;transform:translate(calc((var(--k) - 2.5)*34px),calc((var(--k) - 2.5)*-22px)) rotate(calc((var(--k) - 2.5)*38deg)) scale(.5)}
+.s-nome.on polygon{opacity:1;transform:none;transition:opacity .3s,transform .9s cubic-bezier(.2,1.2,.3,1);transition-delay:calc(var(--k)*.11s + .15s)}
+.s-nome .nm{font-size:calc(var(--u)*13);color:#fff;margin-top:calc(var(--u)*1);opacity:0;transform:translateY(calc(var(--u)*3))}.s-nome .tg{font-size:calc(var(--u)*2.1);max-width:calc(var(--u)*56);text-align:center;margin-top:calc(var(--u)*1);opacity:0}
+.s-nome.on .nm{opacity:1;transform:none;transition:opacity .5s 1.2s,transform .7s cubic-bezier(.2,1.2,.3,1) 1.2s}.s-nome.on .tg{opacity:1;transition:opacity .6s 1.7s}
+.faz{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(var(--u)*1.6);width:100%;max-width:calc(var(--u)*88);margin-top:calc(var(--u)*3)}.fz{position:relative;overflow:hidden;background:var(--noite2);border-radius:calc(var(--u)*2.2);height:calc(var(--u)*32);padding:calc(var(--u)*2.2)}.fz .cond{font-size:calc(var(--u)*3.8)}.fz p{font-size:calc(var(--u)*1.7);margin-top:calc(var(--u)*.8);font-weight:600;color:var(--nevoa)}.fz.v{background:var(--verde);color:var(--txt)}.fz.l{background:var(--lima);color:var(--txt)}.fz.v p,.fz.l p{color:var(--txt)}.fz video{position:absolute;left:50%;bottom:calc(var(--u)*-6);height:calc(var(--u)*27);transform:translateX(-50%);-webkit-mask:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent);mask:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent)}
 /* 4 etapas */
 .etapas{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(var(--u)*1.2);width:100%;max-width:calc(var(--u)*88);margin-top:calc(var(--u)*3)}
 .et{background:var(--noite2);border-radius:calc(var(--u)*1.8);padding:calc(var(--u)*1.8) calc(var(--u)*2)}
@@ -81,6 +87,13 @@ em{font-style:normal;color:var(--lima)}
 .stone .v{font-size:calc(var(--u)*11)}
 /* 8 demo */
 .s-demo{padding:0;background:#131917}#demo{width:100%;height:100%;object-fit:contain;display:block}.s-demo .selo{background:var(--noite);color:var(--lima);font-size:calc(var(--u)*2.6)}
+.ic{display:grid;place-items:center;width:calc(var(--u)*5);height:calc(var(--u)*5);border-radius:calc(var(--u)*1.4);background:var(--lima);margin-bottom:calc(var(--u)*1.4)}.ic svg{width:58%;fill:none;stroke:var(--txt);stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}.et.d .ic{background:var(--txt)}.et.d .ic svg{stroke:var(--lima)}
+.cans{display:flex;justify-content:space-between;gap:calc(var(--u)*3);width:100%;max-width:calc(var(--u)*92);margin-top:calc(var(--u)*1.4);font-size:calc(var(--u)*1.3)}.cans>div{flex:1}.cans b{display:block;margin-bottom:calc(var(--u)*.6)}.cans span{display:grid;grid-template-columns:repeat(25,1fr);gap:calc(var(--u)*.35)}.cans i{aspect-ratio:1;border-radius:50%;background:none;border:calc(var(--u)*.2) solid #57655F}.cans i.a{background:var(--lima);border-color:var(--lima)}
+.dupla{display:grid;grid-template-columns:1fr 1.2fr;gap:calc(var(--u)*1.2);width:100%;max-width:calc(var(--u)*92);margin-top:calc(var(--u)*1.6)}
+.dupla .alarme{margin:0;max-width:none;gap:calc(var(--u)*2);padding:calc(var(--u)*1.6) calc(var(--u)*2.2);font-size:calc(var(--u)*1.45)}.dupla .alarme .cond{font-size:calc(var(--u)*7)}
+.quem-decide{background:var(--noite2);border-radius:calc(var(--u)*2);padding:calc(var(--u)*1.6) calc(var(--u)*2);display:flex;flex-direction:column;gap:calc(var(--u)*1.2);justify-content:center}
+.qd-t{display:flex;justify-content:space-between;align-items:center;font-size:calc(var(--u)*1.6)}.chave em{font-style:normal;font-weight:700;font-size:calc(var(--u)*1.2);color:var(--txt);background:#fff;border-radius:99px;padding:calc(var(--u)*.3) calc(var(--u)*1.1)}
+.chave{display:grid;grid-template-columns:1fr 1fr;background:var(--noite);border-radius:calc(var(--u)*1.6);padding:calc(var(--u)*.5)}.chave>div{display:flex;align-items:center;gap:calc(var(--u)*1);padding:calc(var(--u)*1) calc(var(--u)*1.2);border-radius:calc(var(--u)*1.2);color:var(--nevoa);font-size:calc(var(--u)*1.3);line-height:1.25}.chave span b{display:block;color:#fff;font-size:calc(var(--u)*1.6)}.chave svg{flex:none;width:calc(var(--u)*2.8);fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}.chave .on{background:var(--lima);color:#2B3A1B}.chave .on b{color:var(--txt)}
 .ciclo.q4{grid-template-columns:repeat(4,1fr)}
 .placar{display:grid;grid-template-columns:auto auto auto 1fr;gap:calc(var(--u)*2.4);align-items:center;width:100%;max-width:calc(var(--u)*92);margin-top:calc(var(--u)*1.6);background:#fff;color:var(--txt);border-radius:calc(var(--u)*2);padding:calc(var(--u)*1.8) calc(var(--u)*3)}.placar .cond{font-size:calc(var(--u)*6);white-space:nowrap}.placar small{font-weight:700;font-size:calc(var(--u)*1.4)}.placar p{font-size:calc(var(--u)*1.55);line-height:1.35}.placar .dp .cond{background:var(--lima);border-radius:calc(var(--u)*.8);padding:calc(var(--u)*.4) calc(var(--u)*1)}.placar .sx{font-size:calc(var(--u)*4)}
 .mudou{display:grid;grid-template-columns:auto 1fr;gap:calc(var(--u)*3);align-items:center;width:100%;max-width:calc(var(--u)*92);margin-top:calc(var(--u)*1.6);background:var(--lima);color:var(--txt);border-radius:calc(var(--u)*2);padding:calc(var(--u)*1.6) calc(var(--u)*3);font-size:calc(var(--u)*1.65);line-height:1.35}.mudou .cond{font-size:calc(var(--u)*5.4);white-space:nowrap}
@@ -105,7 +118,8 @@ em{font-style:normal;color:var(--lima)}
 .pil20 p{font-weight:700;font-size:calc(var(--u)*1.6)}
 /* 11 fecho */
 .assina{display:flex;align-items:center;gap:calc(var(--u)*2.6);margin-top:calc(var(--u)*4)}.assina .foto{width:calc(var(--u)*9);border-width:calc(var(--u)*.3)}.assina .nm{font-size:calc(var(--u)*3.4)}
-.qr{background:#fff;color:var(--txt);border-radius:calc(var(--u)*1.4);padding:calc(var(--u)*.8) calc(var(--u)*.8) calc(var(--u)*.9);text-align:center;font-weight:700;font-size:calc(var(--u)*1.3);text-decoration:none}.qr img{display:block;width:calc(var(--u)*12)}
+.acesso{display:inline-block;margin-top:calc(var(--u)*.9);color:var(--lima);font-weight:700;font-size:calc(var(--u)*1.7);text-underline-offset:.2em}
+.qr{background:var(--lima);color:var(--txt);border-radius:calc(var(--u)*1.4);padding:calc(var(--u)*.8) calc(var(--u)*.8) calc(var(--u)*.9);text-align:center;font-weight:700;font-size:calc(var(--u)*1.6);text-decoration:none}.qr img{display:block;width:calc(var(--u)*16);border-radius:calc(var(--u)*.9);margin-bottom:calc(var(--u)*.4)}
 #prog{position:fixed;left:0;bottom:0;height:4px;background:var(--verde);z-index:20;transition:width .4s}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -116,18 +130,17 @@ em{font-style:normal;color:var(--lima)}
   <div class="foto" data-in="zoom"><img src="foto-gabriel.jpg" alt="Gabriel Marques"></div>
   <div class="cond" data-in style="--i:1;font-size:calc(var(--u)*6.4)">Gabriel Marques</div>
   <div class="p" data-in style="--i:2"><b style="color:#fff">1º ano no Inteli</b> · Inteli Academy × Stone</div>
-  <div class="cond" data-in style="--i:4;font-size:calc(var(--u)*3.4);color:var(--lima);margin-top:calc(var(--u)*1.4)"><span style="color:#fff">Lapida:</span> o que gravar, e por quê</div>
 </div></section>
 
-<section class="slide s-gancho" data-passos="1">
+<section data-titulo="Mural: 41%" class="slide s-gancho" data-passos="1">
   <div id="mural"></div>
   <div class="busca" id="busca"><span id="digita"></span><b>Buscar</b></div>
   <div class="selo" id="selo">447 Shorts: os 10% com mais engajamento da base</div>
   <div class="quanto"><div class="v cond" id="v41">0%</div><div class="l cond">não falam de negócio</div><small>Corte de cabelo, pizza, lembrancinha de festa</small></div>
 </section>
 
-<section class="slide verde"><div class="baque">
-  <div><div class="cond" data-in="zoom">Copiar o que está em alta é gravar pizza.</div><p data-in style="--i:5">Em alta para quê?</p></div>
+<section data-titulo="Vídeo de pizza" class="slide verde"><div class="baque">
+  <div><div class="cond" data-in="zoom">Copiar o que está em alta é gravar vídeo de pizza.</div><p data-in style="--i:5">Em alta para quê?</p></div>
   <video class="bon" data-in style="--i:3" src="boneco-cozinha.webm" autoplay loop muted playsinline></video>
 </div></section>
 
@@ -149,15 +162,20 @@ em{font-style:normal;color:var(--lima)}
   <div class="faixa" data-p="1">Mais de 9 em cada 10 vídeos do topo não têm nenhum pedido de contato nos comentários lidos</div>
 </section>
 
-<section class="slide"><div class="ideia">
-  <video class="bon" data-in style="--i:4" src="boneco-celular.webm" autoplay loop muted playsinline></video>
-  <div class="m">
-    <div class="h1 cond" data-in="zoom" style="font-size:calc(var(--u)*15)"><em>Lapida</em></div>
-    <div class="p" data-in style="--i:2;margin-top:calc(var(--u)*1.8);font-size:calc(var(--u)*2.2)">Diz o que gravar e mostra por quê.<br>E confere e corrige o que escreve.</div>
-    <div class="pil" data-in style="--i:4"><span class="a">receber contato</span><u>ou</u><span class="a">ter curtida</span></div>
+<section class="slide">
+  <div class="h2 cond" data-in="zoom" style="text-align:center">E se alguém dissesse <em>o que gravar, e por quê?</em></div>
+  <div class="faz">
+    <div class="fz" data-in style="--i:2"><video src="boneco-comentario.webm" autoplay loop muted playsinline></video><div class="cond">Pergunta o objetivo</div><p>Contato ou curtida. O roteiro muda.</p></div>
+    <div class="fz v" data-in style="--i:4"><video src="boneco-celular.webm" autoplay loop muted playsinline></video><div class="cond">Escreve com prova</div><p>Número medido e vídeo real do lado.</p></div>
+    <div class="fz l" data-in style="--i:6"><video src="boneco-caderno.webm" autoplay loop muted playsinline></video><div class="cond">Confere e corrige</div><p>Faltou algo, ela reescreve.</p></div>
   </div>
-  <video class="bon" data-in style="--i:5" src="boneco-maquininha.webm" autoplay loop muted playsinline></video>
-</div></section>
+</section>
+
+<section class="slide s-nome">
+  <svg class="logo grande" viewBox="8 6 192 188" role="img" aria-label="Lapida"><polygon points="22,64 66,18 66,72" fill="#E3FFA6" style="--k:0"/><polygon points="22,64 66,72 66,128 22,136" fill="#B9F24B" style="--k:1"/><polygon points="22,136 66,128 66,182" fill="#7FD63A" style="--k:2"/><polygon points="66,18 188,100 66,72" fill="#B9F24B" style="--k:3"/><polygon points="66,72 188,100 66,128" fill="#00D568" style="--k:4"/><polygon points="66,128 188,100 66,182" fill="#00A151" style="--k:5"/></svg>
+  <div class="nm cond">Lapida</div>
+  <div class="p tg">A plataforma que diz ao time de conteúdo da Stone o que gravar, e mostra por quê.</div>
+</section>
 
 <section class="slide">
   <div class="h2 cond" data-in="zoom" style="text-align:center">Arquitetura</div>
@@ -178,21 +196,48 @@ em{font-style:normal;color:var(--lima)}
 </section>
 
 <section class="slide s-demo">
-  <video id="demo" muted playsinline preload="auto"><source src="demo.webm?v=2" type="video/webm"><source src="demo.mp4?v=2" type="video/mp4"></video>
+  <video id="demo" playsinline preload="auto"><source src="demo.webm?v=5" type="video/webm"><source src="demo.mp4?v=5" type="video/mp4"></video>
   <div class="selo" id="depois">Roteiro em 57 s · prévia feita à parte</div>
 </section>
 
 <section class="slide" data-passos="1">
   <div class="h2 cond" data-in="zoom" style="text-align:center">Ela lapida <em>o próprio roteiro</em></div>
   <div class="ciclo q4">
-    <div class="et" data-in style="--i:1"><div class="cond">1. Lembra</div><p>Os erros que mais se repetiram viram aviso antes de escrever.</p></div>
-    <div class="et" data-in style="--i:2"><div class="cond">2. Escreve</div><p>Só com padrões medidos e vídeos que existem na base.</p></div>
-    <div class="et" data-in style="--i:3"><div class="cond">3. Confere</div><p>Uma segunda leitura procura cada padrão no roteiro.</p></div>
-    <div class="et d" data-in style="--i:4"><div class="cond">4. Corrige</div><p>Faltou? Reescreve e confere de novo. Só troca se melhorou.</p></div>
+    <div class="et" data-in style="--i:1"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.6-5.9"/><path d="M4 4v4.5h4.5"/><path d="M12 8v4.4l3 1.8"/></svg></span><div class="cond">1. Lembra</div><p>Os erros que mais se repetiram viram aviso antes de escrever.</p></div>
+    <div class="et" data-in style="--i:2"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.2-4.6L16.4 4.2a2 2 0 0 1 2.8 0l.6.6a2 2 0 0 1 0 2.8L8.6 18.8z"/><path d="M14 6.6l3.4 3.4"/></svg></span><div class="cond">2. Escreve</div><p>Só com padrões medidos e vídeos que existem na base.</p></div>
+    <div class="et" data-in style="--i:3"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.4 15.4l5.1 5.1"/><path d="M7.8 10.6l2 2 3.6-3.9"/></svg></span><div class="cond">3. Confere</div><p>Uma segunda leitura procura cada padrão no roteiro.</p></div>
+    <div class="et d" data-in style="--i:4"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 10A8 8 0 0 0 5.4 7.4L4 9"/><path d="M4 4.5V9h4.5"/><path d="M4.5 14a8 8 0 0 0 14.1 2.6L20 15"/><path d="M20 19.5V15h-4.5"/></svg></span><div class="cond">4. Corrige</div><p>Faltou? Reescreve e confere de novo. Só troca se melhorou.</p></div>
   </div>
   <div class="placar" data-p="1">
     <div><small>Sem revisão</small><div class="cond">25 de 32</div></div><div class="cond sx">→</div><div class="dp"><small>Com revisão</small><div class="cond">32 de 32</div></div>
     <p><b>roteiros com todos os padrões.</b> Os mesmos 16 pedidos, com e sem. Quem confere é a própria IA.</p>
+  </div>
+</section>
+
+<section class="slide" data-passos="1">
+  <div class="h2 cond" data-in="zoom" style="text-align:center">A internet muda. <em>Ela se adapta automaticamente.</em></div>
+  <div class="ciclo q4">
+    <div class="et" data-in style="--i:1"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v10"/><path d="M8 10.5l4 4 4-4"/><path d="M4.5 16v2.5A1.5 1.5 0 0 0 6 20h12a1.5 1.5 0 0 0 1.5-1.5V16"/></svg></span><div class="cond">1. Coleta</div><p>Um comando traz vídeos, números e comentários novos.</p></div>
+    <div class="et" data-in style="--i:2"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20v-6"/><path d="M12 20V5"/><path d="M19 20v-9"/></svg></span><div class="cond">2. Refaz</div><p>O topo e os padrões são medidos de novo.</p></div>
+    <div class="et" data-in style="--i:3"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.4"/><path d="M12 12l6-6"/></svg></span><div class="cond">3. Avisa</div><p>O radar diz o que ganha e o que perde força.</p></div>
+    <div class="et d" data-in style="--i:4"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8l4-4 11 8-11 8-4-4z"/><path d="M9 4v16"/></svg></span><div class="cond">4. Adapta</div><p>O próximo roteiro já usa. Padrão que cai, sai.</p></div>
+  </div>
+  <div class="mudou" data-p="1"><div class="cond">4.462 → 4.504</div><div><b>Vídeos, na atualização de hoje.</b> Os padrões firmes continuaram os mesmos, e o radar acusou um indício novo: só rosto falando. Indício desempata, não vira regra.</div></div>
+</section>
+
+<section class="slide" data-passos="1">
+  <div class="h2 cond" data-in="zoom" style="text-align:center">Hipóteses: <em>ela testa antes de acreditar</em></div>
+  <div class="ciclo q4">
+    <div class="et" data-in style="--i:1"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg></span><div class="cond">1. Observa</div><p>54 características, só nos canais abertos.</p></div>
+    <div class="et" data-in style="--i:2"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".6"/></svg></span><div class="cond">2. Aposta</div><p>Escreve 5 e trava. Ex.: pergunta no gancho aparece mais no topo?</p></div>
+    <div class="et" data-in style="--i:3"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><path d="M12 14.6v2"/></svg></span><div class="cond">3. Testa</div><p>Uma única vez, nos canais guardados. Sem segunda chance.</p></div>
+    <div class="et d" data-in style="--i:4"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.6 4.6L19.5 7"/></svg></span><div class="cond">4. Decide</div><p>Passou e uma pessoa aprovou: vira regra. Caiu: fica registrado.</p></div>
+  </div>
+  <div class="cans" data-in style="--i:5"><div><b>25 canais abertos</b><span><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i><i class="a"></i></span></div><div><b>24 guardados para o teste</b><span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div></div>
+  <div class="dupla" data-p="1">
+    <div class="alarme"><div class="cond">0,7%</div><div><b>de alarme falso</b> com dados embaralhados (27 em 4.048; limite 1%). O teste das 5 ainda não rodou.</div></div>
+    <div class="quem-decide"><div class="qd-t"><b>Quem decide o que vira regra?</b></div>
+      <div class="chave"><div class="on"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg><span><b>Com aprovação</b>hoje</span></div><div><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.2 6.3L20.5 12l-6.3 2.2L12 20.5l-2.2-6.3L3.5 12l6.3-2.7z"/></svg><span><b>IA livre</b>se melhora sozinha</span></div></div></div>
   </div>
 </section>
 
@@ -210,9 +255,9 @@ em{font-style:normal;color:var(--lima)}
   <div class="h1 cond" data-in="zoom">Não pergunte o que está em alta.<br><em>Pergunte: em alta para quê?</em></div>
   <div class="assina" data-in style="--i:3">
     <div class="foto"><img src="foto-gabriel.jpg" alt=""></div>
-    <div><div class="nm cond">Gabriel Marques</div><div class="p">Lapida · Inteli Academy × Stone</div></div>
-    <a class="qr" href="https://www.linkedin.com/in/gabrielmarquesinteli" target="_blank" rel="noopener"><img src="qr-linkedin.png" alt="">LinkedIn</a>
-    <a class="qr" href="https://github.com/Gabriel-Marques-tech/Stone-Content-Guide" target="_blank" rel="noopener"><img src="qr-github.png" alt="">Código</a>
+    <div><div class="nm cond">Gabriel Marques</div><div class="p" style="display:flex;align-items:center;gap:calc(var(--u)*.7)"><svg class="logo mini" viewBox="8 6 192 188" role="img" aria-label="Lapida"><polygon points="22,64 66,18 66,72" fill="#E3FFA6" style="--k:0"/><polygon points="22,64 66,72 66,128 22,136" fill="#B9F24B" style="--k:1"/><polygon points="22,136 66,128 66,182" fill="#7FD63A" style="--k:2"/><polygon points="66,18 188,100 66,72" fill="#B9F24B" style="--k:3"/><polygon points="66,72 188,100 66,128" fill="#00D568" style="--k:4"/><polygon points="66,128 188,100 66,182" fill="#00A151" style="--k:5"/></svg>Lapida · Inteli Academy × Stone</div><a class="acesso" href="https://lapida-plataforma.vercel.app" target="_blank" rel="noopener">lapida-plataforma.vercel.app</a></div>
+    <a class="qr" href="https://www.linkedin.com/in/gabrielmarquesinteli" target="_blank" rel="noopener"><img src="qr-linkedin.svg" alt="">LinkedIn</a>
+    <a class="qr" href="https://github.com/Gabriel-Marques-tech/Stone-Content-Guide" target="_blank" rel="noopener"><img src="qr-github.svg" alt="">Código</a>
   </div>
 </section>
 
@@ -227,21 +272,6 @@ em{font-style:normal;color:var(--lima)}
   </div>
   <div class="leg" data-in style="--i:5">Pontos de diferença entre o topo e o resto em três períodos: <b>11/24 a 01/26, 01/26 a 07/26, 07/26 a 11/26</b>. Ainda dentro da margem de erro.</div>
   <div class="mudou" data-p="1"><div class="cond">4.462 → 4.504</div><div><b>Atualizamos hoje, com um comando.</b> Os padrões firmes continuaram os mesmos. Um indício novo entrou no radar. Indício desempata, não vira regra.</div></div>
-</section>
-
-<section class="slide extra" data-passos="1">
-  <div class="h2 cond" data-in="zoom" style="text-align:center">Hipóteses: <em>ela testa antes de acreditar</em></div>
-  <div class="ciclo">
-    <div class="et" data-in style="--i:1"><div class="cond">1. Explora</div><p>54 características, só em 25 canais. Os outros ficam guardados.</p></div>
-    <div class="et" data-in style="--i:2"><div class="cond">2. Aposta</div><p>Escreve 5 hipóteses e trava. Não dá para trocar depois.</p></div>
-    <div class="et" data-in style="--i:3"><div class="cond">3. Testa</div><p>Uma única vez, nos 24 canais que ficaram guardados.</p></div>
-    <div class="et d" data-in style="--i:4"><div class="cond">4. Passou?</div><p>Uma pessoa aprova, e vira regra para os próximos roteiros.</p></div>
-    <div class="et" data-in style="--i:5"><div class="cond">Caiu?</div><p>Fica registrada, e o agente passa a saber que não se sustentou.</p></div>
-  </div>
-  <div class="alarme" data-p="1">
-    <div class="cond">0,7%</div>
-    <div><b>de alarme falso.</b> Embaralhamos os dados 100 vezes, para não sobrar nada a descobrir. Em 4.048 testes, ela acusou 27. O limite era 1%.<br><b>O teste final das 5 ainda não rodou. Ele só vale uma vez, e queremos escolher as hipóteses com vocês.</b></div>
-  </div>
 </section>
 
 <section class="slide extra" data-passos="1">
@@ -313,8 +343,8 @@ function mostrar(i, p = 0) {
   if (p) slides[atual].classList.add("p" + p);
   $("prog").style.width = Math.min(100, 100 * (atual + 1) / document.querySelectorAll(".slide:not(.extra)").length) + "%"; history.replaceState(null, "", "#" + atual);
   if (slides[atual].classList.contains("s-gancho")) p ? contar() : gancho();
-  const dm = $("demo"); dm.pause(); if (slides[atual].classList.contains("s-demo")) dm.currentTime = 0;
-  slides[atual].querySelectorAll("video").forEach((v) => v.play().catch(() => {}));
+  const dm = $("demo"); dm.pause(); dm.muted = false; if (slides[atual].classList.contains("s-demo")) dm.currentTime = 0;
+  slides[atual].querySelectorAll("video").forEach((v) => v.play().catch(() => { v.muted = true; v.play().catch(() => {}); }));
 }
 function avancar() {
   const s = slides[atual], n = +s.dataset.passos || 0;
@@ -324,15 +354,16 @@ function recuar() { if (passo) mostrar(atual); else if (atual) mostrar(atual - 1
 addEventListener("keydown", (e) => {
   if (["ArrowRight", " ", "PageDown"].includes(e.key)) { e.preventDefault(); avancar(); }
   if (["ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); recuar(); }
-  if (e.key === "e") mostrar(slides.findIndex((s) => s.classList.contains("extra"))); // radar, hipóteses, o que caiu, Stone, o que fica
+  if (e.key === "e") mostrar(slides.findIndex((s) => s.classList.contains("extra"))); // radar, o que caiu, Stone, o que fica
   if (e.key === "f") document.documentElement.requestFullscreen?.();
 });
 addEventListener("click", (e) => {
   if (!e.target.closest("a,button")) avancar();
 });
 $("demo").addEventListener("timeupdate", (e) => { const s = e.target.currentTime; $("depois").classList.toggle("on", s > 6.7 && s < 10.4); });
-addEventListener("keydown", (e) => { if (e.key === "p" && slides[atual].classList.contains("s-demo")) $("demo").paused ? $("demo").play() : $("demo").pause(); });
+addEventListener("keydown", (e) => { if (e.key === "m") $("demo").muted = !$("demo").muted; if (e.key === "p" && slides[atual].classList.contains("s-demo")) $("demo").paused ? $("demo").play() : $("demo").pause(); });
 mostrar(atual);
 </script>
+<script src="controle-deck.js"></script>
 </body>
 </html>

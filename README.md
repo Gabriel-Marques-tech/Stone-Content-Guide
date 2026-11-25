@@ -92,6 +92,12 @@ menos de 5 posts no topo, o agente usa o topo inteiro e diz isso na resposta.
   da margem de erro. O agente usa para desempatar, nunca como regra.
 - **Atualização** (`scripts/atualizar.py`): coleta, quadros, comentários e o que mudou nos padrões,
   com cópia do banco e volta automática se falhar. Não inclui a fala dos vídeos novos.
+- **Acompanhamento** (`src/mpe/acompanhamento.py`, aba `/acompanhar`): lê um Short publicado a cada 6 horas
+  enquanto a plataforma está no ar (ou por `scripts/acompanhar.py` no cron), conta pedidos de contato e
+  diz se surge um indício novo: vídeo entre os 10% melhores do canal que faz algo raro nele. Um vídeo
+  não vira regra e nada muda sozinho. Os três vídeos de exemplo são do canal da Stone, não feitos aqui.
+- **Gravação** (`src/mpe/gravacao.py`): a checagem técnica do vídeo enviado é automática; a leitura contra o
+  roteiro é assistida, fora da plataforma (`scripts/preparar_gravacao.py`).
 - `MPE_APRENDE=0` desliga memória, radar e revisão; `MPE_REVISAR=0` só a revisão.
 
 ## Instalação e execução
@@ -124,6 +130,10 @@ crédito acaba.
 
 Apresentação: `uv run python apresentacao/servir.py` (http://127.0.0.1:8020). As capas do mural não
 estão no repositório: sem elas aparecem blocos de cor.
+
+Versão pública, só leitura: https://lapida-plataforma.vercel.app (`scripts/exportar_vitrine.py`; não cria, não
+grava e não leva chave). O deck aceita controle pelo celular (`apresentacao/controle.html`), com um
+código secreto por sala que não fica no repositório.
 
 Plataforma: `uv run mpe-app` (http://127.0.0.1:8010). Um fluxo: pede-se um tema e um objetivo
 (contato ou engajamento) e saem dois criativos editáveis, os Shorts que os inspiraram tocando ao

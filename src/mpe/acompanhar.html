@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Acompanhar</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--noite:#1D2422;--noite2:#2A3330;--nevoa:#B7C4BD;--lima:#B9F24B;--verde:#00D568;--txt:#15201A;--mudo:#53615A;--pedra:#EEF1EF;--tit:"Bricolage Grotesque","Arial Narrow",sans-serif;--corpo:Figtree,system-ui,sans-serif}
+*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;background:#fff;color:var(--txt);font:16px/1.5 var(--corpo);overflow-x:hidden}
+button{font:inherit;color:inherit;cursor:pointer}h1,h2,h3,p,ul{margin:0}ul{padding:0;list-style:none}:focus-visible{outline:3px solid var(--verde);outline-offset:3px}
+.c{max-width:1240px;margin:0 auto;padding:0 clamp(18px,3.4vw,40px)}.cond{font-family:var(--tit);font-weight:800;font-stretch:75%;text-transform:uppercase;line-height:.96}
+.abre{background:var(--noite);color:#fff;padding:18px 0 44px}
+.nav{display:flex;gap:6px}.nav a{min-height:44px;display:inline-flex;align-items:center;padding:0 18px;border-radius:999px;color:#fff;text-decoration:none;font-weight:700}.nav a[aria-current]{background:rgb(255 255 255/.14)}.nav a:hover{background:rgb(255 255 255/.22)}
+h1.cond{font-size:clamp(46px,6.6vw,92px);max-width:9em;margin-top:34px}h1 em{font-style:normal;color:var(--lima)}
+.abre p{color:var(--nevoa);max-width:54ch;margin:16px 0 0}.lk{display:flex;gap:10px;max-width:760px;margin-top:26px;background:#fff;border-radius:999px;padding:7px}.lk input{flex:1;min-width:0;font:inherit;border:0;border-radius:999px;padding:0 20px;min-height:52px;color:var(--txt);background:none}.lk button{border:0;border-radius:999px;background:var(--lima);color:var(--txt);font-weight:800;padding:0 28px;min-height:52px}.lk button:disabled{opacity:.6}
+#est{color:var(--nevoa);min-height:24px;margin-top:12px}#est.erro{color:#FFB4A6}
+.lista{display:grid;gap:22px;padding-top:40px;padding-bottom:70px}
+.pub{display:grid;grid-template-columns:minmax(160px,230px) minmax(0,1fr);gap:clamp(20px,3vw,40px);background:var(--pedra);border-radius:30px;padding:clamp(18px,2.4vw,30px)}
+.pub>a img{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:22px;display:block}.pub h2{font:800 clamp(24px,2.6vw,34px)/1.05 var(--tit);font-stretch:82%}.pub .quem{color:var(--mudo);margin-top:6px}
+.tot{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:20px 0 14px}.tot div{background:#fff;border-radius:18px;padding:16px}.tot strong{display:block;font:800 36px/1 var(--tit);font-stretch:78%}.tot span{color:var(--mudo)}
+.vies{border-radius:22px;padding:20px 22px;background:#fff;margin:14px 0}.vies.sim{background:var(--lima)}.vies.nao{background:var(--noite);color:#fff}.vies small{font-weight:700;font-size:15px;opacity:.8}.vies b{display:block;font:800 26px/1.1 var(--tit);font-stretch:82%;margin:4px 0 6px}.vies p+p{margin-top:8px;font-weight:700}
+.fr{display:grid;gap:6px;margin:14px 0}.fr li{padding-left:18px;position:relative}.fr li::before{content:"";position:absolute;left:0;top:.62em;width:8px;height:8px;border-radius:50%;background:var(--verde)}
+.curva{width:100%;height:70px;margin:4px 0}.pe{color:var(--mudo);font-size:15px}.acs{display:flex;gap:8px;margin-top:14px}.acs button{border:0;border-radius:999px;background:var(--noite);color:#fff;font-weight:700;min-height:46px;padding:0 20px}
+@media (max-width:760px){.pub{grid-template-columns:minmax(0,1fr)}.pub>a img{max-width:190px}.lk{flex-wrap:wrap;border-radius:28px}.lk button{width:100%}.nav a{padding:0 13px}}
+</style>
+</head>
+<body>
+<header class="abre"><div class="c"><nav class="nav"><a href="/">Criar</a><a href="/playbook">Playbook</a><a href="/acompanhar" aria-current="page">Acompanhar</a></nav>
+<h1 class="cond">O que o vídeo <em>no ar ensina?</em></h1><p>Cole o link de um Short. A leitura se repete a cada 6 horas e diz se surge um viés novo.</p>
+<form class="lk" id="f"><label for="link" hidden>Link do Short</label><input id="link" type="url" required placeholder="https://youtube.com/shorts/…" autocomplete="off"><button id="ir">Acompanhar</button></form><p id="est" role="status"></p></div></header>
+<main class="c lista" id="lista" aria-live="polite"><p>Carregando…</p></main>
+<script>
+const $ = (i) => document.getElementById(i), e = (t) => String(t ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const mil = (n) => n.toLocaleString("pt-BR"), nz = (n) => n == null ? "–" : mil(n), hora = (d) => new Date(d).toLocaleString("pt-BR", {day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit"});
+function curva(m) {
+  const v = m.map((x) => x.views).filter((x) => x != null), a = Math.min(...v), b = Math.max(...v) - a; if (v.length < 2 || b < Math.max(...v) * .01) return "";
+  return '<svg class="curva" viewBox="0 0 300 62" preserveAspectRatio="none" role="img" aria-label="Visualizações de ' + mil(v[0]) + " a " + mil(v.at(-1)) + '"><polyline points="' + v.map((x, i) => (i / (v.length - 1) * 296 + 2).toFixed(1) + "," + (57 - (x - a) / b * 52).toFixed(1)).join(" ") + '" fill="none" stroke="#00A151" stroke-width="4" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+function cartao(a) {
+  const m = a.medidas.at(-1) || {}, v = a.vies, link = "https://www.youtube.com/shorts/" + encodeURIComponent(a.id);
+  return '<article class="pub"><a target="_blank" rel="noopener" href="' + link + '"><img alt="Assistir: ' + e(a.titulo) + '" src="https://i.ytimg.com/vi/' + encodeURIComponent(a.id) + '/hqdefault.jpg"></a><div><h2>' + e(a.titulo) + '</h2><p class="quem">Canal ' + e(a.canal) + " · " + (a.idade_dias ? mil(a.idade_dias) + (a.idade_dias === 1 ? " dia no ar" : " dias no ar") : "publicado hoje") + (a.run_id ? " · feito de um roteiro da Lapida" : "") + "</p>"
+    + '<div class="tot">' + [["Visualizações", m.views], ["Curtidas", m.likes], ["Comentários", m.comentarios], ["Pedidos de contato", m.lidos ? m.pedidos : null]].map((x) => "<div><strong>" + nz(x[1]) + "</strong><span>" + x[0] + "</span></div>").join("") + "</div>" + curva(a.medidas)
+    + '<div class="vies ' + (v.surge ? "sim" : v.surge === false ? "nao" : "") + '"><small>Surge um viés novo?</small><b>' + e(v.titulo) + "</b><p>" + e(v.texto) + "</p>" + (v.surge ? "<p>Vale testar em mais vídeos. Um vídeo só não vira regra.</p>" : "") + "</div>"
+    + '<ul class="fr">' + a.frases.map((x) => "<li>" + e(x) + "</li>").join("") + "</ul>" + (a.erro ? "<p>" + e(a.erro) + "</p>" : "")
+    + '<p class="pe">' + (m.quando ? "Lido em " + hora(m.quando) + ", " + a.medidas.length + (a.medidas.length === 1 ? " leitura" : " leituras") : "") + (a.proxima ? ". Próxima: " + hora(a.proxima) : "") + ". Mostra o que aconteceu, não a causa.</p>"
+    + (window.PUBLICA ? "" : '<div class="acs"><button type="button" data-ler="' + e(a.id) + '">Ler agora</button>' + (a.ativo ? '<button type="button" data-parar="' + e(a.id) + '">Parar</button>' : "") + "</div>") + "</div></article>";
+}
+async function carregar() {
+  const r = await fetch("/api/acompanhados"), j = await r.json(); if (!r.ok) throw new Error(j.erro);
+  $("lista").innerHTML = j.videos.map(cartao).join("") || "<p>Nenhum vídeo acompanhado ainda.</p>";
+}
+async function pedir(caminho, corpo, ocupado) {
+  $("est").className = ""; $("est").textContent = ocupado;
+  try { const r = await fetch("/api/acompanhar" + caminho, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(corpo)}), j = await r.json(); if (!r.ok) throw new Error(j.erro); await carregar(); $("est").textContent = ""; return true; }
+  catch (x) { $("est").className = "erro"; $("est").textContent = x.message; return false; }
+}
+$("f").addEventListener("submit", async (ev) => { ev.preventDefault(); $("ir").disabled = true; if (await pedir("", {link:$("link").value}, "Lendo o vídeo e os comentários…")) $("link").value = ""; $("ir").disabled = false; });
+document.addEventListener("click", (ev) => { const l = ev.target.closest("[data-ler]"), p = ev.target.closest("[data-parar]"); if (l) pedir("/ler", {id:l.dataset.ler}, "Lendo…"); if (p) pedir("/parar", {id:p.dataset.parar}, "Parando…"); });
+carregar().catch((x) => { $("est").className = "erro"; $("est").textContent = x.message; }); setInterval(() => carregar().catch(() => {}), 60000);
+</script>
+</body>
+</html>
