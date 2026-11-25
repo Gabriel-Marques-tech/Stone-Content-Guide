@@ -1,0 +1,43 @@
+[project]
+name = "mpe"
+version = "0.1.0"
+description = "Mapeamento de conteúdo para MPEs com motor de hipóteses e agente"
+readme = "README.md"
+authors = [
+    { name = "Gabriel Marques" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "duckdb>=2.0.1",
+    "httpx>=0.28.1",
+    "langchain-core>=1.8.4",
+    "langgraph>=1.2.24",
+    "mcp>=2.3.0",
+    "numpy>=2.5.5",
+    "pandas>=3.1.1",
+    "pydantic>=2.14.4",
+    "python-dotenv>=1.2.4",
+    "scipy>=1.18.1",
+    "yt-dlp>=2026.11.23",
+]
+
+[project.scripts]
+mpe-mcp = "mpe.mcp_servidor:main"
+mpe-app = "mpe.app:main"
+
+[build-system]
+requires = ["uv_build>=0.12.9,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+    "ruff>=0.17.6",
+]
+
+[tool.ruff]
+line-length = 100
+extend-exclude = ["scripts/boneco/boneco.py", "scripts/boneco/cenas.py"]  # modelagem 3D
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]

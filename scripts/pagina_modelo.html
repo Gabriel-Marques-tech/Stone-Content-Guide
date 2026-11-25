@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Extrato de Conteúdo MPE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+/* Conceito: a home do app da conta (azulejos brancos sobre cinza) abre o projeto; cada hipótese
+   é um comprovante de maquininha, aprovado ou negado. Verde só onde há dado ou ação. */
+:root {
+  --fundo: #eef1ef; --cartao: #ffffff; --papel: #fdfdfb;
+  --tinta: #12211b; --tinta2: #48584f; --tinta3: #76857d; --linha: #dbe2de;
+  --verde: #00a868; --verde-forte: #0a7a50; --verde-suave: #dff4ea;
+  --quente: #d8612a; --quente-suave: #fbe6dc; --neutro: #e6e9e7;
+  --azul: #2f5bea; --alerta: #b7791f; --alerta-suave: #fbf0d9;
+  --sombra: 0 1px 2px rgb(18 33 27 / .06), 0 6px 18px rgb(18 33 27 / .06);
+  --titulo: "Bricolage Grotesque", "Figtree", system-ui, sans-serif;
+  --texto: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --raio: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fundo: #0d1411; --cartao: #161f1b; --papel: #1b2520;
+    --tinta: #e8f0ec; --tinta2: #b3c1ba; --tinta3: #82918a; --linha: #2a3731;
+    --verde: #2fcf8f; --verde-forte: #6fe0b0; --verde-suave: #143a2b;
+    --quente: #f08a55; --quente-suave: #43261a; --neutro: #26312c;
+    --azul: #7f9bff; --alerta: #e2b458; --alerta-suave: #3a2f16;
+    --sombra: 0 1px 2px rgb(0 0 0 / .4), 0 6px 18px rgb(0 0 0 / .3);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --fundo: #0d1411; --cartao: #161f1b; --papel: #1b2520;
+  --tinta: #e8f0ec; --tinta2: #b3c1ba; --tinta3: #82918a; --linha: #2a3731;
+  --verde: #2fcf8f; --verde-forte: #6fe0b0; --verde-suave: #143a2b;
+  --quente: #f08a55; --quente-suave: #43261a; --neutro: #26312c;
+  --azul: #7f9bff; --alerta: #e2b458; --alerta-suave: #3a2f16;
+  --sombra: 0 1px 2px rgb(0 0 0 / .4), 0 6px 18px rgb(0 0 0 / .3);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--fundo); color: var(--tinta); font: 16px/1.5 var(--texto); }
+a { color: var(--verde-forte); }
+:focus-visible { outline: 2px solid var(--verde); outline-offset: 2px; border-radius: 6px; }
+.tela { max-width: 1080px; margin: 0 auto; padding-block: 0 72px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--titulo); text-wrap: balance; margin: 0; letter-spacing: -.01em; }
+h1 { font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.04; font-weight: 700; }
+h2 { font-size: clamp(1.35rem, 3vw, 1.9rem); line-height: 1.15; font-weight: 700; }
+h3 { font-size: 1.05rem; font-weight: 700; }
+p { margin: 0; }
+.olho { font: 600 .74rem/1 var(--texto); letter-spacing: .09em; text-transform: uppercase; color: var(--tinta3); }
+.sub { color: var(--tinta2); max-width: 64ch; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* barra do topo */
+.barra { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; padding-block: 18px; }
+.marca { display: flex; align-items: center; gap: 10px; font: 700 1rem var(--titulo); }
+.marca i { width: 26px; height: 26px; border-radius: 8px; background: var(--verde); display: grid; place-items: center; }
+.marca i::after { content: ""; width: 10px; height: 10px; border-radius: 50%; border: 3px solid var(--cartao); }
+.barra small { color: var(--tinta3); font-size: .82rem; }
+
+/* abertura */
+.abertura { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 28px; align-items: center; padding-block: 20px 28px; }
+.abertura > div { display: grid; gap: 16px; min-width: 0; }
+.faixa { background: var(--cartao); border-radius: var(--raio); box-shadow: var(--sombra); padding: 16px 18px; display: flex; gap: 14px; align-items: center; justify-content: space-between; }
+.faixa b { display: block; font: 700 1.3rem var(--titulo); }
+.faixa span { color: var(--tinta2); font-size: .9rem; }
+.botao { font: 600 .9rem var(--texto); color: var(--tinta); background: var(--fundo); padding: 8px 14px; border-radius: 10px; text-decoration: none; white-space: nowrap; }
+.azulejos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.azulejo { position: relative; background: var(--cartao); border-radius: var(--raio); box-shadow: var(--sombra); padding: 16px 8px 14px; display: grid; justify-items: center; gap: 8px; text-align: center; text-decoration: none; color: var(--tinta); font: 500 .86rem/1.2 var(--texto); transition: transform .15s; }
+.azulejo:hover { transform: translateY(-2px); }
+.azulejo svg { width: 26px; height: 26px; stroke: var(--verde); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.azulejo em { position: absolute; top: -7px; right: -4px; background: var(--azul); color: #fff; font: 700 .68rem var(--texto); padding: 3px 8px; border-radius: 99px; }
+@media (prefers-reduced-motion: reduce) { .azulejo { transition: none; } html { scroll-behavior: auto; } }
+
+/* seções */
+section { padding-block: 34px 6px; display: grid; gap: 16px; scroll-margin-top: 12px; }
+.cartao { background: var(--cartao); border-radius: var(--raio); box-shadow: var(--sombra); padding: 20px; min-width: 0; }
+.rolagem { overflow-x: auto; }
+.nota { font-size: .86rem; color: var(--tinta3); max-width: 78ch; }
+
+.figuras { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.figura { background: var(--cartao); border-radius: var(--raio); box-shadow: var(--sombra); padding: 16px 18px; }
+.figura b { display: block; font: 700 1.9rem/1.1 var(--titulo); }
+.figura span { color: var(--tinta2); font-size: .88rem; }
+
+/* concentração do topo */
+.pilha { display: flex; gap: 2px; height: 34px; border-radius: 8px; overflow: hidden; }
+.pilha div { min-width: 2px; background: var(--neutro); }
+.pilha .dest { background: var(--verde); }
+.pilha .dest:nth-child(2) { background: color-mix(in oklab, var(--verde) 78%, var(--cartao)); }
+.pilha .dest:nth-child(3) { background: color-mix(in oklab, var(--verde) 58%, var(--cartao)); }
+.legenda { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 8px 18px; margin-top: 14px; font-size: .88rem; }
+.legenda div { display: grid; grid-template-columns: 12px 1fr; gap: 8px; align-items: start; }
+.legenda i { width: 12px; height: 12px; border-radius: 3px; margin-top: 5px; background: var(--neutro); }
+.legenda small { color: var(--tinta3); display: block; }
+
+/* gráfico de pontos */
+svg text { font-family: var(--texto); fill: var(--tinta2); }
+svg .rot { fill: var(--tinta); font-size: 13px; }
+svg .eixo { font-size: 11px; fill: var(--tinta3); }
+.linha-g { cursor: default; }
+.linha-g:hover .fundo-l { fill: var(--fundo); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: .84rem; color: var(--tinta2); align-items: center; }
+.chips i { display: inline-block; width: 22px; height: 10px; vertical-align: middle; margin-right: 6px; border-radius: 3px; }
+
+/* mapa de calor */
+table.calor { border-collapse: separate; border-spacing: 2px; font-size: .78rem; width: 100%; min-width: 640px; }
+table.calor th { font-weight: 500; color: var(--tinta2); text-align: left; padding: 4px 6px; vertical-align: bottom; line-height: 1.2; }
+table.calor thead th { font-size: .74rem; }
+table.calor td { text-align: center; padding: 6px 4px; border-radius: 5px; font-variant-numeric: tabular-nums; color: var(--tinta); min-width: 52px; }
+table.calor td.vazio { background: transparent; color: var(--tinta3); }
+
+/* comprovantes */
+.cupons { display: grid; grid-template-columns: repeat(auto-fill, minmax(238px, 1fr)); gap: 18px; align-items: start; }
+.cupom-caixa { filter: drop-shadow(0 6px 10px rgb(18 33 27 / .12)); }
+.cupom { --d: 9px; background: var(--papel); font: 400 .78rem/1.55 var(--mono); padding: 18px 16px calc(var(--d) + 16px); color: var(--tinta);
+  -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / calc(2 * var(--d)) 100%;
+          mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / calc(2 * var(--d)) 100%; }
+.cupom hr { border: 0; border-top: 1px dashed var(--tinta3); margin: 10px 0; }
+.cupom .cab { text-align: center; font-weight: 700; letter-spacing: .08em; }
+.cupom .frase { font: 600 .95rem/1.3 var(--texto); margin: 2px 0; }
+.cupom dl { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 1px 10px; }
+.cupom dt { color: var(--tinta2); } .cupom dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+.carimbo { margin-top: 12px; text-align: center; font-weight: 700; letter-spacing: .12em; padding: 7px 4px; border: 2px solid currentColor; border-radius: 6px; }
+.carimbo.ok { color: var(--verde-forte); background: var(--verde-suave); }
+.carimbo.nao { color: var(--quente); background: var(--quente-suave); }
+.carimbo.pend { color: var(--alerta); background: var(--alerta-suave); }
+.cupom.vaga { background: transparent; border: 1.5px dashed var(--tinta3); -webkit-mask: none; mask: none; border-radius: 8px; color: var(--tinta3); padding-bottom: 18px; }
+.cupom-caixa.vazia { filter: none; }
+.regras { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px 22px; font-size: .9rem; color: var(--tinta2); }
+.regras b { color: var(--tinta); display: block; }
+
+/* vitrine */
+.vitrine { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.short { background: var(--cartao); border-radius: var(--raio); box-shadow: var(--sombra); overflow: hidden; text-decoration: none; color: var(--tinta); display: grid; grid-template-rows: auto 1fr; }
+.short .capa { aspect-ratio: 3 / 4; background: var(--neutro) center / cover no-repeat; position: relative; }
+.short .capa b { position: absolute; left: 8px; top: 8px; background: var(--cartao); color: var(--tinta); font: 700 .74rem var(--mono); padding: 3px 7px; border-radius: 6px; }
+.short div.txt { padding: 10px 12px 12px; display: grid; gap: 3px; font-size: .8rem; align-content: start; }
+.short strong { font: 700 1.05rem var(--titulo); }
+.short .t { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.short small { color: var(--tinta3); }
+
+/* criativos */
+.criativos { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+.criativo { display: grid; gap: 10px; align-content: start; }
+.criativo .g { font: 700 1.15rem/1.25 var(--titulo); }
+.criativo p { font-size: .92rem; color: var(--tinta2); }
+.criativo .cta { color: var(--tinta); font-weight: 600; }
+.etiqueta { display: inline-block; font: 600 .72rem var(--texto); padding: 3px 9px; border-radius: 99px; background: var(--alerta-suave); color: var(--alerta); }
+.etiqueta.ok { background: var(--verde-suave); color: var(--verde-forte); }
+.refs { font-size: .8rem; color: var(--tinta3); display: grid; gap: 2px; }
+code { font: .86em var(--mono); background: var(--fundo); padding: 2px 6px; border-radius: 5px; }
+
+.dica { position: fixed; pointer-events: none; z-index: 20; background: var(--tinta); color: var(--fundo); font-size: .8rem; line-height: 1.4; padding: 8px 10px; border-radius: 8px; max-width: 260px; box-shadow: var(--sombra); }
+.dica b { display: block; }
+
+.desenho { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px 26px; font-size: .9rem; color: var(--tinta2); }
+.desenho b { color: var(--tinta); display: block; margin-bottom: 2px; }
+.desenho small { color: var(--tinta3); display: block; margin-top: 3px; }
+footer { margin-top: 44px; padding-top: 18px; border-top: 1px solid var(--linha); color: var(--tinta3); font-size: .84rem; }
+
+@media (max-width: 760px) { .abertura { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body>
+<div class="tela">
+  <header class="barra">
+    <div class="marca"><i></i>Extrato de Conteúdo MPE</div>
+    <small>Stone × Inteli Academy · YouTube Shorts · atualizado em <span id="gerado"></span></small>
+  </header>
+
+  <div class="abertura">
+    <div>
+      <p class="olho">Mapeamento de conteúdo para quem empreende</p>
+      <h1>O que os Shorts que mais engajam têm em comum?</h1>
+      <p class="sub">Cada característica passa pelo mesmo teste: aparece mais nos vídeos de maior engajamento do que nos outros vídeos <b>do mesmo canal</b>? O que passa vira regra de criativo. O que não passa fica registrado como negado.</p>
+    </div>
+    <div>
+      <div class="faixa"><div><span>Você possui</span><b class="num" id="posse"></b></div><a class="botao" href="#base">Ver base</a></div>
+      <nav class="azulejos" aria-label="Seções" id="azulejos"></nav>
+    </div>
+  </div>
+
+  <section id="base">
+    <p class="olho">Base</p>
+    <h2 id="t-conc"></h2>
+    <p class="sub">Engajamento é (curtidas + comentários) ÷ inscritos, então canal pequeno com um vídeo bom sobe rápido. Olhar só a frequência no topo descreveria o estilo desses canais. Por isso toda comparação daqui para baixo é feita dentro do mesmo perfil.</p>
+    <div class="figuras" id="figuras"></div>
+    <div class="cartao">
+      <h3>Quem ocupa os 10% de maior engajamento</h3>
+      <p class="nota" style="margin:4px 0 14px">Cada bloco é um perfil; a largura é o número de Shorts dele no topo.</p>
+      <div class="pilha" id="pilha" role="img"></div>
+      <div class="legenda" id="leg-conc"></div>
+    </div>
+  </section>
+
+  <section id="explora">
+    <p class="olho">Exploração · metade dos perfis</p>
+    <h2 id="t-exp"></h2>
+    <p class="sub">Diferença entre o topo e o resto do mesmo perfil, em pontos percentuais, com intervalo de 95%. É a única parte dos dados que o agente vê antes de propor hipóteses. A faixa cinza marca menos de <span id="minimo"></span> pontos: pequeno demais para mudar uma decisão de conteúdo.</p>
+    <div class="cartao">
+      <div class="chips" style="margin-bottom:10px">
+        <span><i style="background:var(--neutro)"></i>abaixo do efeito mínimo</span>
+        <span><svg width="34" height="12" style="vertical-align:middle;margin-right:6px"><line x1="2" y1="6" x2="32" y2="6" stroke="var(--tinta3)" stroke-width="2" stroke-linecap="round"/><circle cx="17" cy="6" r="5" fill="var(--verde)" stroke="var(--cartao)" stroke-width="2"/></svg>diferença média e intervalo de 95%</span>
+      </div>
+      <div class="rolagem"><div id="g-exp"></div></div>
+      <p class="nota" id="n-exp" style="margin-top:10px"></p>
+    </div>
+  </section>
+
+  <section id="perfis">
+    <p class="olho">Perfil a perfil</p>
+    <h2 id="t-calor"></h2>
+    <p class="sub">A mesma diferença, aberta por perfil. Verde: a característica aparece mais no topo daquele canal. Laranja: aparece mais no resto. Cinza: tanto faz.</p>
+    <div class="cartao rolagem"><table class="calor" id="calor"></table></div>
+  </section>
+
+  <section id="hipoteses">
+    <p class="olho">Hipóteses · <span id="vagas"></span> vagas</p>
+    <h2 id="t-hip"></h2>
+    <p class="sub">O agente propõe, as hipóteses são travadas e cada uma é testada uma única vez em perfis que ele nunca viu. O resultado sai como comprovante: aprovada, negada ou pendente.</p>
+    <div class="cupons" id="cupons"></div>
+    <div class="cartao regras" id="regras"></div>
+  </section>
+
+  <section id="topo">
+    <p class="olho">Vitrine</p>
+    <h2>Os Shorts de maior engajamento da base</h2>
+    <p class="sub">Um vídeo que estourou é um exemplo, não um padrão. Estes são os posts que o agente usa como referência ao redigir.</p>
+    <div class="vitrine" id="vitrine"></div>
+  </section>
+
+  <section id="criativos">
+    <p class="olho">Criativos</p>
+    <h2 id="t-cri"></h2>
+    <p class="sub">Gancho, roteiro e chamada gerados pelo agente. Cada criativo cita os posts que o inspiraram; se citar um post fora das referências consultadas, é descartado.</p>
+    <div class="criativos" id="lista-cri"></div>
+  </section>
+
+  <section id="desenho">
+    <p class="olho">Por que a página é assim</p>
+    <h2>Cinco decisões de desenho, cada uma com um estudo por trás</h2>
+    <div class="cartao desenho">
+      <div><b>Pontos com intervalo, não barras</b>Em gráficos de barras, valores dentro da barra parecem mais prováveis que os de fora, mesmo à mesma distância da média.<small>Newman &amp; Scholl, 2012 · Correll &amp; Gleicher, 2014</small></div>
+      <div><b>"Aparece mais", nunca "causa"</b>Leitores tiram conclusões causais de dados que só mostram associação, em qualquer tipo de gráfico. O texto precisa segurar isso.<small>Xiong, Shapiro, Hullman &amp; Franconeri, 2019</small></div>
+      <div><b>O título já diz a conclusão</b>Quem conhece os dados acha que o padrão é óbvio para todo mundo. Título com a conclusão e um único destaque de cor melhoram clareza e memória.<small>Xiong, van Weelden &amp; Franconeri, 2019 · Ajani et al., 2021</small></div>
+      <div><b>O primeiro número é o viés da base</b>O primeiro valor que a pessoa vê ancora a leitura do resto. A página abre com a concentração do topo, não com a frequência mais alta.<small>Tversky &amp; Kahneman, 1974 · Cho et al., 2017</small></div>
+      <div><b>Gráfico só onde há dado</b>Gráficos convencem mais que tabelas quando o leitor não tem opinião formada, então nenhum está aqui como enfeite. A faixa de efeito mínimo aparece em todo gráfico de diferença.<small>Pandey et al., 2014 · Dimara et al., 2020</small></div>
+    </div>
+  </section>
+
+  <footer>São associações observadas, não causas. Base de YouTube Shorts coletada pela API oficial; o Instagram, fonte principal do desafio, não entrou. Página gerada por <code>scripts/gerar_pagina.py</code> a partir do banco do projeto.</footer>
+</div>
+<div class="dica" id="dica" hidden></div>
+
+<script>
+const D = __DADOS__;
+const $ = (id) => document.getElementById(id);
+const e = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const n = (v) => Number(v).toLocaleString('pt-BR');
+const pct = (v, d = 0) => (v * 100).toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d }) + '%';
+const pts = (v) => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v * 100).toLocaleString('pt-BR', { maximumFractionDigits: 0 });
+
+const CAMPOS = { tem_rosto: 'Tem rosto', criador_e_empreendedor_real: 'Criador é empreendedor', prova_social: 'Prova social', texto_na_tela: 'Texto na tela', usa_linguagem_regional: 'Linguagem regional', tem_cta: 'Tem chamada para ação', oferta_ou_beneficio_explicito: 'Oferta explícita', numero_no_gancho: 'Número no gancho', passo_concreto: 'Passo concreto', exemplo_com_numeros: 'Exemplo com números', cita_erro_ou_perda: 'Cita erro ou perda', cita_regra_ou_lei: 'Cita regra ou lei', fala_direto_com_dono: 'Fala direto com o dono', mostra_ambiente_real: 'Mostra ambiente real', promove_produto_proprio: 'Promove produto próprio', formato_video: 'Formato', tipo_hook: 'Gancho', tema_principal: 'Tema', tom: 'Tom', tipo_cta: 'Chamada', duracao_faixa: 'Duração' };
+const VALORES = { talking_head: 'fala para a câmera', lista_dicas: 'lista de dicas', antes_depois: 'antes e depois', humor_esquete: 'humor', ferramentas_maquininha: 'maquininha e ferramentas', historia_de_empreendedor: 'história de empreendedor', ate_30s: 'até 30 s', '31_60s': '31 a 60 s', acima_60s: 'mais de 60 s', link_na_bio: 'link na bio', gestao: 'gestão', financas: 'finanças', motivacao: 'motivação', polemica: 'polêmica', numero: 'número', tecnico: 'técnico', humoristico: 'humorístico' };
+const nome = (a) => { const [c, v] = a.split('='); const base = CAMPOS[c] || c.replaceAll('_', ' '); return v ? `${base}: ${VALORES[v] || v.replaceAll('_', ' ')}` : base; };
+const AVALIADOR = { quadros: 'lido nos quadros do vídeo', fala: 'lido com o som do vídeo', metadados: 'metadado do YouTube' };
+
+// ---- abertura
+$('gerado').textContent = D.gerado_em;
+$('posse').textContent = `${n(D.base.com_metricas)} Shorts de ${D.base.canais} canais`;
+const ICONES = {
+  base: '<path d="M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3z"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>',
+  explora: '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
+  perfis: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  hipoteses: '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/>',
+  topo: '<path d="m12 3 2.7 5.6 6.1.8-4.5 4.3 1.1 6.1L12 17l-5.4 2.8 1.1-6.1L3.2 9.4l6.1-.8z"/>',
+  criativos: '<path d="M21 3 10 14M21 3l-7 18-4-7-7-4z"/>',
+};
+const AZULEJOS = [['base', 'Base'], ['explora', 'Top × resto'], ['perfis', 'Perfil a perfil'], ['hipoteses', 'Hipóteses'], ['topo', 'Vitrine'], ['criativos', 'Criativos']];
+$('azulejos').innerHTML = AZULEJOS.map(([id, rot]) => `<a class="azulejo" href="#${id}"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONES[id]}</svg>${rot}${id === 'hipoteses' && !D.hipoteses.length ? '<em>Em aberto</em>' : ''}</a>`).join('');
+
+// ---- base
+const C = D.concentracao, top3 = C.slice(0, 3), soma3 = top3.reduce((s, c) => s + c.no_top, 0);
+$('t-conc').textContent = `${top3.length} perfis pequenos ocupam ${pct(soma3 / D.base.top)} do topo`;
+$('figuras').innerHTML = [
+  [n(D.base.com_metricas), 'Shorts com métricas públicas'],
+  [n(D.base.canais), 'canais voltados a pequenos negócios'],
+  [n(D.base.top), 'no topo: os 10% de maior engajamento'],
+  [n(D.base.quadros), 'categorizados pelos quadros do vídeo'],
+  [`${n(D.base.fala)} de ${n(D.base.fila_fala)}`, 'categorizados com som, em andamento'],
+].map(([v, r]) => `<div class="figura"><b class="num">${v}</b><span>${r}</span></div>`).join('');
+$('pilha').innerHTML = C.map((c, i) => `<div class="${i < 3 ? 'dest' : ''}" style="flex:${c.no_top}" data-dica="${e(`<b>${e(c.canal)}</b>${c.no_top} Shorts no topo · ${n(c.inscritos)} inscritos`)}"></div>`).join('');
+$('pilha').setAttribute('aria-label', `${top3.length} perfis somam ${soma3} dos ${D.base.top} Shorts do topo`);
+const corDest = ['var(--verde)', 'color-mix(in oklab, var(--verde) 78%, var(--cartao))', 'color-mix(in oklab, var(--verde) 58%, var(--cartao))'];
+$('leg-conc').innerHTML = top3.map((c, i) => `<div><i style="background:${corDest[i]}"></i><span><b>${e(c.canal)}</b><small class="num">${c.no_top} Shorts no topo (${pct(c.no_top / D.base.top)}) · ${n(c.inscritos)} inscritos</small></span></div>`).join('')
+  + `<div><i></i><span><b>Outros ${C.length - 3} perfis</b><small class="num">${D.base.top - soma3} Shorts no topo (${pct(1 - soma3 / D.base.top)})</small></span></div>`;
+
+// ---- exploração: pontos com intervalo
+const R = D.regras, E = D.exploracao.slice(0, 16), min = R.efeito_minimo;
+$('minimo').textContent = (min * 100).toFixed(0);
+const acima = D.exploracao.filter((t) => Math.abs(t.efeito) >= min).length;
+$('t-exp').textContent = !D.exploracao.length ? 'Ainda não há perfis suficientes para explorar'
+  : acima ? `${acima} ${acima > 1 ? 'características passam' : 'característica passa'} de ${(min * 100).toFixed(0)} pontos na exploração`
+  : `Na exploração, nenhuma característica chega a ${(min * 100).toFixed(0)} pontos de diferença`;
+(function () {
+  if (!E.length) { $('g-exp').innerHTML = '<p class="nota">Sem dados.</p>'; return; }
+  const esq = 250, larg = 440, dir = 40, alt = 30, topo = 26, W = esq + larg + dir, H = topo + E.length * alt + 30;
+  const lim = Math.max(0.2, Math.ceil(Math.max(...E.flatMap((t) => t.ic95.map(Math.abs))) * 20) / 20);
+  const x = (v) => esq + ((v + lim) / (2 * lim)) * larg;
+  let s = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;min-width:620px;height:auto;display:block" role="img" aria-label="Diferença top menos resto por característica">`;
+  s += `<rect x="${x(-min)}" y="${topo - 6}" width="${x(min) - x(-min)}" height="${H - topo - 18}" fill="var(--neutro)" rx="4"/>`;
+  for (let v = -lim; v <= lim + 1e-9; v += 0.1) s += `<text class="eixo" x="${x(v)}" y="12" text-anchor="middle">${pts(v) || '0'}</text><line x1="${x(v)}" x2="${x(v)}" y1="${topo - 6}" y2="${H - 24}" stroke="var(--linha)" stroke-width="${Math.abs(v) < 1e-9 ? 1.5 : 0.6}"/>`;
+  s += `<text class="eixo" x="${esq + larg}" y="${H - 6}" text-anchor="end">mais no topo →</text><text class="eixo" x="${esq}" y="${H - 6}">← mais no resto</text>`;
+  E.forEach((t, i) => {
+    const y = topo + i * alt + alt / 2, forte = Math.abs(t.efeito) >= min;
+    const dica = `<b>${e(nome(t.atributo))}</b>No topo: ${pct(t.prevalencia_top)} · no resto: ${pct(t.prevalencia_resto)}<br>Diferença dentro do perfil: ${pts(t.efeito)} pts (de ${pts(t.ic95[0])} a ${pts(t.ic95[1])})<br>p = ${t.p.toLocaleString('pt-BR', { maximumFractionDigits: 3 })}, sem correção<br>${t.n_perfis} perfis · ${t.ocorrencias} ocorrências · ${AVALIADOR[t.avaliador]}`;
+    s += `<g class="linha-g" data-dica="${e(dica)}"><rect class="fundo-l" x="0" y="${y - alt / 2}" width="${W}" height="${alt}" fill="transparent"/>`
+      + `<text class="rot" x="${esq - 12}" y="${y + 4}" text-anchor="end">${e(nome(t.atributo))}</text>`
+      + `<line x1="${x(t.ic95[0])}" x2="${x(t.ic95[1])}" y1="${y}" y2="${y}" stroke="var(--tinta3)" stroke-width="2" stroke-linecap="round"/>`
+      + `<circle cx="${x(t.efeito)}" cy="${y}" r="6" fill="${forte ? 'var(--verde)' : 'var(--tinta3)'}" stroke="var(--cartao)" stroke-width="2"/></g>`;
+  });
+  $('g-exp').innerHTML = s + '</svg>';
+  $('n-exp').textContent = `${R.perfis_explora} perfis na metade de exploração. As ${E.length} características de maior diferença, entre as ${D.exploracao.length} com pelo menos ${R.min_perfis} perfis e 15 ocorrências. Os p-valores aqui não têm correção: a exploração escolhe o que testar, não conclui nada.`;
+})();
+
+// ---- mapa de calor
+(function () {
+  const A = D.calor.atributos, P = D.calor.perfis;
+  if (!A.length || !P.length) { $('t-calor').textContent = 'Sem perfis suficientes para abrir por canal'; return; }
+  const col0 = P.map((p) => p.valores[0]).filter((v) => v !== null);
+  const sobe = col0.filter((v) => v > 0.05).length, cai = col0.filter((v) => v < -0.05).length;
+  $('t-calor').textContent = `"${nome(A[0])}" sobe em ${sobe} perfis e cai em ${cai}: o padrão muda de canal para canal`;
+  const cor = (v) => { const f = Math.min(1, Math.abs(v) / 0.5); return v === null ? '' : `background:color-mix(in oklab, var(${v >= 0 ? '--verde' : '--quente'}) ${Math.round(f * 78)}%, var(--neutro))`; };
+  $('calor').innerHTML = `<thead><tr><th>Perfil</th>${A.map((a) => `<th>${e(nome(a))}</th>`).join('')}</tr></thead><tbody>`
+    + P.map((p) => `<tr><th title="${e(p.handle)}">${e(p.canal.length > 30 ? p.canal.slice(0, 29) + '…' : p.canal)}</th>${p.valores.map((v, j) => v === null ? '<td class="vazio">·</td>' : `<td style="${cor(v)}" data-dica="${e(`<b>${e(p.canal)}</b>${e(nome(A[j]))}: ${pts(v)} pts no topo em relação ao resto`)}">${pts(v) || '0'}</td>`).join('')}</tr>`).join('') + '</tbody>';
+})();
+
+// ---- hipóteses como comprovantes
+(function () {
+  const H = D.hipoteses, STATUS = { sustentada: ['ok', 'APROVADA'], nao_sustentada: ['nao', 'NEGADA'], evidencia_insuficiente: ['pend', 'PENDENTE'] };
+  $('vagas').textContent = R.vagas;
+  const fechadas = H.filter((h) => h.veredito), ok = H.filter((h) => h.veredito === 'sustentada').length;
+  $('t-hip').textContent = !H.length ? `As ${R.vagas} vagas estão abertas: nenhuma hipótese foi registrada ainda`
+    : !fechadas.length ? `${H.length} hipóteses travadas, aguardando o teste de confirmação`
+    : `${ok} de ${fechadas.length} hipóteses ${ok === 1 ? 'foi aprovada' : 'foram aprovadas'} no teste de confirmação`;
+  const linha = (r, v) => `<dt>${r}</dt><dd>${v}</dd>`;
+  const bloco = (rot, t) => t ? `<hr><div>${rot}</div><dl>${linha('diferença', pts(t.efeito) + ' pts')}${linha('intervalo 95%', pts(t.ic95[0]) + ' a ' + pts(t.ic95[1]))}${linha('p', t.p.toLocaleString('pt-BR', { maximumFractionDigits: 4 }))}${linha('perfis', t.n_perfis)}</dl>` : '';
+  const cupons = H.map((h) => {
+    const [cls, rot] = STATUS[h.veredito] || ['pend', 'AGUARDANDO TESTE'];
+    return `<div class="cupom-caixa"><div class="cupom"><div class="cab">HIPÓTESE ${e(h.id)}</div><hr><p class="frase">${e(h.afirmacao)}</p><div>${e(nome(h.atributo))} · ${h.direcao} no topo</div>`
+      + bloco('EXPLORAÇÃO', h.exploracao) + bloco('CONFIRMAÇÃO', h.confirmacao)
+      + `<div class="carimbo ${cls}">${rot}</div>${h.aprovada_por_humano ? '<div style="text-align:center;margin-top:8px">VIA DO PLAYBOOK · aprovada por humano</div>' : ''}</div></div>`;
+  });
+  for (let i = H.length; i < R.vagas; i++) cupons.push(`<div class="cupom-caixa vazia"><div class="cupom vaga"><div class="cab">VAGA ${i + 1}</div><hr><p>Aguardando proposta do agente.</p><p style="margin-top:8px">Depois de registrada, não pode ser trocada.</p></div></div>`);
+  $('cupons').innerHTML = cupons.join('');
+  $('regras').innerHTML = [
+    ['Metade para explorar, metade para confirmar', `${R.perfis_explora} perfis que o agente vê e ${R.perfis_confirma} reservados para o teste.`],
+    ['Teste único', 'Cada hipótese é confirmada uma vez e fica registrada, inclusive se cair.'],
+    ['Corte de ' + R.alfa.toLocaleString('pt-BR'), `Permutação com ${n(R.permutacoes)} sorteios dentro de cada perfil, corrigida pelas ${R.vagas} vagas.`],
+    ['Efeito mínimo de ' + (min * 100).toFixed(0) + ' pontos', 'Abaixo disso a hipótese é negada, mesmo que a diferença exista.'],
+    ['Só gente aprova', 'Hipótese aprovada no teste só vai ao playbook depois de um humano liberar.'],
+    ...(Number.isFinite(R.falsos_positivos) ? [['Auditoria do próprio motor', `Com os rótulos sorteados, sem nada real para achar, o motor acusou ${pct(R.falsos_positivos, 1)} de falsos achados. O limite é ${pct(R.alfa)}.`]] : []),
+  ].map(([t, d]) => `<div><b>${t}</b>${d}</div>`).join('');
+})();
+
+// ---- vitrine
+$('vitrine').innerHTML = D.vitrine.map((v) => `<a class="short" href="https://www.youtube.com/shorts/${e(v.id)}" target="_blank" rel="noopener"><div class="capa" style="background-image:url('${e(v.capa)}')"><b>#${v.posicao}</b></div><div class="txt"><strong class="num">${pct(v.engajamento, 1)}</strong><span class="t">${e(v.titulo)}</span><small>${e(v.canal)} · ${n(v.inscritos)} inscritos</small></div></a>`).join('');
+
+// ---- criativos
+(function () {
+  const L = D.criativos;
+  $('t-cri').textContent = L.length ? 'Do padrão ao roteiro, com os posts de origem à vista' : 'Nenhum criativo gerado nesta base ainda';
+  $('lista-cri').innerHTML = L.length ? L.map((c) => `<div class="cartao criativo"><div><span class="etiqueta ${c.sinal === 'ok' ? 'ok' : ''}">${c.sinal === 'ok' ? 'base suficiente' : 'poucos posts no recorte'}</span></div><small style="color:var(--tinta3)">Pedido: ${e(c.pedido)}</small><div class="g">${e(c.gancho)}</div><p>${e(c.roteiro)}</p><p class="cta">${e(c.chamada_para_acao)}</p><div class="refs">${c.refs.map((r) => `<a href="https://www.youtube.com/shorts/${e(r.id)}" target="_blank" rel="noopener">${e(r.canal)}: ${e(r.titulo.slice(0, 60))}</a>`).join('')}</div></div>`).join('')
+    : '<div class="cartao"><p class="sub">Rode <code>uv run python scripts/demo.py</code> e gere a página de novo: os criativos aparecem aqui com os posts de referência.</p></div>';
+})();
+
+// ---- dica flutuante
+const dica = $('dica');
+document.addEventListener('mousemove', (ev) => {
+  const alvo = ev.target.closest('[data-dica]');
+  if (!alvo) { dica.hidden = true; return; }
+  dica.innerHTML = alvo.dataset.dica; dica.hidden = false;
+  const r = dica.getBoundingClientRect();
+  dica.style.left = Math.min(innerWidth - r.width - 8, ev.clientX + 14) + 'px';
+  dica.style.top = (ev.clientY + r.height + 24 > innerHeight ? ev.clientY - r.height - 12 : ev.clientY + 16) + 'px';
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Playbook</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--noite:#1D2422;--noite2:#2A3330;--nevoa:#B7C4BD;--lima:#B9F24B;--verde:#00D568;--txt:#15201A;--mudo:#53615A;--pedra:#EEF1EF;--tit:"Bricolage Grotesque","Arial Narrow",sans-serif;--corpo:Figtree,system-ui,sans-serif}
+*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;background:#fff;color:var(--txt);font:16px/1.5 var(--corpo);overflow-x:hidden}
+button{font:inherit;color:inherit;cursor:pointer}h1,h2,h3,p,ul{margin:0}ul{padding:0;list-style:none}:focus-visible{outline:3px solid var(--verde);outline-offset:3px}
+.c{max-width:1240px;margin:0 auto;padding:0 clamp(18px,3.4vw,40px)}.cond{font-family:var(--tit);font-weight:800;font-stretch:75%;text-transform:uppercase;line-height:.96}
+.abre{background:var(--noite);color:#fff;padding:18px 0 44px}
+.nav{display:flex;gap:6px}.nav a{min-height:44px;display:inline-flex;align-items:center;padding:0 18px;border-radius:999px;color:#fff;text-decoration:none;font-weight:700}.nav a[aria-current]{background:rgb(255 255 255/.14)}.nav a:hover{background:rgb(255 255 255/.22)}
+.cab{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin:34px 0 26px}.cab h1{font-size:clamp(46px,6.6vw,92px);max-width:9em}.cab h1 em{font-style:normal;color:var(--lima)}
+.esc{display:flex;background:var(--noite2);border-radius:999px;padding:4px}.esc button{min-height:48px;padding:0 22px;border:0;border-radius:999px;background:none;font-weight:700;color:var(--nevoa)}.esc button[aria-pressed=true]{background:var(--lima);color:var(--txt)}
+.claro{background:var(--pedra)}.claro button{color:var(--mudo);min-height:44px}.claro button[aria-pressed=true]{background:var(--noite);color:#fff}
+.firmes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:16px}
+.firme{border-radius:26px;overflow:hidden;position:relative;min-height:300px;display:grid;grid-template-columns:minmax(0,1fr) 46%;color:var(--txt);background:var(--lima)}.firme:nth-child(2){background:var(--verde)}.firme:nth-child(3){background:#fff}
+.firme>div{padding:24px 0 24px 24px;display:flex;flex-direction:column;justify-content:space-between;gap:18px;z-index:1}.firme h3{font:800 27px/1.02 var(--tit);font-stretch:82%}
+.firme video{position:absolute;right:-1%;bottom:-13%;height:112%;pointer-events:none;-webkit-mask:linear-gradient(90deg,transparent,#000 14%,#000 92%,transparent);mask:linear-gradient(90deg,transparent,#000 14%,#000 92%,transparent)}.g{font-size:84px;line-height:.8}
+.bar{height:10px;border-radius:5px;background:rgb(0 0 0/.14);position:relative;max-width:150px;margin:14px 0 8px}.bar i{position:absolute;inset:0 auto 0 0;background:var(--txt);border-radius:5px}.bar u{position:absolute;top:-4px;bottom:-4px;width:3px;background:#fff;box-shadow:0 0 0 1px var(--txt)}.firme small{font-size:15px;font-weight:600}
+.sec{padding-top:56px}.sec h2{font-size:clamp(30px,3.4vw,44px)}.sub{color:var(--mudo);margin:8px 0 20px;max-width:56ch}.linha{display:flex;justify-content:space-between;align-items:end;gap:18px;flex-wrap:wrap;margin-bottom:18px}
+.chec{display:grid;grid-template-columns:minmax(230px,.8fr) 2fr;gap:18px}.susto{background:var(--noite);color:#fff;border-radius:26px;padding:26px;display:flex;flex-direction:column;justify-content:space-between;gap:20px}.susto .g{font-size:104px;color:var(--lima)}
+.caiu{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}.caiu li{background:var(--pedra);border-radius:20px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;gap:14px}.caiu b{line-height:1.2}.caiu span{display:block;font-size:15px;color:var(--mudo)}.caiu strong{font:800 30px/1 var(--tit);font-stretch:80%}
+.barras{display:grid;gap:8px}.b{display:grid;grid-template-columns:40px minmax(120px,190px) minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:center;padding:6px 0}.b img{width:40px;aspect-ratio:9/13;object-fit:cover;border-radius:8px}.b>b::first-letter{text-transform:uppercase}.b>b{line-height:1.15}.b>b small{display:block;font-weight:500;color:var(--mudo);font-size:14px}
+.t{display:flex;align-items:center;gap:10px;font-weight:700}.t i{height:22px;border-radius:6px;background:var(--verde);min-width:3px}.t.p i{background:var(--lima);box-shadow:inset 0 0 0 1.5px #86B325}.t em{font-style:normal;color:var(--mudo);font-weight:500;font-size:14px;white-space:nowrap}
+.leg{display:grid;grid-template-columns:40px minmax(120px,190px) minmax(0,1fr) minmax(0,1fr);gap:16px;font-weight:700;color:var(--mudo);font-size:15px;margin-bottom:4px}
+.prat{display:grid;grid-auto-flow:column;grid-auto-columns:clamp(150px,17vw,200px);gap:16px;overflow-x:auto;padding:4px 2px 18px;scrollbar-width:thin}
+.cp{display:block;aspect-ratio:9/16;border-radius:20px;overflow:hidden;position:relative;background:var(--noite);color:#fff;text-decoration:none}.cp img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}.cp:hover img{transform:scale(1.06)}.cp::after{content:"";position:absolute;inset:40% 0 0;background:linear-gradient(transparent,rgb(8 14 11/.94))}.cp div{position:absolute;left:14px;right:14px;bottom:14px;z-index:1}.cp b{font:700 17px/1.14 var(--tit);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.cp small{display:block;margin-top:6px;font-size:14px;color:#D6E0DA}.cp em{position:absolute;left:12px;top:12px;z-index:1;background:var(--lima);color:var(--txt);border-radius:999px;padding:8px 12px;font:700 13px/1 var(--corpo)}.cp em.n{background:#fff}
+.fim{background:var(--lima);margin-top:60px;padding:40px 0}.fim .c{display:flex;gap:14px 24px;align-items:center;flex-wrap:wrap;justify-content:space-between}.fim h2{font-size:clamp(30px,3.6vw,46px)}.bt{min-height:52px;padding:0 28px;border-radius:999px;background:var(--noite);color:#fff;font-weight:700;display:inline-flex;align-items:center;text-decoration:none}.bt.v{background:rgb(0 0 0/.1);color:var(--txt)}
+details{border-top:2px solid var(--pedra)}summary{min-height:56px;display:flex;align-items:center;font-weight:700;cursor:pointer}details div{padding-bottom:20px;max-width:68ch}details li{padding:5px 0}
+@media (max-width:760px){.chec{grid-template-columns:minmax(0,1fr)}.b,.leg{grid-template-columns:34px minmax(0,1fr) minmax(0,1fr);gap:6px 12px}.b>b{grid-column:2/4}.b .t:nth-of-type(1){grid-column:2}.b img{grid-row:1/3}.leg span:nth-child(-n+2){display:none}.leg{grid-template-columns:34px 1fr 1fr}.leg span:nth-child(3){grid-column:2}.t em{display:none}.esc button{padding:0 14px}}
+</style>
+</head>
+<body>
+<header class="abre"><div class="c"><nav class="nav"><a href="/">Criar</a><a href="/playbook" aria-current="page">Playbook</a></nav>
+<div class="cab"><h1 class="cond" id="tit">Quem recebe <em>contato</em></h1><div class="esc" role="group" aria-label="Objetivo"><button type="button" data-obj="contato" aria-pressed="true">Receber contato</button><button type="button" data-obj="engajamento" aria-pressed="false">Ter curtida</button></div></div>
+<div class="firmes" id="firmes" aria-live="polite"></div></div></header>
+<main>
+<section class="sec c"><h2 class="cond">Não passou na checagem</h2><p class="sub" id="subc"></p><div class="chec"><div class="susto"><span class="g cond" id="pf"></span><b>do topo não fala de negócio: é corte de cabelo, pizza, festa</b></div><ul class="caiu" id="caiu"></ul></div></section>
+<section class="sec c"><div class="linha"><h2 class="cond">Onde aparece</h2><div class="esc claro" role="group" aria-label="Recorte"><button type="button" data-rec="tema_principal" aria-pressed="true">Tema</button><button type="button" data-rec="formato_video" aria-pressed="false">Formato</button><button type="button" data-rec="segmento" aria-pressed="false">Segmento</button></div></div><div class="leg" aria-hidden="true"><span></span><span></span><span>Entra no topo</span><span>Recebe pedido</span></div><div class="barras" id="barras"></div></section>
+<section class="sec c"><h2 class="cond">Mais pedidos de contato</h2><p class="sub">Vídeos reais, um por canal. Toque para assistir.</p><div class="prat" id="ex"></div></section>
+<section class="sec c"><h2 class="cond">Quem mais aparece no topo</h2><p class="sub">Três canais ocupam metade das vagas. Por isso cada canal pesa igual nos números acima.</p><div class="prat" id="perfis"></div></section>
+<section class="sec c"><details><summary>De onde vêm os números</summary><div id="fonte"></div></details><details><summary>O que isto não mostra</summary><div><ul><li>São associações em YouTube Shorts. Não mostram causa nem garantem resultado.</li><li>O Instagram, canal principal da Stone, não está na base.</li><li>A leitura dos vídeos foi conferida por outra IA, não por uma pessoa.</li><li>Pedido de contato é comentário, não venda. Ele é raro e concentrado.</li></ul></div></details></section>
+</main>
+<footer class="fim"><div class="c"><h2 class="cond">Agora vira vídeo</h2><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="bt" href="/">Criar vídeo</a><a class="bt v" href="/playbook.md">Baixar o playbook</a></div></div></footer>
+<script>
+const $ = (id) => document.getElementById(id), e = (t) => String(t ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pct = (x) => Math.round(x * 100) + "%", p1 = (x) => (x * 100).toFixed(1).replace(".", ",") + "%", mil = (n) => n.toLocaleString("pt-BR"), capa = (id) => "https://i.ytimg.com/vi/" + encodeURIComponent(id) + "/hqdefault.jpg";
+const NOME = {oferta_ou_beneficio_explicito:"Diz o que a pessoa ganha", tem_cta:"Pede uma ação no fim", "formato_video=talking_head":"Mostra mais que o rosto", mostra_ambiente_real:"Grava num negócio de verdade"};
+const BON = {oferta_ou_beneficio_explicito:"dinheiro", tem_cta:"comentario", "formato_video=talking_head":"caderno", mostra_ambiente_real:"loja"};
+const PARADO = matchMedia("(prefers-reduced-motion:reduce)").matches;
+let D, obj = "contato", rec = "tema_principal";
+function firmes() {
+  const o = D.objetivos[obj];
+  $("tit").innerHTML = obj === "contato" ? "Quem recebe <em>contato</em>" : "Quem ganha <em>curtida</em>";
+  $("firmes").innerHTML = o.firmes.map((p) => '<article class="firme"><div><h3>' + e(NOME[p.atributo] || p.conselho) + '</h3><div><span class="g cond">' + pct(p.no_grupo) + '</span><div class="bar"><i style="width:' + pct(p.no_grupo) + '"></i><u style="left:' + pct(p.nos_outros) + '"></u></div><small>nos outros, ' + pct(p.nos_outros) + '</small></div></div><video src="/static/boneco-' + (BON[p.atributo] || "rosto") + '.webm" muted loop playsinline ' + (PARADO ? "" : "autoplay ") + 'aria-hidden="true"></video></article>').join("");
+  $("subc").textContent = "Parecia padrão para " + (obj === "contato" ? "contato" : "curtida") + ". Perdeu força quando tiramos esses vídeos.";
+  $("caiu").innerHTML = o.caiu.map((x) => "<li><b>" + e(x.nome) + '</b><div><span>antes ' + pct(x.antes[0]) + " contra " + pct(x.antes[1]) + "</span><strong>" + pct(x.depois[0]) + " × " + pct(x.depois[1]) + "</strong></div></li>").join("");
+}
+function barras() {
+  const l = D.recortes[rec], mt = Math.max(...l.map((x) => x.topo)), mp = Math.max(...l.map((x) => x.pedido), .001);
+  $("barras").innerHTML = l.map((x) => '<div class="b"><img alt="" loading="lazy" src="' + capa(x.capa) + '"><b>' + e(x.nome) + "<small>" + mil(x.posts) + ' vídeos</small></b><span class="t"><i style="width:' + 58 * x.topo / mt + '%"></i>' + p1(x.topo) + (x.maior_canal >= .5 ? "<em>" + pct(x.maior_canal) + " de um canal</em>" : "") + '</span><span class="t p"><i style="width:' + 58 * x.pedido / mp + '%"></i>' + p1(x.pedido) + "<em>" + x.pedidos + (x.pedidos === 1 ? " vídeo" : " vídeos") + "</em></span></div>").join("");
+}
+const cartao = (id, titulo, sub, et, n) => '<a class="cp" target="_blank" rel="noopener" href="https://www.youtube.com/shorts/' + encodeURIComponent(id) + '"><img alt="" loading="lazy" src="' + capa(id) + '"><em class="' + (n ? "n" : "") + '">' + e(et) + "</em><div><b>" + e(titulo) + "</b><small>" + e(sub) + "</small></div></a>";
+document.addEventListener("click", (ev) => {
+  const a = ev.target.closest("[data-obj]"), r = ev.target.closest("[data-rec]");
+  if (a) { obj = a.dataset.obj; document.querySelectorAll("[data-obj]").forEach((b) => b.setAttribute("aria-pressed", b === a)); firmes(); }
+  if (r) { rec = r.dataset.rec; document.querySelectorAll("[data-rec]").forEach((b) => b.setAttribute("aria-pressed", b === r)); barras(); }
+});
+(async () => {
+  try {
+    const r = await fetch("/api/playbook"); D = await r.json(); if (!r.ok) throw new Error(D.erro);
+    $("pf").textContent = pct(D.topo_fora_do_publico); firmes(); barras();
+    $("ex").innerHTML = D.exemplos.map((x) => cartao(x.id, x.titulo, x.canal, x.pedidos + (x.pedidos === 1 ? " pedido" : " pedidos"))).join("");
+    $("perfis").innerHTML = D.perfis.map((x) => cartao(x.capa, x.canal, x.tema + " · " + x.formato.toLowerCase(), x.no_topo + " no topo", x.fora)).join("");
+    $("fonte").innerHTML = "<p>" + mil(D.posts) + " Shorts de " + D.canais + " canais e " + mil(D.comentarios) + " comentários, pela API oficial do YouTube. Topo: os " + D.topo + " posts com mais (curtidas + comentários) ÷ seguidores. Contato: " + D.com_pedido + " posts com " + D.pedidos + " comentários pedindo preço, link ou contato; são " + p1(D.no_topo) + " dos posts do topo e " + p1(D.fora_do_topo) + " dos demais.</p><p style='margin-top:10px'>Um padrão só aparece no alto se a diferença passa de 8 pontos, sobram 5 com peso igual por canal e isso se repete sem os vídeos fora de tema de negócio. A marca na barra são os outros vídeos; no contato, em características de fala, os outros são posts do topo sem pedido.</p>";
+  } catch (x) { $("firmes").innerHTML = "<p>Não deu para abrir o playbook: " + e(x.message) + "</p>"; }
+})();
+</script>
+</body>
+</html>

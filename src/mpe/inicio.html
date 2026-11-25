@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Extrato de conteúdo</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--fundo:#fff;--suave:#F1F3F2;--suave2:#E2E7E4;--linha:#D5DBD7;--txt:#1D2422;--mudo:#4C5A54;--verde:#00A868;--verde-txt:#007A4D;--sobre:#04130C;--laranja:#E0892B;--escuro:#1D2422;--escuro2:#33403A;--claro:#F2F5F3;--claro-mudo:#B9C6BE;--lima:#B9F24B;
+--tit:"Bricolage Grotesque","Arial Narrow",sans-serif;--corpo:Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;--recibo:"IBM Plex Sans Condensed","Arial Narrow",sans-serif;--topo:120px}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--suave);color:var(--txt);font:15px/1.5 var(--corpo)}
+h1,h2{font-family:var(--tit);font-weight:700;line-height:1.15;letter-spacing:-.01em;margin:0}
+h1{font-size:24px}h2{font-size:18px}p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--verde);outline-offset:2px}
+.mudo{color:var(--mudo)}
+.sobre{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mudo)}
+.app{min-height:100vh;display:flex;flex-direction:column}
+main{flex:1;min-width:0}
+/* cabeçalho único: marca, seções e, na tela de dúvida, a pergunta */
+.topo{background:var(--escuro);color:var(--claro);padding:0 32px}
+.topo .dentro,.tela>*{max-width:1180px;margin-inline:auto}
+.topo nav{display:flex;align-items:stretch;gap:32px;min-height:60px}
+.marca{font:700 19px/1 var(--tit);letter-spacing:-.02em;display:flex;align-items:center;margin-right:auto}
+#menu{display:flex;gap:4px}
+#menu button{min-height:60px;padding:0 14px;border:0;background:none;color:var(--claro-mudo);font-weight:600;border-bottom:4px solid transparent;border-top:4px solid transparent}
+#menu button:hover{color:var(--claro)}
+#menu button.on{color:var(--claro);border-bottom-color:var(--lima)}
+#menu i{font-style:normal;color:var(--lima)}
+:is(.topo) :focus-visible{outline-color:var(--lima)}
+.abre{padding:14px 0 22px}
+.abre h1{font:800 clamp(28px,3.4vw,44px)/1 var(--tit);font-stretch:75%;text-transform:uppercase;letter-spacing:0}
+.abre em{font-style:normal;color:var(--lima)}
+.abre p{margin-top:14px;color:var(--claro-mudo)}
+.tela{display:none;padding:28px 32px 56px}
+.tela.ativa{display:block}
+.pilha{display:flex;flex-direction:column;gap:16px}
+.cab{display:flex;flex-direction:column;gap:6px}
+.linha{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pilula{min-height:48px;padding:0 20px;border-radius:24px;border:1px solid var(--linha);background:var(--fundo);display:inline-flex;align-items:center;justify-content:center}
+.pilula[aria-pressed=true]{background:var(--escuro);color:var(--claro);border-color:var(--escuro);font-weight:600}
+.primario{min-height:48px;padding:0 24px;border-radius:24px;border:0;background:var(--lima);color:var(--sobre);font-weight:700}
+.primario:disabled{opacity:.6;cursor:wait}
+
+/* dúvida */
+.palco{display:grid;grid-template-columns:minmax(200px,1fr) auto minmax(200px,1fr);gap:clamp(16px,2.6vw,48px);align-items:start}
+.fixo{position:sticky;top:24px}
+.chips{display:flex;gap:4px;border-bottom:1px solid var(--linha);margin-bottom:6px}
+.chips button{flex:1 1 auto;min-height:44px;padding:0 6px;border:0;background:none;color:var(--mudo);font-size:14px;border-bottom:3px solid transparent}
+.chips button[aria-pressed=true]{color:var(--txt);font-weight:700;border-bottom-color:var(--txt)}
+.faixa{width:100%;display:flex;gap:10px;align-items:center;justify-content:space-between;min-height:44px;padding:5px 12px;border:0;border-radius:10px;background:none;text-align:left;line-height:1.25}
+.faixa:hover{background:var(--suave2)}
+.faixa[aria-pressed=true]{background:var(--escuro);color:var(--claro);font-weight:600}
+.faixa svg{flex:none;width:16px;height:16px;color:var(--verde-txt)}
+.faixa[aria-pressed=true] svg{color:var(--lima)}
+.conta{padding:10px 12px 0;font-size:13px;color:var(--mudo)}
+
+/* maquininha: render 3D da Stone, inclinado. O texto acompanha a inclinação com skew plano: a
+   transformação em perspectiva embaralhava as letras em alguns navegadores. */
+.maq{position:relative;container-type:inline-size;height:clamp(490px,calc(100vh - 206px),640px);aspect-ratio:670/1000;margin:0 auto}
+.maq.fixo{position:sticky}
+.maq::before{content:"";position:absolute;left:22%;right:-2%;bottom:-1.5%;height:9%;border-radius:50%;background:radial-gradient(closest-side,rgb(6 40 20/.5),rgb(6 40 20/.16) 60%,transparent);filter:blur(9px)}
+.maq img,.maq svg{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;user-select:none}
+.maq img{filter:drop-shadow(-14px 22px 22px rgb(6 40 20/.28))}
+.visor{position:absolute;left:29.2cqw;top:15cqw;width:45cqw;height:111.5cqw;transform:skewX(6.4deg);transform-origin:0 0;display:flex;flex-direction:column;gap:8px;color:var(--claro)}
+.visor .rot{font:700 12px/1.3 var(--recibo);letter-spacing:.06em;color:#3DDC97}
+.visor .frase{font:700 clamp(17px,5.6cqw,23px)/1.15 var(--tit)}
+.visor .perg{font-size:14px;line-height:1.35;color:var(--claro-mudo)}
+.visor .teclas{margin-top:auto;display:flex;flex-direction:column;gap:8px}
+.visor .teclas button{min-height:48px;padding:4px 10px;border-radius:14px;border:0;font-size:15px;line-height:1.15;font-weight:700;background:var(--suave2);color:var(--escuro)}
+.visor .seguir{min-height:48px;border:0;border-radius:14px;background:var(--lima);color:var(--sobre);font-weight:700;font-size:15px;margin-top:10px}
+.visor .teclas button:hover{background:#fff}
+.visor .res{margin-top:auto;display:flex;flex-direction:column;gap:4px;font-size:13px;line-height:1.3}
+.visor .num{font:800 22cqw/1 var(--tit);font-stretch:75%;color:var(--lima)}
+.selo{font:700 13px/1.2 var(--recibo);letter-spacing:.03em;padding:5px 9px;border-radius:6px;background:var(--suave2);color:var(--txt);align-self:flex-start;white-space:nowrap}
+.selo.mais{background:var(--verde);color:var(--sobre)}
+.selo.menos{background:var(--laranja);color:var(--sobre)}
+.selo.indefinido{background:#fff;color:var(--txt);box-shadow:inset 0 0 0 2px var(--mudo)}
+
+/* comprovante */
+.lado{display:flex;flex-direction:column;gap:16px;align-items:stretch}
+.cupom{background:#fff;color:#1b1b1b;font:500 13px/1.45 var(--recibo);text-transform:uppercase;letter-spacing:.02em;padding:20px 18px 28px;scroll-margin:24px;
+-webkit-mask:linear-gradient(#000,#000) top/100% calc(100% - 6px) no-repeat,linear-gradient(135deg,#000 50%,transparent 50%) bottom left/10px 6px repeat-x,linear-gradient(225deg,#000 50%,transparent 50%) bottom left/10px 6px repeat-x;
+mask:linear-gradient(#000,#000) top/100% calc(100% - 6px) no-repeat,linear-gradient(135deg,#000 50%,transparent 50%) bottom left/10px 6px repeat-x,linear-gradient(225deg,#000 50%,transparent 50%) bottom left/10px 6px repeat-x}
+.cupom .logo{font:800 22px/1 var(--tit);text-transform:lowercase;letter-spacing:-.03em;text-align:center}
+.cupom .via{text-align:center;font-size:11px;margin:3px 0 8px}
+.cupom hr{border:0;border-top:1px solid #1b1b1b;margin:10px 0}
+.cupom .par{display:flex;justify-content:space-between;gap:10px}
+.cupom .par>:last-child{text-align:right;flex:none}
+.cupom .tot{font-weight:700;font-size:14px}
+.cupom .perg{font-weight:700;font-size:15px;line-height:1.3}
+.cupom .nota{text-transform:none;letter-spacing:0;font-size:12px;color:#444}
+.cupom .pe{text-align:center;font-size:11px;text-transform:none;letter-spacing:0;margin-top:10px}
+.cupom a{color:inherit}
+.pontos{display:inline-flex;gap:3px;margin:2px 0 6px}
+.pontos i{width:9px;height:9px;border-radius:50%;border:1.5px solid #1b1b1b}
+.pontos i.c{background:#1b1b1b}
+.item{margin:0 0 10px}
+.item .nota{display:block}
+.toco{background:#fff;font:500 13px/1.45 var(--recibo);text-transform:uppercase;letter-spacing:.02em;text-align:center;padding:20px 18px 26px;color:#444}
+.toco .logo{font:800 22px/1 var(--tit);text-transform:lowercase;letter-spacing:-.03em;color:#1b1b1b;margin-bottom:8px}
+.sair{animation:sair .55s cubic-bezier(.2,.8,.2,1)}
+@keyframes sair{from{clip-path:inset(0 0 100% 0);transform:translateY(-14px)}to{clip-path:inset(0);transform:none}}
+.vazio{border:2px dashed var(--linha);border-radius:16px;color:var(--mudo);text-align:center;padding:32px 20px}
+details{background:var(--fundo);border-radius:16px;padding:0 16px}
+summary{cursor:pointer;min-height:48px;display:flex;align-items:center;font-weight:600}
+details dl{margin:0 0 16px;font-size:14px}dt{font-weight:600}dd{margin:0 0 10px;color:var(--mudo)}
+
+.vids{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:16px}
+.vid{display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:16px;background:var(--fundo);color:inherit;text-decoration:none}
+.vid:hover b{text-decoration:underline}
+.vid img{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:10px;background:var(--suave2)}
+.vid b{font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.vid small{color:var(--mudo);font-size:13px}
+.duas{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:32px;align-items:start;max-width:1180px}
+textarea{font:inherit;color:inherit;background:var(--fundo);border:1px solid var(--linha);border-radius:16px;width:100%;min-height:180px;padding:16px;resize:vertical}
+.reg{background:var(--fundo);border-radius:20px;overflow:hidden}
+.reg button{width:100%;min-height:64px;padding:10px 20px;border:0;border-bottom:1px solid var(--suave2);background:none;text-align:left;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 16px;align-items:center}
+.reg button:last-child{border-bottom:0}
+.reg button:hover{background:var(--suave)}
+.reg small{display:block;color:var(--mudo);font-size:13px}
+.reg .linha{justify-content:flex-end}
+.aviso{background:#FDF1DC;border-radius:12px;padding:12px 16px}
+
+@media (max-width:860px){
+ .topo{padding:0 16px}.topo nav{gap:0}.marca{display:none}
+ #menu{flex:1}#menu button{flex:1;padding:0 4px;font-size:14px;min-height:52px}
+ .abre{padding:10px 0 14px}.abre h1{font-size:25px}.abre p{display:none}
+ .tela{padding:20px 16px 40px}
+ .palco,.duas{grid-template-columns:minmax(0,1fr)}
+ .fixo{position:static}.maq.fixo{position:relative;top:0}.lista{order:3}
+ .maq{height:auto;width:min(100%,350px)}
+ .reg button{grid-template-columns:minmax(0,1fr)}.reg .linha{justify-content:flex-start}
+}
+@media (prefers-reduced-motion:reduce){.sair{animation:none}}
+
+/* componentes portados do Magic UI (MIT): marquee, ripple-button, interactive-hover-button,
+   number-ticker, highlighter (rough-notation) e hero-video-dialog */
+.mural{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;height:clamp(240px,calc(100vh - 420px),430px);overflow:hidden;border-radius:16px;
+-webkit-mask:linear-gradient(transparent,#000 9%,#000 91%,transparent);mask:linear-gradient(transparent,#000 9%,#000 91%,transparent)}
+.mural .fita{display:flex;flex-direction:column;gap:8px;overflow:hidden}
+.mural .rolo{display:flex;flex-direction:column;gap:8px;flex:none;animation:mural 26s linear infinite}
+.mural .fita:nth-child(2) .rolo{animation-direction:reverse;animation-duration:32s}
+.mural .fita:nth-child(3) .rolo{animation-duration:38s}
+.mural:is(:hover,:focus-within) .rolo{animation-play-state:paused}
+.mural a{display:block;border-radius:10px;overflow:hidden;flex:none}
+.mural img{display:block;width:100%;aspect-ratio:9/16;object-fit:cover;background:var(--suave2);transition:transform .3s}
+.mural a:hover img{transform:scale(1.06)}
+@keyframes mural{to{transform:translateY(calc(-100% - 8px))}}
+.onda{position:absolute;border-radius:50%;background:var(--verde);opacity:.45;transform:scale(0);animation:onda .5s ease-out forwards;pointer-events:none}
+@keyframes onda{to{transform:scale(2.2);opacity:0}}
+.teclas button{position:relative;overflow:hidden}
+.seta{position:relative;overflow:hidden;min-height:48px;border-radius:24px;border:1px solid var(--escuro);background:none;font-weight:600;padding:0 24px;isolation:isolate;text-align:left}
+.seta::before{content:"";position:absolute;z-index:-1;left:24px;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:var(--escuro);transition:transform .35s ease-out}
+.seta span{display:block;transition:transform .3s,opacity .3s;padding-left:14px}
+.seta b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:10px;color:var(--lima);transform:translateX(40px);opacity:0;transition:transform .3s,opacity .3s}
+.seta b svg{width:18px;height:18px}
+.seta:is(:hover,:focus-visible)::before{transform:scale(100)}
+.seta:is(:hover,:focus-visible) span{transform:translateX(40px);opacity:0}
+.seta:is(:hover,:focus-visible) b{transform:none;opacity:1}
+.rough-annotation{pointer-events:none}
+.cupom{position:relative}
+.vid{position:relative}.vid .tocar{position:absolute;left:18px;top:18px;width:36px;height:36px;border-radius:50%;background:var(--lima);display:grid;place-items:center;transition:transform .2s}
+.vid:hover .tocar{transform:scale(1.15)}.tocar svg{width:14px;height:14px}
+#player{border:0;padding:0;background:none;max-width:none;max-height:none;color:var(--claro)}
+#player::backdrop{background:rgb(10 15 13/.82)}
+#player[open]{animation:abrir .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes abrir{from{transform:scale(.8);opacity:0}}
+#player iframe{display:block;height:min(78vh,720px);aspect-ratio:9/16;max-width:92vw;border:0;border-radius:18px;background:#000}
+#player .linha{justify-content:space-between;margin-top:10px}
+#player a,#player button{min-height:44px;display:inline-flex;align-items:center;color:inherit;border:0;background:none;font-weight:600;padding:0 6px}
+@media (max-width:860px){.mural{display:none}}
+@media (prefers-reduced-motion:reduce){.mural .rolo,#player[open],.onda{animation:none}.seta *,.seta::before,.mural img{transition:none}}
+</style>
+</head>
+<body>
+<div class="app">
+ <header class="topo"><div class="dentro">
+  <nav aria-label="Principal"><span class="marca">extrato de conteúdo</span>
+   <div id="menu">
+    <button type="button" data-tela="duvida">Tirar uma dúvida</button>
+    <button type="button" data-tela="roteiro">Conferir roteiro</button>
+    <button type="button" data-tela="comprovantes">Comprovantes <i id="qtd"></i></button>
+   </div></nav>
+  <div class="abre" id="abre">
+   <h1>Seu vídeo chama curtida ou chama <em>empreendedor</em>?</h1>
+   <p id="sub">Para o time de conteúdo da Stone: o que aparece nos vídeos feitos para donos de pequenos negócios.</p>
+  </div></div>
+ </header>
+ <main>
+
+  <section class="tela" id="duvida" aria-label="Tirar uma dúvida">
+   <div class="palco">
+    <div class="lista fixo"><div class="chips" id="filtros" role="group" aria-label="Filtrar dúvidas"></div><div id="faixas"></div><p class="conta" id="prog-txt"></p></div>
+    <div class="maq fixo" id="maq"><img src="/static/maquininha-3d.png" alt="Maquininha da Stone"><svg viewBox="0 0 670 1000" aria-hidden="true"><defs><linearGradient id="vidro0" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#26332d"/><stop offset=".45" stop-color="#111815"/><stop offset="1" stop-color="#0a0f0d"/></linearGradient></defs><path fill="url(#vidro0)" d="M208 64 L482 80 Q512 82 518 112 L613 820 Q617 866 570 868 L285 876 Q253 876 248 840 L169 102 Q168 66 208 64Z"/><path fill="#fff" opacity=".05" d="M300 69 L482 80 Q512 82 518 112 L560 425 Z"/><path fill="none" stroke="#fff" stroke-opacity=".16" stroke-width="2" d="M208 64 L482 80 Q512 82 518 112 L613 820"/></svg><div class="visor" id="visor" aria-live="polite"></div></div>
+    <div class="lado">
+     <div id="cupom"></div>
+     <button type="button" class="seta" data-tela="videos"><span>Ver vídeos que fazem isso</span><b aria-hidden="true">Ver vídeos <svg viewBox="0 0 18 18"><path d="M2 9h13M10 4l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></b></button>
+     <div class="mural" id="mural" hidden></div>
+     <details><summary>O que esses números querem dizer</summary><dl id="glossario"></dl></details>
+    </div>
+   </div>
+  </section>
+
+  <section class="tela" id="videos" aria-label="Vídeos que fazem isso">
+   <div class="pilha">
+    <div class="cab"><span class="sobre">Vídeos que fazem isso</span><h1 id="vid-titulo"></h1>
+     <p class="mudo">Exemplos para assistir, não um ranking do que funciona. Até 2 por canal; um vídeo pode estar nas duas listas. Toque para assistir aqui.</p></div>
+    <h2>Com mais comentários pedindo contato</h2><div class="vids" id="vid-contato"></div>
+    <h2>Mais engajados para o tamanho do canal</h2><div class="vids" id="vid-engajamento"></div>
+    <div><button type="button" class="pilula" data-tela="duvida">Voltar para a maquininha</button></div>
+   </div>
+  </section>
+
+  <section class="tela" id="roteiro" aria-label="Conferir roteiro">
+   <div class="duas">
+    <div class="pilha">
+     <div class="cab"><span class="sobre">Antes de gravar</span><h1>Confira um roteiro na maquininha</h1>
+      <p class="mudo">Compara o roteiro com o que aparece nos vídeos para donos de negócio. Não prevê resultado.</p></div>
+     <div class="linha" id="objetivos"><span class="mudo">O objetivo é</span>
+      <button type="button" class="pilula" data-objetivo="interesse" aria-pressed="true">Contato ou pergunta</button>
+      <button type="button" class="pilula" data-objetivo="engajamento" aria-pressed="false">Engajamento</button></div>
+     <label for="rot"><b>O que vai ser falado e mostrado</b></label>
+     <textarea id="rot" placeholder="Começo: ...&#10;Meio: ...&#10;Fim: ..."></textarea>
+     <div class="linha"><button type="button" class="primario" id="avaliar">Passar na maquininha</button><span class="mudo" id="rot-estado" role="status"></span></div>
+    </div>
+    <div class="lado">
+     <div class="maq"><img src="/static/maquininha-3d.png" alt="Maquininha da Stone"><svg viewBox="0 0 670 1000" aria-hidden="true"><defs><linearGradient id="vidro1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#26332d"/><stop offset=".45" stop-color="#111815"/><stop offset="1" stop-color="#0a0f0d"/></linearGradient></defs><path fill="url(#vidro1)" d="M208 64 L482 80 Q512 82 518 112 L613 820 Q617 866 570 868 L285 876 Q253 876 248 840 L169 102 Q168 66 208 64Z"/><path fill="#fff" opacity=".05" d="M300 69 L482 80 Q512 82 518 112 L560 425 Z"/><path fill="none" stroke="#fff" stroke-opacity=".16" stroke-width="2" d="M208 64 L482 80 Q512 82 518 112 L613 820"/></svg><div class="visor" id="visor-rot"></div></div>
+     <div id="cupom-rot"></div>
+    </div>
+   </div>
+  </section>
+
+  <section class="tela" id="comprovantes" aria-label="Comprovantes">
+   <div class="pilha">
+    <div class="cab"><span class="sobre">Guardados neste navegador</span><h1>Comprovantes</h1><p class="mudo">Toque para abrir de novo.</p></div>
+    <h2>Dúvidas</h2><div id="reg-duvidas"></div>
+    <h2>Roteiros</h2><div id="reg-roteiros"></div>
+    <div><button type="button" class="pilula" id="apagar">Apagar tudo</button></div>
+   </div>
+  </section>
+ </main>
+</div>
+
+<dialog id="player" aria-label="Vídeo"><div id="player-corpo"></div><div class="linha"><a id="player-link" target="_blank" rel="noopener">Abrir no YouTube</a><button type="button" id="player-fechar">Fechar</button></div></dialog>
+
+<script src="/static/rough-notation.js"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+const e = (t) => String(t ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const PALPITES = {curt:"Mais engajamento", cont:"Mais contato", nada:"Nenhum dos dois"};
+const ROTULO = {mais:"APARECE MAIS", menos:"APARECE MENOS", parecido:"PARECIDO", indefinido:"NÃO DÁ PRA DIZER"};
+const ler = (c, v) => { try { return JSON.parse(localStorage[c]) ?? v; } catch (x) { return v; } };
+const gravar = (c, v) => { try { localStorage[c] = JSON.stringify(v); } catch (x) {} };
+let D = [], B = {}, sel = 0, filtro = "", objetivo = "interesse", atual = "duvida", novo = false;
+let feito = ler("mpe-palpites-2", {}), roteiros = ler("mpe-roteiros", []);
+const pct = (x) => Math.round(x * 100) + "%", mil = (n) => n.toLocaleString("pt-BR");
+const quando = (t) => new Date(t).toLocaleDateString("pt-BR") + " " + new Date(t).toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit"});
+const sinal = (d) => d ? d.sinal : "indefinido";
+const selo = (d) => '<span class="selo ' + sinal(d) + '">' + ROTULO[sinal(d)] + "</span>";
+const visiveis = () => D.map((d, i) => i).filter((i) => !filtro || D[i].assunto === filtro);
+const pontos = (x) => '<span class="pontos" aria-hidden="true">' + Array.from({length:10}, (_, i) => "<i" + (i < Math.round(x * 10) ? ' class="c"' : "") + "></i>").join("") + "</span>";
+const pe = () => '<div class="pe">YouTube Shorts, API oficial, vídeos de ' + B.de + " a " + B.ate + ", coleta em " + B.coleta + ".<br>Associação observada, não causa.</div>";
+
+function palpite(d, p) {
+  const eng = sinal(d.engajamento), con = sinal(d.contato);
+  if (p !== "nada") { const s = p === "curt" ? eng : con; return s === "indefinido" ? "ainda sem resposta" : s === "mais" ? "bateu" : "não bateu"; }
+  if (eng === "mais" || con === "mais") return "não bateu";
+  return eng === "indefinido" || con === "indefinido" ? "ainda sem resposta" : "bateu";
+}
+function bloco(nome, grupo, outros, d) {
+  const topo = '<div class="par tot"><span>' + nome + '</span><span class="veredito ' + sinal(d) + '">' + ROTULO[sinal(d)] + "</span></div>";
+  if (!d) return topo + '<div class="nota">Sem vídeos suficientes para comparar.</div>';
+  const linha = (n, q, x) => '<div class="par"><span>' + n + " (" + mil(q) + ")</span><b data-pct='" + Math.round(x * 100) + "'>" + pct(x) + "</b></div>" + pontos(x);
+  return topo + '<div class="nota">Quantos vídeos fazem isso:</div>' + linha(grupo, d.n, d.grupo) + linha(outros, d.n_outros, d.resto)
+    + '<div class="nota">' + grupo + ", com peso igual por canal: <b>" + pct(d.por_perfil) + "</b>. Quem entra: " + d.leitura + ".</div>";
+}
+function cupom(i) {
+  const d = D[i], f = feito[d.atributo];
+  if (!f) return '<div class="toco"><div class="logo">stone</div>Aguardando o seu palpite</div>';
+  return '<div class="cupom' + (novo ? " sair" : "") + '"><div class="logo">stone</div><div class="via">extrato de conteúdo · via do time</div><div class="par"><span>' + quando(f.t) + "</span><span>dúvida " + (i + 1) + " de " + D.length + "</span></div><hr>"
+    + '<div class="perg">' + e(d.pergunta) + "</div><hr>" + bloco("Engajamento", "mais engajados", "outros", d.engajamento) + "<hr>"
+    + bloco("Contato", d.conta_duvida ? "com pedido ou pergunta" : "com pedido de contato", "outros", d.contato)
+    + '<hr><div class="par"><span>Seu palpite</span><span>' + PALPITES[f.p] + '</span></div><div class="par tot"><span>Resultado</span><span>' + palpite(d, f.p) + '</span></div><hr><div class="nota">' + e(d.dica) + "</div>" + pe() + "</div>";
+}
+function visor(i) {
+  const d = D[i], f = feito[d.atributo];
+  const topo = '<span class="rot">DÚVIDA ' + (i + 1) + " DE " + D.length + '</span><span class="frase">' + e(d.pergunta) + "</span>";
+  if (f) return topo + '<div class="res"><span class="perg">Engajamento</span>' + selo(d.engajamento) + '<span class="perg">Contato</span>' + selo(d.contato) + '<span class="perg" style="margin-top:6px">Seu palpite: ' + palpite(d, f.p) + '</span><button type="button" class="seguir" ' + (seguinte() < 0 ? 'data-tela="comprovantes">Ver comprovantes' : 'id="seguir">Próxima dúvida') + "</button></div>";
+  return topo + '<span class="perg">Onde isso aparece mais?</span><div class="teclas">' + Object.entries(PALPITES).map(([k, v]) => '<button type="button" data-palpite="' + k + '">' + v + "</button>").join("") + "</div>";
+}
+// próxima ainda não passada, dentro do filtro e depois no resto
+function seguinte() { const livre = (i) => !feito[D[i].atributo]; const v = visiveis(), k = v.indexOf(sel); return [...v.slice(k + 1), ...v.slice(0, k + 1), ...D.keys()].find(livre) ?? -1; }
+function desenhar() {
+  if (!D.length) return;
+  const d = D[sel], f = feito[d.atributo], n = D.filter((x) => feito[x.atributo]).length;
+  const visto = '<svg viewBox="0 0 16 16" role="img" aria-label="já passada"><path d="M2.5 8.5l3.5 3.5 7.5-8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  $("faixas").innerHTML = visiveis().map((i) => '<button type="button" class="faixa" data-sel="' + i + '" aria-pressed="' + (i === sel) + '"><span>' + e(D[i].pergunta) + "</span>" + (feito[D[i].atributo] ? visto : "") + "</button>").join("");
+  $("visor").innerHTML = visor(sel);
+  $("cupom").innerHTML = cupom(sel); if (atual === "duvida") { enfeitar(); mural(); }
+  $("prog-txt").textContent = n + " de " + D.length + " dúvidas passadas na maquininha";
+  $("qtd").textContent = n + roteiros.length || "";
+  $("filtros").innerHTML = [["", "Tudo"], ["o que se fala", "Fala"], ["como se grava", "Gravação"], ["do que se fala", "Tema"]].map(([a, nome]) => '<button type="button" data-filtro="' + a + '" aria-pressed="' + (a === filtro) + '">' + nome + "</button>").join("");
+  const passadas = D.map((x, i) => i).filter((i) => feito[D[i].atributo]).sort((a, b) => feito[D[b].atributo].t - feito[D[a].atributo].t);
+  $("reg-duvidas").innerHTML = passadas.length ? '<div class="reg">' + passadas.map((i) => '<button type="button" data-sel="' + i + '" data-tela="duvida"><span><b>' + e(D[i].pergunta) + "</b><small>" + quando(feito[D[i].atributo].t) + " · palpite " + palpite(D[i], feito[D[i].atributo].p) + '</small></span><span class="linha"><small>Engajamento</small>' + selo(D[i].engajamento) + "<small>Contato</small>" + selo(D[i].contato) + "</span></button>").join("") + "</div>" + (passadas.length < D.length ? '<p class="mudo" style="margin-top:8px">Faltam ' + (D.length - passadas.length) + " de " + D.length + ".</p>" : "") : '<div class="vazio">Nenhuma dúvida passada ainda.</div>';
+  $("reg-roteiros").innerHTML = roteiros.length ? '<div class="reg">' + roteiros.map((r, i) => '<button type="button" data-roteiro="' + i + '"><span><b>' + e(r.texto.slice(0, 90)) + (r.texto.length > 90 ? "…" : "") + "</b><small>" + quando(r.t) + " · " + (r.r.objetivo === "interesse" ? "contato ou pergunta" : "engajamento") + '</small></span><span class="selo">TEM ' + r.r.tem + " DE " + r.r.de + "</span></button>").join("") + "</div>" : '<div class="vazio">Nenhum roteiro conferido ainda.</div>';
+}
+// caneta: circula o veredito no comprovante e sublinha o título (highlighter)
+const semMovimento = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function riscar(el, op, espera) {
+  if (!el || !window.RoughNotation) return;
+  const a = RoughNotation.annotate(el, {strokeWidth:2, iterations:2, animationDuration:700, animate:!!espera && !semMovimento, ...op});
+  setTimeout(() => el.isConnected && el.offsetWidth && a.show(), espera);
+}
+const TINTA = {mais:"#00803F", menos:"#C4600A"};
+function enfeitar() {
+  const c = $("cupom");
+  c.querySelectorAll(".veredito").forEach((v, k) => { const s = ["mais", "menos"].find((x) => v.classList.contains(x)); if (s) riscar(v, {type:"circle", color:TINTA[s], padding:[4, 8]}, novo ? 700 + k * 500 : 0); });
+  if (novo && !semMovimento) c.querySelectorAll("[data-pct]").forEach((el) => {
+    const fim = +el.dataset.pct, t0 = performance.now();
+    (function passo(t) { const x = Math.min(1, Math.max(0, (t - t0 - 250) / 900)); el.textContent = Math.round(fim * (1 - (1 - x) ** 3)) + "%"; if (x < 1 && el.isConnected) requestAnimationFrame(passo); })(t0);
+  });
+}
+// mural de capas reais enquanto não há comprovante (marquee)
+const EX = {};
+async function buscarExemplos(atributo) {
+  if (!EX[atributo]) { const r = await fetch("/api/exemplos?atributo=" + encodeURIComponent(atributo)), j = await r.json(); if (!r.ok) throw new Error(j.erro); EX[atributo] = j; }
+  return EX[atributo];
+}
+async function mural() {
+  const d = D[sel], m = $("mural"); m.hidden = !!feito[d.atributo];
+  if (m.hidden || m.dataset.de === d.atributo) return;
+  m.dataset.de = d.atributo;
+  try {
+    const j = await buscarExemplos(d.atributo); if (m.dataset.de !== d.atributo) return;
+    const l = [...new Map([...j.contato, ...j.engajamento].map((v) => [v.id, v])).values()];
+    const capa = (v, copia) => '<a href="https://www.youtube.com/shorts/' + e(v.id) + '" target="_blank" rel="noopener"' + (copia ? ' tabindex="-1" aria-hidden="true"' : ' aria-label="' + e(v.titulo) + '"') + '><img alt="" src="' + e(v.capa) + '"></a>';
+    m.innerHTML = [0, 1, 2].map((k) => { const meus = l.filter((_, i) => i % 3 === k); return '<div class="fita">' + [0, 1].map((c) => '<div class="rolo">' + meus.map((v) => capa(v, c)).join("") + "</div>").join("") + "</div>"; }).join("");
+  } catch (x) { m.hidden = true; }
+}
+function assistir(id) {
+  $("player-corpo").innerHTML = '<iframe title="Vídeo do YouTube" allow="autoplay; encrypted-media; fullscreen" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?autoplay=1&playsinline=1&rel=0"></iframe>';
+  $("player-link").href = "https://www.youtube.com/shorts/" + encodeURIComponent(id); $("player").showModal();
+}
+$("player").addEventListener("close", () => { $("player-corpo").innerHTML = ""; });
+function tela(id) {
+  atual = id;
+  document.querySelectorAll(".tela").forEach((t) => t.classList.toggle("ativa", t.id === id));
+  document.querySelectorAll("#menu button").forEach((b) => { const on = b.dataset.tela === (id === "videos" ? "duvida" : id); b.classList.toggle("on", on); on ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current"); });
+  $("abre").hidden = id !== "duvida";
+  if (id === "videos") videos();
+  history.replaceState(null, "", "#/" + id); scrollTo(0, 0);
+}
+async function videos() {
+  const d = D[sel], vez = sel;
+  $("vid-titulo").textContent = d.pergunta;
+  $("vid-contato").innerHTML = $("vid-engajamento").innerHTML = '<span class="mudo">Buscando…</span>';
+  try {
+    const j = await buscarExemplos(d.atributo);
+    if (vez !== sel) return;
+    const cartoes = (l) => l.map((v) => '<a class="vid" target="_blank" rel="noopener" href="https://www.youtube.com/shorts/' + e(v.id) + '"><img loading="lazy" alt="" src="' + e(v.capa) + '"><span class="tocar" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M3 1.5v11l9-5.5z" fill="#04130C"/></svg></span><b>' + e(v.titulo) + "</b><small>" + e(v.canal) + "</small>" + (v.pedidos ? "<small>" + v.pedidos + (v.pedidos === 1 ? " comentário pedindo contato" : " comentários pedindo contato") + "</small>" : "") + "</a>").join("") || '<span class="mudo">Nenhum na base.</span>';
+    $("vid-contato").innerHTML = cartoes(j.contato); $("vid-engajamento").innerHTML = cartoes(j.engajamento);
+  } catch (x) { $("vid-contato").innerHTML = '<div class="aviso">Não deu para buscar os vídeos: ' + e(x.message) + "</div>"; $("vid-engajamento").innerHTML = ""; }
+}
+function roteiroVazio() {
+  $("visor-rot").innerHTML = '<span class="rot">ROTEIRO</span><span class="frase">Escreva e passe aqui.</span>';
+  $("cupom-rot").innerHTML = '<div class="vazio">O comprovante do roteiro sai aqui.</div>';
+}
+function mostrarRoteiro(j, t) {
+  const mudar = j.sinais.filter((s) => !s.alinhado), ok = j.sinais.filter((s) => s.alinhado), com = j.objetivo === "interesse" ? "com pedido ou pergunta" : "mais engajados";
+  $("visor-rot").innerHTML = '<span class="rot">ROTEIRO</span><span class="num">' + j.tem + "/" + j.de + '</span><span class="frase">padrões dos vídeos ' + com + '</span><div class="res"><span class="selo ' + (mudar.length ? "menos" : "mais") + '">' + (mudar.length ? mudar.length + " PARA AVALIAR" : "TUDO PRESENTE") + "</span></div>";
+  const item = (s) => '<div class="item"><b>' + e(s.texto) + '</b><span class="nota">Seguem isso: ' + pct(s.no_grupo) + " dos vídeos " + com + " e " + pct(s.nos_outros) + " dos outros" + (Math.abs(s.no_grupo - s.nos_outros) < .08 ? " (diferença pequena)" : "") + "." + (s.exemplo ? ' <a target="_blank" rel="noopener" href="' + e(s.exemplo.link) + '">Assistir a um exemplo</a>' : "") + "</span></div>";
+  $("cupom-rot").innerHTML = '<div class="cupom"><div class="logo">stone</div><div class="via">extrato de conteúdo · roteiro</div><div class="par"><span>' + quando(t) + "</span><span>" + (j.objetivo === "interesse" ? "contato ou pergunta" : "engajamento") + "</span></div><hr>"
+    + (mudar.length ? '<div class="perg" style="margin-bottom:8px">Vale avaliar</div>' + mudar.map(item).join("") + "<hr>" : "") + (ok.length ? '<div class="perg" style="margin-bottom:8px">O roteiro já segue</div>' + ok.map(item).join("") + "<hr>" : "")
+    + '<div class="par tot"><span>Segue</span><span>' + j.tem + " de " + j.de + '</span></div><div class="nota" style="margin-top:6px">Percentuais do grupo com peso igual por canal. Os padrões pesam igual na conta; siga só os que servem ao seu objetivo.</div>' + pe() + "</div>";
+}
+async function avaliar() {
+  const texto = $("rot").value.trim();
+  if (texto.length < 20) { $("rot-estado").textContent = "Escreva um pouco mais sobre o que vai ser falado e mostrado."; return; }
+  $("avaliar").disabled = true; $("rot-estado").textContent = "Lendo o roteiro… leva uns 20 segundos.";
+  $("visor-rot").innerHTML = '<span class="rot">ROTEIRO</span><span class="frase">Processando…</span>';
+  try {
+    const r = await fetch("/api/avaliar", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({rascunho:texto, objetivo})}), j = await r.json();
+    if (!r.ok) throw new Error(j.erro);
+    const t = Date.now();
+    roteiros = [{t, texto, r:j}, ...roteiros].slice(0, 20); gravar("mpe-roteiros", roteiros);
+    mostrarRoteiro(j, t); $("rot-estado").textContent = "Pronto. Guardado em Comprovantes.";
+    if (innerWidth <= 860) $("visor-rot").parentElement.scrollIntoView({block:"start"});
+  } catch (x) { $("rot-estado").textContent = "Não deu certo: " + x.message; roteiroVazio(); }
+  $("avaliar").disabled = false; desenhar();
+}
+function marcarObjetivo(o) { objetivo = o; document.querySelectorAll("#objetivos button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.objetivo === o)); }
+document.addEventListener("click", (ev) => {
+  const a = (s) => ev.target.closest(s);
+  const s = a("[data-sel]"), p = a("[data-palpite]"), t = a("[data-tela]"), f = a("[data-filtro]"), o = a("[data-objetivo]"), r = a("[data-roteiro]");
+  if (s) sel = +s.dataset.sel;
+  const yt = a('a[href*="youtube.com/shorts/"]');
+  if (yt && yt.id !== "player-link" && !ev.ctrlKey && !ev.metaKey && !ev.shiftKey) { ev.preventDefault(); return assistir(yt.href.split("/shorts/")[1]); }
+  if (a("#player-fechar") || ev.target === $("player")) return $("player").close();
+  if ($("visor").dataset.espera) return;
+  if (p) { // toque na tecla: a onda aparece antes de a maquininha responder (ripple-button)
+    const q = Math.max(p.offsetWidth, p.offsetHeight), o = document.createElement("i"); o.className = "onda";
+    Object.assign(o.style, {width:q + "px", height:q + "px", left:(ev.detail ? ev.offsetX : p.offsetWidth / 2) - q / 2 + "px", top:(ev.detail ? ev.offsetY : p.offsetHeight / 2) - q / 2 + "px"}); p.append(o);
+    const at = D[sel].atributo, valor = p.dataset.palpite; $("visor").dataset.espera = 1;
+    setTimeout(() => { delete $("visor").dataset.espera; feito[at] = {p:valor, t:Date.now()}; gravar("mpe-palpites-2", feito); novo = true; desenhar(); novo = false; }, semMovimento ? 0 : 300);
+    return;
+  }
+  if (f) { filtro = f.dataset.filtro; if (!visiveis().includes(sel)) sel = visiveis()[0]; }
+  if (o) marcarObjetivo(o.dataset.objetivo);
+  if (a("#seguir")) { sel = seguinte(); if (!visiveis().includes(sel)) filtro = ""; }
+  if (a("#avaliar")) avaliar();
+  if (a("#apagar")) { const b = $("apagar"); if (b.dataset.certeza) { feito = {}; roteiros = []; gravar("mpe-palpites-2", feito); gravar("mpe-roteiros", roteiros); roteiroVazio(); delete b.dataset.certeza; b.textContent = "Apagar tudo"; } else { b.dataset.certeza = 1; b.textContent = "Toque de novo para apagar"; } }
+  if (t) tela(t.dataset.tela);
+  if (r) { const x = roteiros[+r.dataset.roteiro]; tela("roteiro"); $("rot").value = x.texto; marcarObjetivo(x.r.objetivo); mostrarRoteiro(x.r, x.t); $("rot-estado").textContent = "Roteiro de " + quando(x.t) + "."; }
+  if (s || f || a("#seguir") || t || a("#apagar")) desenhar();
+  if (s && !t && innerWidth <= 860) $("maq").scrollIntoView({block:"start"});
+});
+(async () => {
+  const inicial = location.hash.slice(2);
+  roteiroVazio(); tela("duvida");
+  try {
+    const r = await fetch("/api/duvidas"), j = await r.json();
+    if (!r.ok) throw new Error(j.erro);
+    D = j.duvidas; B = j;
+    $("sub").textContent = "Para o time de conteúdo da Stone: " + mil(j.videos) + " Shorts feitos para donos de pequenos negócios e " + mil(j.comentarios) + " comentários lidos.";
+    $("glossario").innerHTML = [["Engajamento", "Curtidas e comentários divididos pelos inscritos. “Mais engajados” são os 10% de cima."],
+      ["Pedido de contato", "Comentário pedindo preço, link, contato ou material. São " + j.pedidos + " em " + j.com_pedido + " vídeos, lidos por IA. Não é venda nem lead fechado."],
+      ["Pergunta", "Em algumas dúvidas o grupo inclui vídeos em que alguém tirou dúvida nos comentários."],
+      ["Peso igual por canal", "Cada canal conta o mesmo, para poucos canais não ditarem o número."],
+      ["Aparece mais ou menos", "Diferença de 8 pontos ou mais, e de pelo menos 5 com peso igual por canal."],
+      ["Não dá pra dizer", "Há diferença, mas ela encolhe ou só aparece conforme o peso dos canais."],
+      ["O que falta", "É YouTube Shorts; Reels não está na base. Nada aqui prova causa."]].map(([a, b]) => "<dt>" + a + "</dt><dd>" + b + "</dd>").join("");
+    tela(["duvida", "roteiro", "comprovantes"].includes(inicial) ? inicial : "duvida"); desenhar();
+    document.fonts.ready.then(() => riscar(document.querySelector(".abre em"), {type:"underline", color:"#B9F24B", strokeWidth:3, padding:1}, 500));
+  } catch (x) { $("faixas").innerHTML = '<div class="aviso">Não deu para carregar as dúvidas: ' + e(x.message) + "</div>"; }
+})();
+</script>
+</body>
+</html>

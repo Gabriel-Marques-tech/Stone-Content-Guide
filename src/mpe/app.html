@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Extrato de Conteúdo MPE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap">
+<style>
+/* A maquininha é a ação (uma crença por vez, palpite antes do resultado) e o extrato é onde os
+   comprovantes ficam. Visual claro e único, de propósito: papel, verde e as três teclas. */
+:root {
+  --fundo: #f1f3f2; --branco: #ffffff; --papel: #fffef9;
+  --tinta: #10201a; --tinta2: #51605a; --tinta3: #7b8983; --linha: #dfe5e2;
+  --verde: #00a868; --verde-texto: #00794c; --verde-fundo: #0b3d2e; --verde-claro: #e3f6ec;
+  --amarelo: #f2b705; --vermelho: #d9412b; --vermelho-claro: #fbe7e2;
+  --texto: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'Space Mono', ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; color: var(--tinta); font: 16px/1.5 var(--texto); min-height: 100vh; background-color: #062a1f;
+  background-image: radial-gradient(60vw 50vh at 12% -8%, rgb(0 168 104 / .55), transparent 70%), radial-gradient(46vw 44vh at 96% 18%, rgb(132 224 60 / .22), transparent 70%), radial-gradient(70vw 60vh at 60% 110%, rgb(0 168 104 / .38), transparent 70%); background-attachment: fixed; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: var(--verde-texto); }
+:focus-visible { outline: 2px solid var(--verde); outline-offset: 2px; border-radius: 4px; }
+h1, h2, h3, p { margin: 0; }
+h1 { font-size: clamp(28px, 3.2vw, 36px); font-weight: 800; line-height: 1.1; letter-spacing: -.02em; text-wrap: balance; }
+h2 { font-size: 20px; font-weight: 800; letter-spacing: -.01em; }
+.sub { color: var(--tinta2); }
+.peq { font-size: 13.5px; color: var(--tinta2); }
+.num { font-variant-numeric: tabular-nums; }
+
+/* topo: sobre o verde */
+.topo { display: flex; align-items: center; gap: 8px 28px; flex-wrap: wrap; padding: 18px max(20px, env(safe-area-inset-right, 0px)) 14px max(20px, env(safe-area-inset-left, 0px)); max-width: 1240px; margin: 0 auto; color: #fff; }
+.topo .marca { font-weight: 800; font-size: 17px; margin-right: auto; color: #fff; text-decoration: none; }
+.topo nav { display: flex; gap: 4px; flex-wrap: wrap; }
+.topo nav a { text-decoration: none; color: rgb(255 255 255 / .72); font-weight: 600; padding: 8px 14px; border-radius: 999px; }
+.topo nav a:hover { color: #fff; }
+.topo nav a[aria-current='page'] { background: #fff; color: var(--verde-fundo); }
+.topo nav a b { background: #b9f24b; color: #10320a; border-radius: 999px; font-size: 12px; padding: 1px 7px; margin-left: 6px; }
+.topo .peq { color: rgb(255 255 255 / .7); }
+main { max-width: 1240px; margin: 0 auto; padding: 10px max(20px, env(safe-area-inset-right, 0px)) 80px max(20px, env(safe-area-inset-left, 0px)); }
+.folha { background: var(--fundo); border-radius: 28px; padding: clamp(20px, 3vw, 36px); box-shadow: 0 30px 80px rgb(0 0 0 / .35); }
+.col { max-width: 800px; margin: 0 auto; }
+
+/* peças comuns */
+.btn { border: 0; border-radius: 10px; padding: 11px 18px; font-weight: 700; background: var(--verde); color: #fff; text-decoration: none; display: inline-block; }
+.btn.leve { background: #e4e9e6; color: var(--tinta); }
+.btn:disabled { opacity: .5; cursor: default; }
+.acoes { display: flex; gap: 10px; flex-wrap: wrap; }
+.campo { background: var(--branco); border: 1px solid var(--linha); border-radius: 10px; padding: 10px 12px; max-width: 100%; }
+.campo:focus { border-color: var(--verde); outline: 0; }
+.pilulas { display: flex; gap: 8px; flex-wrap: wrap; }
+.pilulas button { border: 1px solid var(--linha); background: var(--branco); border-radius: 999px; padding: 6px 14px; font-size: 14px; font-weight: 600; }
+.pilulas button[aria-pressed='true'] { background: var(--tinta); color: #fff; border-color: var(--tinta); }
+.aviso { background: var(--vermelho-claro); border-radius: 12px; padding: 12px 16px; }
+.nota-livre { background: #fdf3d3; border-radius: 12px; padding: 12px 16px; font-size: 14.5px; }
+.torrada { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--tinta); color: #fff; padding: 10px 18px; border-radius: 999px; z-index: 50; max-width: min(560px, 90vw); font-size: 14.5px; }
+
+/* maquininha: imagem oficial do aparelho, com a interface encaixada na tela em perspectiva */
+.banca { display: grid; grid-template-columns: minmax(260px, 380px) auto minmax(260px, 340px); gap: clamp(20px, 3vw, 44px); justify-content: center; align-items: start; color: #fff; }
+.banca h1 { color: #fff; }
+.banca .intro { color: rgb(255 255 255 / .78); margin: 10px 0 18px; }
+.crencas { list-style: none; margin: 0; padding: 0 6px 0 0; border-top: 1px solid rgb(255 255 255 / .18); max-height: 46vh; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgb(255 255 255 / .3) transparent; }
+.crencas button { width: 100%; text-align: left; background: none; border: 0; border-bottom: 1px solid rgb(255 255 255 / .18); padding: 11px 4px; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-weight: 500; color: rgb(255 255 255 / .86); }
+.crencas button:hover { color: #fff; }
+.crencas button[aria-pressed='true'] { font-weight: 800; color: #b9f24b; }
+.crencas i { font-style: normal; color: rgb(255 255 255 / .55); font-size: 13px; font-weight: 500; white-space: nowrap; }
+.crencas i.feita { color: #fff; font-family: var(--mono); font-size: 12px; }
+.maq { position: relative; height: min(76vh, 700px); aspect-ratio: 670 / 1000; filter: drop-shadow(0 40px 50px rgb(0 0 0 / .45)); animation: flutuar 6s ease-in-out infinite; }
+@keyframes flutuar { 50% { transform: translateY(-8px); } }
+@media (prefers-reduced-motion: reduce) { .maq { animation: none; } }
+.maq img { width: 100%; height: 100%; display: block; user-select: none; -webkit-user-drag: none; }
+.visor { position: absolute; left: 0; top: 0; width: 360px; height: 800px; transform-origin: 0 0; background: linear-gradient(170deg, #f6fbf7, #e4f5ea); border-radius: 30px; padding: 62px 24px 26px; display: flex; flex-direction: column; gap: 14px; color: var(--tinta); overflow: hidden; }
+.visor .rot { font: 700 15px var(--mono); color: var(--verde-texto); letter-spacing: .04em; }
+.visor b.frase-v { font: 800 33px/1.14 var(--texto); letter-spacing: -.02em; }
+.visor .pergunta { font-size: 19px; color: var(--tinta2); }
+.visor .teclas { display: grid; gap: 12px; margin-top: auto; }
+.visor .teclas button { border: 0; border-radius: 20px; padding: 22px 10px; font: 800 21px var(--texto); color: #fff; box-shadow: 0 5px 0 rgb(0 0 0 / .22); }
+.visor .teclas button:active { transform: translateY(4px); box-shadow: 0 1px 0 rgb(0 0 0 / .22); }
+.t-sobe { background: var(--verde); } .t-tanto { background: var(--amarelo); color: #3a2c00 !important; } .t-cai { background: var(--vermelho); }
+.visor .resultado { margin-top: auto; display: grid; gap: 14px; }
+.visor .resultado .selo { font: 800 31px/1.05 var(--texto); letter-spacing: -.02em; }
+.visor .resultado .selo.sobe { color: var(--verde-texto); } .visor .resultado .selo.cai { color: var(--vermelho); }
+.visor .resultado p { font-size: 18px; color: var(--tinta2); }
+.visor .resultado button { border: 0; border-radius: 20px; padding: 20px 10px; font: 800 20px var(--texto); background: var(--verde-fundo); color: #fff; }
+.saida { display: grid; gap: 16px; align-content: start; min-width: 0; padding-top: 6px; }
+.saida .peq { color: rgb(255 255 255 / .8); }
+.saida .btn.leve { background: rgb(255 255 255 / .14); color: #fff; }
+.espera { color: rgb(255 255 255 / .78); font-size: 14.5px; border: 1.5px dashed rgb(255 255 255 / .35); border-radius: 12px; padding: 18px; }
+.cupom { --d: 9px; background: var(--papel); color: var(--tinta); font: 13px/1.6 var(--mono); padding: 20px 18px calc(var(--d) + 18px); filter: drop-shadow(0 14px 22px rgb(0 0 0 / .35));
+  -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / calc(2 * var(--d)) 100%; mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / calc(2 * var(--d)) 100%; }
+.cupom.novo { animation: imprimir .8s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes imprimir { from { clip-path: inset(0 0 100% 0); transform: translateY(-24px); } to { clip-path: inset(0); transform: none; } }
+@media (prefers-reduced-motion: reduce) { .cupom.novo { animation: none; } }
+.cupom hr { border: 0; border-top: 1px dashed #9aa7a1; margin: 10px 0; }
+.cupom dl { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; }
+.cupom dd { margin: 0; text-align: right; }
+.cupom .frase { font: 700 15px/1.3 var(--texto); }
+.cupom .cab { text-align: center; font-weight: 700; letter-spacing: .1em; }
+.carimbo + .carimbo { margin-top: 6px; }
+.carimbo { margin-top: 12px; text-align: center; font-weight: 700; letter-spacing: .14em; border: 2px solid; border-radius: 6px; padding: 6px; }
+.carimbo.sobe { color: var(--verde-texto); } .carimbo.cai { color: var(--vermelho); }
+.cupom .fino { margin-top: 10px; font-size: 11.5px; color: #6b7772; }
+@media (max-width: 1040px) { .banca { grid-template-columns: 1fr; justify-items: center; } .banca > div:first-child { width: 100%; } .crencas { max-height: 34vh; } .saida { width: min(360px, 100%); } }
+
+/* extrato */
+.saldo { padding: 14px 0 22px; border-bottom: 1px solid var(--linha); }
+.saldo strong { font: 800 46px/1.05 var(--texto); letter-spacing: -.03em; display: block; margin: 4px 0 8px; }
+.grupo { font: 700 12px var(--texto); letter-spacing: .09em; text-transform: uppercase; color: var(--tinta3); padding: 24px 0 8px; }
+.lanc { width: 100%; background: none; border: 0; border-bottom: 1px solid var(--linha); display: grid; grid-template-columns: 36px 1fr auto; gap: 14px; align-items: center; padding: 14px 0; text-align: left; }
+.lanc:hover { background: #e9eeeb; }
+.bola { width: 36px; height: 36px; border-radius: 50%; background: #e4e9e6; display: grid; place-items: center; font: 700 14px var(--mono); color: var(--tinta2); }
+.lanc.sobe .bola { background: var(--verde-claro); color: var(--verde-texto); } .lanc.cai .bola { background: var(--vermelho-claro); color: var(--vermelho); }
+.lanc b { font-weight: 700; display: block; }
+.lanc.pendente b { font-weight: 500; color: var(--tinta2); }
+.valor { text-align: right; font: 700 16px var(--mono); color: var(--tinta2); white-space: nowrap; }
+.valor small { display: block; font: 500 12.5px var(--texto); }
+.lanc.sobe .valor { color: var(--verde-texto); } .lanc.cai .valor { color: var(--vermelho); }
+.abre { padding: 8px 0 22px 50px; border-bottom: 1px solid var(--linha); display: grid; gap: 14px; }
+.abre dl { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 24px; }
+.abre dt { color: var(--tinta2); font-size: 13px; } .abre dd { margin: 0; font: 700 17px var(--mono); }
+@media (max-width: 560px) { .abre { padding-left: 0; } }
+
+/* vídeos */
+.grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px 14px; }
+.short { background: none; border: 0; padding: 0; text-align: left; display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.short .capa { aspect-ratio: 3 / 4; border-radius: 12px; background: #dfe5e2 center / cover no-repeat; position: relative; }
+.short:hover .capa { box-shadow: 0 0 0 2px var(--verde); }
+.short .capa span { position: absolute; left: 6px; top: 6px; background: rgb(0 0 0 / .65); color: #fff; font: 700 11px var(--mono); padding: 2px 6px; border-radius: 6px; }
+.short b { font-weight: 700; }
+.short .t { font-size: 13px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.short .c { font-size: 12.5px; color: var(--tinta3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.filtros { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.secao { display: grid; gap: 12px; margin-top: 28px; }
+.gaveta { position: fixed; inset: 0 0 0 auto; width: min(460px, 100%); background: var(--branco); box-shadow: -12px 0 40px rgb(0 0 0 / .2); z-index: 30; overflow-y: auto; padding: 18px 22px 28px; display: grid; gap: 14px; align-content: start; }
+.veu { position: fixed; inset: 0; background: rgb(0 0 0 / .35); z-index: 29; }
+.gaveta img { width: 100%; border-radius: 12px; aspect-ratio: 16 / 10; object-fit: cover; background: #dfe5e2; }
+.tab { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+.tab td, .tab th { padding: 9px 6px; border-bottom: 1px solid var(--linha); text-align: left; vertical-align: top; }
+.tab th { color: var(--tinta3); font-size: 12.5px; font-weight: 600; }
+.tab td.n, .tab th.n { text-align: right; font-variant-numeric: tabular-nums; }
+.tab tr.clicavel { cursor: pointer; } .tab tr.clicavel:hover td { background: #e9eeeb; }
+.rolagem-x { overflow-x: auto; }
+
+/* agente */
+.pedido { display: grid; gap: 10px; }
+.pedido textarea { width: 100%; min-height: 84px; resize: vertical; font-size: 16.5px; }
+.criativo { padding: 18px 0; border-top: 1px solid var(--linha); display: grid; gap: 8px; }
+.criativo h3 { font-size: 18px; font-weight: 800; line-height: 1.3; }
+.criativo dl { margin: 0; display: grid; grid-template-columns: 80px 1fr; gap: 6px 12px; font-size: 14.5px; }
+.criativo dt { color: var(--tinta3); } .criativo dd { margin: 0; }
+.fita { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 6px; }
+.fita .short { flex: 0 0 128px; }
+.exemplos, .gerar { display: grid; gap: 10px; margin-top: 8px; }
+.fita-yt { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 6px; }
+.fita-yt figure { margin: 0; flex: 0 0 190px; display: grid; gap: 6px; }
+.fita-yt iframe, video.gerado { width: 100%; aspect-ratio: 9 / 16; border: 0; border-radius: 14px; background: #0c1512; display: block; }
+.gerar > video.gerado { width: min(250px, 100%); }
+.fita-yt figcaption { font-size: 12.5px; color: var(--tinta3); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+/* molde de gravação: cena 3D sem marca + legenda viva por cima */
+.molde { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(20px, 4vw, 48px); align-items: start; }
+@media (max-width: 820px) { .molde { grid-template-columns: 1fr; justify-items: center; } }
+.palco-m { position: relative; width: min(330px, 80vw); aspect-ratio: 9 / 16; border-radius: 30px; overflow: hidden; background: #2f9e62; box-shadow: 0 24px 50px rgb(0 0 0 / .28), 0 0 0 8px #10201a; }
+.palco-m video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.palco-m .trilhos { position: absolute; left: 12px; right: 12px; top: 12px; display: flex; gap: 5px; z-index: 3; }
+.palco-m .trilhos i { flex: 1; height: 4px; border-radius: 4px; background: rgb(255 255 255 / .38); overflow: hidden; }
+.palco-m .trilhos i b { display: block; height: 100%; width: 0; background: #fff; }
+.palco-m .direcao { position: absolute; left: 12px; right: 12px; top: 28px; z-index: 3; display: flex; gap: 8px; align-items: center; background: rgb(11 61 46 / .9); color: #fff; border-radius: 14px; padding: 9px 12px; font-size: 13.5px; font-weight: 600; line-height: 1.25; }
+.palco-m .direcao span { background: #b9f24b; color: #10320a; font: 800 10.5px var(--texto); letter-spacing: .08em; padding: 3px 7px; border-radius: 6px; white-space: nowrap; }
+.palco-m .legenda { position: absolute; left: 14px; right: 14px; bottom: 74px; z-index: 3; display: flex; flex-wrap: wrap; gap: 6px 8px; justify-content: center; text-align: center; }
+.palco-m .legenda span { font: 800 30px/1.1 var(--texto); letter-spacing: -.01em; color: #fff; text-transform: uppercase; text-shadow: 0 3px 0 rgb(0 0 0 / .35), 0 0 14px rgb(0 0 0 / .35); opacity: 0; transform: translateY(14px) scale(.7) rotate(-4deg); transition: opacity .16s, transform .28s cubic-bezier(.2, 1.7, .4, 1); }
+.palco-m .legenda span.on { opacity: 1; transform: none; }
+.palco-m .legenda span.vaga { background: #b9f24b; color: #10320a; text-shadow: none; padding: 2px 10px 4px; border-radius: 10px; transform-origin: center; }
+.palco-m .legenda span.vaga.on { transform: rotate(-2deg); }
+@media (prefers-reduced-motion: reduce) { .palco-m .legenda span { transition: none; } }
+.palco-m .controle { position: absolute; left: 0; right: 0; bottom: 14px; z-index: 3; display: flex; justify-content: center; gap: 10px; }
+.palco-m .controle button { border: 0; border-radius: 999px; padding: 9px 18px; font-weight: 700; background: rgb(255 255 255 / .92); color: var(--tinta); }
+.formula { font: 800 clamp(22px, 2.6vw, 30px)/1.2 var(--texto); letter-spacing: -.02em; }
+.formula mark { background: #b9f24b; color: #10320a; border-radius: 8px; padding: 0 8px; }
+.campos-m { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.campos-m label { display: grid; gap: 5px; font-size: 13.5px; font-weight: 600; color: var(--tinta2); }
+.campos-m input { width: 100%; }
+.roteiro-m { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--linha); }
+.roteiro-m button { width: 100%; text-align: left; background: none; border: 0; border-bottom: 1px solid var(--linha); padding: 12px 6px; display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start; }
+.roteiro-m button:hover { background: #e9eeeb; }
+.roteiro-m button[aria-current='true'] { background: var(--verde-claro); }
+.roteiro-m em { font: 800 14px var(--mono); font-style: normal; color: var(--verde-texto); }
+.roteiro-m b { display: block; } .roteiro-m small { color: var(--tinta2); font-size: 13.5px; }
+details > summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
+.trabalhando { display: flex; gap: 12px; align-items: center; color: var(--tinta2); }
+.trabalhando i { width: 18px; height: 18px; border-radius: 50%; border: 3px solid var(--linha); border-top-color: var(--verde); animation: girar 1s linear infinite; }
+@keyframes girar { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<header class="topo"><a class="marca" href="#maquininha">Extrato de Conteúdo</a><nav id="nav" aria-label="Principal"></nav><span class="peq num" id="base"></span></header>
+<main id="tela"><p class="sub">Carregando a base…</p></main>
+<div class="torrada" id="torrada" role="status" hidden></div>
+<div id="camada"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const e = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const n = (v) => Number(v).toLocaleString('pt-BR');
+const pct = (v, d = 0) => (v * 100).toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d }) + '%';
+const pts = (v) => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(Math.round(v * 100));
+const capa = (id) => `https://i.ytimg.com/vi/${encodeURIComponent(id)}/hqdefault.jpg`;
+const yt = (id) => `https://www.youtube.com/shorts/${encodeURIComponent(id)}`;
+
+// Cada crença é uma escolha de quem grava, ligada a uma característica que a base mede. O resultado
+// sai em dois desfechos: alcance (views) e reação (curtidas e comentários por view).
+const FRASES = { 'duracao_faixa=ate_30s': 'Fazer vídeo curtinho, de até 30 segundos', 'duracao_faixa=31_60s': 'Fazer vídeo de 31 a 60 segundos', 'duracao_faixa=acima_60s': 'Fazer vídeo com mais de um minuto', 'formato_video=talking_head': 'Falar olhando para a câmera', 'formato_video=tutorial': 'Fazer tutorial', 'formato_video=humor_esquete': 'Fazer humor', 'formato_video=bastidores': 'Mostrar os bastidores', 'formato_video=lista_dicas': 'Fazer lista de dicas', 'formato_video=depoimento': 'Mostrar depoimento', texto_na_tela: 'Colocar texto na tela', tem_rosto: 'Aparecer o rosto', cita_regra_ou_lei: 'Falar de regra, imposto ou lei', mostra_ambiente_real: 'Mostrar a loja ou a cozinha de verdade', prova_social: 'Mostrar cliente ou resultado', 'tema_principal=vendas': 'Falar de vendas', 'tema_principal=gestao': 'Falar de gestão', 'tema_principal=financas': 'Falar de finanças', 'tema_principal=marketing': 'Falar de marketing', 'tema_principal=ferramentas_maquininha': 'Falar de maquininha', 'tema_principal=historia_de_empreendedor': 'Contar história de empreendedor', 'tema_principal=motivacao': 'Fazer vídeo motivacional', titulo_pergunta: 'Pôr uma pergunta no título', titulo_numero: 'Pôr um número no título', titulo_emoji: 'Usar emoji no título', titulo_caixa_alta: 'Escrever uma palavra em CAIXA ALTA no título', titulo_fala_com_voce: 'Falar com "você" no título', titulo_ensina: 'Prometer ensinar algo no título', titulo_curto: 'Usar título curto', titulo_3_hashtags: 'Usar três ou mais hashtags', postado_fim_de_semana: 'Postar no fim de semana', postado_a_noite: 'Postar à noite' };
+const TEMAS = { vendas: 'vendas', gestao: 'gestão do negócio', financas: 'finanças do negócio', marketing: 'marketing para pequenos negócios', ferramentas_maquininha: 'maquininha e formas de receber', historia_de_empreendedor: 'a história de quem empreende', motivacao: 'motivação para empreender' };
+const CARAC = { 'duracao_faixa=31_60s': 'duram de 31 a 60 segundos', 'duracao_faixa=ate_30s': 'duram até 30 segundos', 'duracao_faixa=acima_60s': 'passam de um minuto', 'formato_video=talking_head': 'são de fala para a câmera', 'formato_video=tutorial': 'são tutoriais', 'formato_video=humor_esquete': 'são de humor', 'formato_video=bastidores': 'mostram bastidores', 'formato_video=lista_dicas': 'são listas de dicas', 'formato_video=depoimento': 'são depoimentos', texto_na_tela: 'têm texto na tela', tem_rosto: 'mostram o rosto de alguém', cita_regra_ou_lei: 'citam regra, imposto ou lei', mostra_ambiente_real: 'mostram o ambiente real do negócio', prova_social: 'mostram cliente ou resultado', titulo_pergunta: 'têm pergunta no título', titulo_numero: 'têm número no título', titulo_emoji: 'têm emoji no título', titulo_caixa_alta: 'têm palavra em caixa alta no título', titulo_fala_com_voce: 'falam com "você" no título', titulo_ensina: 'prometem ensinar algo no título', titulo_curto: 'têm título curto', titulo_3_hashtags: 'usam três ou mais hashtags', postado_fim_de_semana: 'foram postados no fim de semana', postado_a_noite: 'foram postados à noite' };
+const grupo = (a) => a.startsWith('duracao') ? 'Duração' : a.startsWith('tema') ? 'Tema' : a.startsWith('formato') ? 'Formato' : a.startsWith('titulo') ? 'Título' : a.startsWith('postado') ? 'Horário' : 'O que aparece';
+const PALPITES = { alcance: 'Alcança mais gente', reacao: 'Gera mais reação', nenhum: 'Nenhum dos dois' };
+const PALAVRA = { alcance: { sobe: 'MAIS ALCANCE', cai: 'MENOS ALCANCE' }, reacao: { sobe: 'MAIS REAÇÃO', cai: 'MENOS REAÇÃO' } };
+const rel = (v) => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(Math.round(v * 100)) + '%';
+const selos = (c) => { const l = ['alcance', 'reacao'].map((d) => PALAVRA[d][c[d].veredito]).filter(Boolean); return l.length ? l : [c.alcance.veredito === 'tanto' && c.reacao.veredito === 'tanto' ? 'TANTO FAZ' : 'AINDA NÃO DÁ PARA DIZER']; };
+const acertou = (c, palpite) => palpite === c.real || (c.real === 'ambos' && palpite !== 'nenhum');
+const CAMPOS = { tem_rosto: 'Tem rosto', criador_e_empreendedor_real: 'Criador é empreendedor', prova_social: 'Prova social', texto_na_tela: 'Texto na tela', usa_linguagem_regional: 'Linguagem regional', tem_cta: 'Tem chamada para ação', oferta_ou_beneficio_explicito: 'Oferta explícita', numero_no_gancho: 'Número no gancho', passo_concreto: 'Passo concreto', exemplo_com_numeros: 'Exemplo com números', cita_erro_ou_perda: 'Cita erro ou perda', cita_regra_ou_lei: 'Cita regra ou lei', fala_direto_com_dono: 'Fala direto com o dono', mostra_ambiente_real: 'Mostra ambiente real', promove_produto_proprio: 'Promove produto próprio', formato_video: 'Formato', tipo_hook: 'Gancho', tema_principal: 'Tema', tom: 'Tom', tipo_cta: 'Chamada', duracao_faixa: 'Duração', forca_hook_0a10: 'Força do gancho (0 a 10)', legenda_tamanho: 'Tamanho da legenda', ritmo_cortes_0a10: 'Ritmo de cortes (0 a 10)', clareza_mensagem_0a10: 'Clareza (0 a 10)' };
+const VALORES = { talking_head: 'fala para a câmera', lista_dicas: 'lista de dicas', antes_depois: 'antes e depois', humor_esquete: 'humor', ferramentas_maquininha: 'maquininha e ferramentas', historia_de_empreendedor: 'história de empreendedor', ate_30s: 'até 30 s', '31_60s': '31 a 60 s', acima_60s: 'mais de 60 s', link_na_bio: 'link na bio', gestao: 'gestão', financas: 'finanças', motivacao: 'motivação', polemica: 'polêmica', numero: 'número', tecnico: 'técnico', humoristico: 'humorístico', alimentacao: 'alimentação' };
+const valor = (v) => VALORES[v] || String(v).replaceAll('_', ' ');
+const nome = (a) => { const [c, v] = a.split('='); const b = CAMPOS[c] || c.replaceAll('_', ' '); return v ? `${b}: ${valor(v)}` : b; };
+const STATUS = { sustentada: 'aprovada no teste', nao_sustentada: 'negada no teste', evidencia_insuficiente: 'evidência insuficiente', nao_testada: 'não testada' };
+const SINAL = { ok: 'base suficiente', poucos_posts: 'poucos posts no recorte', sem_dados: 'sem dados no recorte' };
+const MODOS = { gerar_criativo: 'Criar criativo', analisar: 'Analisar', recomendar: 'Recomendar' };
+const TELAS = [['maquininha', 'Maquininha'], ['extrato', 'Extrato'], ['videos', 'Vídeos'], ['agente', 'Criar vídeo'], ['molde', 'Molde']];
+
+let D = null, C = [];
+const S = { sel: 0, novo: false, filtro: 'Todas', aberto: null, carac: null, filtros: { busca: '', segmento: '', top: '', ordem: '' }, pagina: 0, posts: null,
+  modo: 'gerar_criativo', segmento: '', pedido: '', origem: null, resultado: null, trabalhando: false, execucoes: [], gerados: [], creditosPorSegundo: 5 };
+
+// palpites ficam só neste navegador
+let P = {};
+try { P = JSON.parse(localStorage.getItem('palpites3') || '{}'); } catch { /* sem armazenamento: vale só nesta visita */ }
+const guardar = () => { try { localStorage.setItem('palpites3', JSON.stringify(P)); } catch { /* idem */ } };
+
+async function api(caminho, corpo) {
+  const r = await fetch('/api/' + caminho, corpo ? { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(corpo) } : undefined);
+  const j = await r.json().catch(() => ({ erro: 'Resposta inesperada do servidor.' }));
+  if (!r.ok) throw new Error(j.erro || 'Falha no servidor.');
+  return j;
+}
+let relogio;
+function avisar(msg) { const t = $('torrada'); t.textContent = msg; t.hidden = false; clearTimeout(relogio); relogio = setTimeout(() => { t.hidden = true; }, 6000); }
+
+function preparar() {
+  const peso = (c) => Math.max(...['alcance', 'reacao'].map((d) => ['sobe', 'cai'].includes(c[d].veredito) ? 1 + Math.abs(c[d].efeito) : Math.abs(c[d].efeito) / 10));
+  C = D.crencas.filter((t) => FRASES[t.atributo]).map((t) => {
+    const a = t.alcance.veredito === 'sobe', v = t.reacao.veredito === 'sobe';
+    return { ...t, frase: FRASES[t.atributo], grupo: grupo(t.atributo), real: a && v ? 'ambos' : a ? 'alcance' : v ? 'reacao' : 'nenhum' };
+  }).sort((x, y) => peso(y) - peso(x));
+}
+const linhaDesfecho = (r) => `${rel(r.efeito)} (de ${rel(r.ic95[0])} a ${rel(r.ic95[1])})`;
+const feitas = () => C.filter((c) => P[c.atributo]);
+const temEfeito = (c) => ['alcance', 'reacao'].some((d) => ['sobe', 'cai'].includes(c[d].veredito));
+
+// ------------------------------------------------------------------ peças
+const short = (p) => `<button class="short" data-post="${e(p.id)}"><div class="capa" style="background-image:url('${e(p.capa || capa(p.id))}')"><span>#${p.posicao}</span></div><b class="num">${pct(p.engajamento, 1)}</b><span class="t">${e(p.titulo)}</span><span class="c">${e(p.canal)}</span></button>`;
+function cupom(c, novo) {
+  const palpite = P[c.atributo].palpite, bloco = (rot, r) => `<div>${rot}</div><dl><dt>diferença</dt><dd>${rel(r.efeito)}</dd><dt>margem</dt><dd>${rel(r.ic95[0])} a ${rel(r.ic95[1])}</dd><dt>canais em que sobe</dt><dd>${r.sobe_em} de ${r.n_perfis}</dd></dl>`;
+  return `<div class="cupom ${novo ? 'novo' : ''}"><div class="cab">COMPROVANTE DE CONSULTA</div><hr><p class="frase">${e(c.frase)}</p><hr>${bloco('ALCANCE · views', c.alcance)}<hr>${bloco('REAÇÃO · curtidas por view', c.reacao)}<hr><div>seu palpite: ${PALPITES[palpite].toLowerCase()}</div><div>${acertou(c, palpite) ? 'bateu com os dados' : 'os dados dizem outra coisa'}</div>${selos(c).map((t) => `<div class="carimbo ${t.startsWith('MAIS') ? 'sobe' : t.startsWith('MENOS') ? 'cai' : ''}">${t}</div>`).join('')}<p class="fino">Comparação dentro do mesmo canal, em metade dos canais. Não é veredito: associação, não causa.</p></div>`;
+}
+const acoes = (i) => `<div class="acoes"><button class="btn" data-videos="${i}">Ver os vídeos</button><button class="btn leve" data-criar="${i}">Criar um criativo</button></div>`;
+
+// ------------------------------------------------------------------ telas
+const V = {};
+
+V.maquininha = () => {
+  if (!C.length) return '<div class="folha"><h1>Ainda não há dados para consultar</h1><p class="sub">A consulta precisa de pelo menos 8 canais com vídeos categorizados.</p></div>';
+  const c = C[S.sel], feito = P[c.atributo], falta = C.some((x) => !P[x.atributo]);
+  return `<div class="banca">
+    <div><h1>Passe uma crença na maquininha</h1><p class="intro">Escolha uma decisão de quem grava, dê o seu palpite na tela e veja o que ela muda: o alcance do vídeo, a reação de quem assiste, ou nada.</p>
+      <ul class="crencas">${C.map((x, i) => `<li><button data-sel="${i}" aria-pressed="${i === S.sel}">${e(x.frase)}${P[x.atributo] ? `<i class="feita">${temEfeito(x) ? 'muda' : 'não muda'}</i>` : `<i>${e(x.grupo)}</i>`}</button></li>`).join('')}</ul></div>
+    <div class="maq" id="maq"><img src="/static/maquininha.png" alt="Maquininha Stone" draggable="false"><div class="visor" id="visor">
+      <span class="rot">CONSULTA ${String(S.sel + 1).padStart(2, '0')} DE ${C.length}</span><b class="frase-v">${e(c.frase)}</b>
+      ${feito ? `<div class="resultado"><span class="pergunta">Seu palpite: ${PALPITES[feito.palpite].toLowerCase()}</span>${selos(c).map((t) => `<span class="selo ${t.startsWith('MAIS') ? 'sobe' : t.startsWith('MENOS') ? 'cai' : ''}">${t}</span>`).join('')}<p>Alcance ${rel(c.alcance.efeito)} · reação ${rel(c.reacao.efeito)}. Comprovante impresso.</p>${falta ? '<button data-seguinte>Próxima crença</button>' : ''}</div>`
+        : `<span class="pergunta">O que isso muda no vídeo?</span><div class="teclas"><button class="t-sobe" data-palpite="alcance">${PALPITES.alcance}</button><button class="t-tanto" data-palpite="reacao">${PALPITES.reacao}</button><button class="t-cai" data-palpite="nenhum">${PALPITES.nenhum}</button></div>`}
+    </div></div>
+    <div class="saida">${feito ? cupom(c, S.novo) + acoes(S.sel) + `<a class="peq" href="#extrato">Guardado no extrato: ${feitas().length} de ${C.length} crenças consultadas</a>` : '<div class="espera">O comprovante sai aqui depois do seu palpite.</div>'}</div>
+  </div>`;
+};
+// Encaixa o visor (360×800) no quadrilátero da tela dentro da imagem (medido em px da imagem de 670×1000).
+const QUAD = [[167, 63], [512, 83], [618, 864], [252, 877]];
+function encaixarVisor() {
+  const maq = $('maq'), visor = $('visor'); if (!maq) return;
+  const k = maq.clientWidth / 670, d = QUAD.map(([x, y]) => [x * k, y * k]), o = [[0, 0], [360, 0], [360, 800], [0, 800]];
+  const adj = (m) => [m[4] * m[8] - m[5] * m[7], m[2] * m[7] - m[1] * m[8], m[1] * m[5] - m[2] * m[4], m[5] * m[6] - m[3] * m[8], m[0] * m[8] - m[2] * m[6], m[2] * m[3] - m[0] * m[5], m[3] * m[7] - m[4] * m[6], m[1] * m[6] - m[0] * m[7], m[0] * m[4] - m[1] * m[3]];
+  const mul = (a, b) => { const c = Array(9); for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) c[3 * i + j] = a[3 * i] * b[j] + a[3 * i + 1] * b[3 + j] + a[3 * i + 2] * b[6 + j]; return c; };
+  const base = (p) => { const m = [p[0][0], p[1][0], p[2][0], p[0][1], p[1][1], p[2][1], 1, 1, 1], a = adj(m), v = [0, 1, 2].map((i) => a[3 * i] * p[3][0] + a[3 * i + 1] * p[3][1] + a[3 * i + 2]); return mul(m, [v[0], 0, 0, 0, v[1], 0, 0, 0, v[2]]); };
+  const t = mul(base(d), adj(base(o))).map((x, _, arr) => x / arr[8]);
+  visor.style.transform = `matrix3d(${t[0]},${t[3]},0,${t[6]},${t[1]},${t[4]},0,${t[7]},0,0,1,0,${t[2]},${t[5]},0,${t[8]})`;
+}
+addEventListener('resize', encaixarVisor);
+
+V.extrato = () => {
+  const F = feitas(), fortes = F.filter(temEfeito).length, acertos = F.filter((c) => acertou(c, P[c.atributo].palpite)).length;
+  const grupos = ['Todas', ...new Set(C.map((c) => c.grupo))], lista = C.filter((c) => S.filtro === 'Todas' || c.grupo === S.filtro);
+  return `<div class="col"><div class="saldo"><span class="peq">Crenças consultadas</span><strong class="num">${F.length} de ${C.length}</strong>
+    <p class="sub">${!F.length ? 'Nenhum comprovante ainda. Cada crença que você passa na maquininha fica guardada aqui.' : `${fortes} ${fortes === 1 ? 'muda' : 'mudam'} o alcance ou a reação ao vídeo; ${F.length - fortes} não ${F.length - fortes === 1 ? 'muda' : 'mudam'} nada que dê para medir. Você acertou ${acertos} de ${F.length} ${F.length > 1 ? 'palpites' : 'palpite'}.`}</p>
+    <div class="acoes" style="margin-top:14px">${F.length < C.length ? `<a class="btn" href="#maquininha" data-proxima>${F.length ? 'Passar a próxima crença' : 'Passar a primeira crença'}</a>` : ''}${F.length ? '<button class="btn leve" data-limpar>Apagar meus palpites</button>' : ''}</div></div>
+    <div class="pilulas" style="padding-top:16px">${grupos.map((g) => `<button data-filtro="${e(g)}" aria-pressed="${g === S.filtro}">${e(g)}</button>`).join('')}</div>
+    ${[...new Set(lista.map((c) => c.grupo))].map((g) => `<div class="grupo">${e(g)}</div>` + lista.filter((c) => c.grupo === g).map((c) => { const i = C.indexOf(c), p = P[c.atributo];
+      if (!p) return `<button class="lanc pendente" data-ir="${i}"><span class="bola">?</span><span><b>${e(c.frase)}</b><span class="peq">Ainda não consultada</span></span><span class="valor"><small>passar na maquininha</small></span></button>`;
+      const sobe = [c.alcance, c.reacao].some((r) => r.veredito === 'sobe'), cai = [c.alcance, c.reacao].some((r) => r.veredito === 'cai');
+      return `<button class="lanc ${sobe && cai ? '' : sobe ? 'sobe' : cai ? 'cai' : ''}" data-abre="${i}" aria-expanded="${S.aberto === i}"><span class="bola">${sobe && cai ? '⇅' : sobe ? '↑' : cai ? '↓' : '='}</span><span><b>${e(c.frase)}</b><span class="peq">${selos(c).join(' · ').toLowerCase()} · seu palpite: ${PALPITES[p.palpite].toLowerCase()}</span></span><span class="valor num" style="font-size:14px">alcance ${rel(c.alcance.efeito)}<br>reação ${rel(c.reacao.efeito)}</span></button>`
+        + (S.aberto === i ? `<div class="abre"><dl><div><dt>Alcance (views)</dt><dd class="num">${linhaDesfecho(c.alcance)}</dd></div><div><dt>Reação (curtidas e comentários por view)</dt><dd class="num">${linhaDesfecho(c.reacao)}</dd></div><div><dt>Canal a canal</dt><dd style="font:600 15px var(--texto)">alcance sobe em ${c.alcance.sobe_em} de ${c.alcance.n_perfis}; reação sobe em ${c.reacao.sobe_em} de ${c.reacao.n_perfis}</dd></div></dl>${acoes(i)}</div>` : ''); }).join('')).join('')}
+    <p class="peq" style="margin-top:22px">Cada crença compara os vídeos que têm a característica com os que não têm, dentro do mesmo canal, usando os ${n(D.posts_explora)} vídeos de ${D.regras.perfis_explora} canais (metade da base). Os outros ${D.regras.perfis_confirma} canais ficam reservados para o teste oficial das hipóteses. São associações, não causas.</p></div>`;
+};
+
+V.videos = () => {
+  if (S.carac !== null) { const c = C[S.carac];
+    return `<h1>Vídeos que ${e(CARAC[c.atributo] || 'falam de ' + (TEMAS[c.atributo.split('=')[1]] || nome(c.atributo)))}</h1><p class="sub" style="margin-top:8px">${e(c.frase)}: ${selos(c).join(', ').toLowerCase()} (alcance ${rel(c.alcance.efeito)}, reação ${rel(c.reacao.efeito)} dentro do mesmo canal). Compare você mesmo os dois grupos.</p><div class="acoes" style="margin-top:14px"><button class="btn leve" data-todos>Ver todos os vídeos</button></div>
+      <div class="secao"><h2>Entre os 10% de maior engajamento <span class="peq num" id="n-top"></span></h2><div class="grade" id="g-top"><p class="sub">Carregando…</p></div></div>
+      <div class="secao"><h2>Fora do topo <span class="peq num" id="n-resto"></span></h2><div class="grade" id="g-resto"><p class="sub">Carregando…</p></div></div>`; }
+  const F = S.filtros;
+  return `<h1>Vídeos da base</h1><div class="filtros" style="margin:16px 0 8px"><input class="campo" type="search" id="f-busca" placeholder="Buscar por título ou canal" value="${e(F.busca)}" aria-label="Buscar" style="flex:1;min-width:220px"><select class="campo" id="f-segmento" aria-label="Segmento"><option value="">Todos os segmentos</option>${D.opcoes.segmentos.map((s) => `<option value="${e(s)}" ${F.segmento === s ? 'selected' : ''}>${e(valor(s))}</option>`).join('')}</select><select class="campo" id="f-ordem" aria-label="Ordem"><option value="">Maior engajamento</option><option value="views" ${F.ordem === 'views' ? 'selected' : ''}>Mais vistos</option><option value="recentes" ${F.ordem === 'recentes' ? 'selected' : ''}>Mais recentes</option></select><label class="peq" style="display:flex;gap:6px;align-items:center;cursor:pointer"><input type="checkbox" id="f-top" ${F.top ? 'checked' : ''}> só os 10% de maior engajamento</label></div>
+    <p class="peq num" id="contagem" style="margin-bottom:14px"></p><div class="grade" id="grade"></div><div style="text-align:center;margin-top:20px"><button class="btn leve" id="mais" hidden>Carregar mais</button></div>`;
+};
+async function carregarVideos(juntar) {
+  try {
+    if (S.carac !== null) { const a = C[S.carac].atributo;
+      for (const [lado, q] of [['top', 'top=1'], ['resto', 'resto=1']]) { const r = await api(`posts?atributo=${encodeURIComponent(a)}&${q}`); if (!$('g-' + lado)) return;
+        $('g-' + lado).innerHTML = r.posts.slice(0, 12).map(short).join('') || '<p class="sub">Nenhum vídeo.</p>'; $('n-' + lado).textContent = `· ${n(r.total)} vídeos`; }
+      return; }
+    const r = await api('posts?' + new URLSearchParams({ ...S.filtros, pagina: S.pagina }));
+    S.posts = juntar ? { ...r, posts: [...S.posts.posts, ...r.posts] } : r;
+    if (!$('grade')) return;
+    $('grade').innerHTML = S.posts.posts.map(short).join('') || '<p class="sub">Nenhum vídeo com esses filtros.</p>';
+    $('contagem').textContent = `${n(r.total)} vídeos · ${n(r.no_top)} no topo`; $('mais').hidden = S.posts.posts.length >= r.total;
+  } catch (x) { avisar(x.message); }
+}
+async function abrirPost(id) {
+  try {
+    const p = await api('posts/' + encodeURIComponent(id)), R = p.rubrica, fora = ['transcricao', 'elementos_top5', 'hook_primeiros_3s'];
+    $('camada').innerHTML = `<div class="veu" data-fechar></div><aside class="gaveta" role="dialog" aria-label="Detalhe do vídeo"><div class="acoes" style="justify-content:space-between;align-items:center"><b>#${p.posicao} no ranking${p.top ? ' · topo' : ''}</b><button class="btn leve" data-fechar>Fechar</button></div>
+      <img src="${e(p.capa || capa(p.id))}" alt=""><div><h2 style="font-size:18px">${e(p.titulo)}</h2><p class="peq" style="margin-top:4px">${e(p.canal)} · ${n(p.inscritos)} inscritos · ${e(valor(p.segmento))} · ${e(p.publicado_em)} · ${p.duracao_s} s</p></div>
+      <table class="tab"><tbody><tr><td>Engajamento</td><td class="n">${pct(p.engajamento, 1)}</td></tr><tr><td>Views</td><td class="n">${n(p.views)}</td></tr><tr><td>Curtidas</td><td class="n">${n(p.likes)}</td></tr><tr><td>Comentários</td><td class="n">${n(p.comentarios)}</td></tr></tbody></table>
+      <a class="btn" href="${yt(p.id)}" target="_blank" rel="noopener" style="text-align:center">Abrir no YouTube</a>
+      ${R.hook_primeiros_3s ? `<div><p class="peq">Primeiros 3 segundos</p><p>${e(R.hook_primeiros_3s)}</p></div>` : ''}
+      <div><b>O que foi lido no vídeo</b><p class="peq">${p.com_fala ? 'Lido com som e pelos quadros.' : 'Lido só pelos quadros; o que depende da fala ainda não foi preenchido.'}</p><table class="tab" style="margin-top:6px"><tbody>${Object.entries(R).filter(([k]) => !fora.includes(k)).map(([k, v]) => `<tr><td class="peq">${e(CAMPOS[k] || k)}</td><td>${typeof v === 'boolean' ? (v ? 'sim' : 'não') : e(valor(v))}</td></tr>`).join('')}</tbody></table></div>
+      ${R.transcricao ? `<details><summary>Transcrição</summary><p class="peq">${e(R.transcricao)}</p></details>` : ''}</aside>`;
+  } catch (x) { avisar(x.message); }
+}
+
+// Moldes de gravação: cada tipo de gancho da base virou uma fórmula com lacunas. As cenas 3D são
+// genéricas e sem marca (geradas uma vez); a legenda é texto da página e muda com o que se digita.
+const ROTULOS = { produto: 'Seu produto', passo: 'Primeiro passo', palavra: 'Palavra para comentar', problema: 'O que atrapalha', gasto: 'Com o que se gasta demais', numero: 'Seu número', prazo: 'Em quanto tempo' };
+const MOLDES = [
+  { id: 'curiosidade', nome: 'Curiosidade', noTopo: 174, origem: 'Bora montar uma pizza comigo', exemplos: [['IQ9uaMOYjjc', 'Gestão de Pizzarias'], ['dM8vnSbCHWM', 'Gestão de Pizzarias']],
+    campos: { produto: 'a pizza', passo: 'a massa', palavra: 'RECEITA' },
+    cenas: [['gancho-curiosidade', 'Gancho', 'Olhe para a câmera e chame com a mão', 'Bora montar {produto} comigo?'], ['produto', 'Mostre o produto', 'Levante o produto na altura do rosto', 'Olha só {produto} saindo agora'], ['passo', 'Passo a passo', 'Mostre de perto como você faz', 'Primeiro vem {passo}'], ['chamada', 'Chamada', 'Aponte para os comentários', 'Comenta {palavra} que eu te conto o resto']] },
+  { id: 'pergunta', nome: 'Pergunta', noTopo: 68, origem: 'Na sua opinião, pizzas desse tipo servem para vender realmente?', exemplos: [['STKkWJcK5NQ', 'Gestão de Pizzarias'], ['qaX3DZ3TuiA', 'Rodrigo Almeida']],
+    campos: { produto: 'um bolo assim', passo: 'recheio de verdade', palavra: 'SIM ou NÃO' },
+    cenas: [['gancho-pergunta', 'Gancho', 'Dê de ombros e aponte para quem assiste', 'Na sua opinião, {produto} vende?'], ['produto', 'Mostre o produto', 'Levante o produto na altura do rosto', 'Olha {produto} de perto'], ['passo', 'Passo a passo', 'Mostre de perto como você faz', 'Eu faço com {passo}'], ['chamada', 'Chamada', 'Aponte para os comentários', 'Comenta {palavra} aqui embaixo']] },
+  { id: 'promessa', nome: 'Promessa', noTopo: 59, origem: 'Pare de gastar uma fortuna com balões importados!', exemplos: [['4QoQl1T_d3o', 'Tend Ideias'], ['OOc0uSxth90', 'Tend Ideias']],
+    campos: { gasto: 'embalagem cara', produto: 'essa caixa simples', passo: 'dobrar e colar', palavra: 'MOLDE' },
+    cenas: [['gancho-promessa', 'Gancho', 'Faça sinal de pare com a mão', 'Pare de gastar uma fortuna com {gasto}!'], ['produto', 'Mostre o produto', 'Levante o produto na altura do rosto', 'Use {produto} no lugar'], ['passo', 'Passo a passo', 'Mostre de perto como você faz', 'É só {passo}'], ['chamada', 'Chamada', 'Aponte para os comentários', 'Salva o vídeo e comenta {palavra}']] },
+  { id: 'dor', nome: 'Dor', noTopo: 33, origem: 'Sua bio do Instagram tá te impedindo de vender', exemplos: [['Qt14TzHkVWA', 'Nícolas Monteiro'], ['CuPYYaPxBNo', 'Allman Gestão e Negócios']],
+    campos: { problema: 'Sua vitrine', produto: 'uma peça de destaque', passo: 'tirar o excesso', palavra: 'VITRINE' },
+    cenas: [['gancho-dor', 'Gancho', 'Mãos na cabeça, depois olhe para a câmera', '{problema} tá te impedindo de vender'], ['produto', 'Mostre o produto', 'Levante o produto na altura do rosto', 'Coloque {produto} na frente'], ['passo', 'Passo a passo', 'Mostre de perto como você faz', 'Comece por {passo}'], ['chamada', 'Chamada', 'Aponte para os comentários', 'Comenta {palavra} que eu te ajudo']] },
+  { id: 'numero', nome: 'Número', noTopo: 19, origem: 'Quase 200 mil de investimento em apenas 2 máquinas', exemplos: [['MP_VAHdo2PI', 'Matheus Brayan'], ['4oJ7uUdH4lQ', 'Allman Gestão e Negócios']],
+    campos: { numero: '300 vendas', prazo: 'uma semana', produto: 'esse combo', passo: 'o preço certo', palavra: 'COMBO' },
+    cenas: [['gancho-numero', 'Gancho', 'Conte nos dedos e abra os braços', '{numero} em apenas {prazo}'], ['produto', 'Mostre o produto', 'Levante o produto na altura do rosto', 'Tudo com {produto}'], ['passo', 'Passo a passo', 'Mostre de perto como você faz', 'O segredo foi {passo}'], ['chamada', 'Chamada', 'Aponte para os comentários', 'Comenta {palavra} que eu mostro']] },
+].map((m) => ({ ...m, cenas: m.cenas.map(([id, nome, direcao, fala]) => ({ id, nome, direcao, fala })) }));
+const M = { molde: 0, cena: 0, prontas: null, tocando: true };
+const moldeAtual = () => MOLDES[M.molde];
+const cenasM = () => moldeAtual().cenas.filter((c) => !M.prontas || M.prontas.includes(c.id));
+const palavrasM = (c) => c.fala.split(' ').map((p) => { const m = p.match(/^\{(\w+)\}(.*)$/); return m ? { vaga: true, texto: (moldeAtual().campos[m[1]] || '…') + m[2] } : { texto: p }; });
+const formulaM = () => palavrasM(moldeAtual().cenas[0]).map((p) => p.vaga ? `<mark>${e(p.texto)}</mark>` : e(p.texto)).join(' ');
+V.molde = () => {
+  const m = moldeAtual(), L = cenasM(), falta = m.cenas.length - L.length;
+  return `<div class="molde"><div class="palco-m">${L.length ? '<video id="vm" muted playsinline preload="auto"></video>' : '<p style="position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:#fff;font-weight:600">As cenas 3D deste molde ainda estão sendo geradas.</p>'}<div class="trilhos" id="trilhos"></div><div class="direcao" ${L.length ? '' : 'hidden'}><span>DIREÇÃO</span><b id="dir-m"></b></div><div class="legenda" id="leg-m" aria-live="off"></div><div class="controle" ${L.length ? '' : 'hidden'}><button data-mtoca>${M.tocando ? 'Pausar' : 'Tocar'}</button><button data-minicio>Do início</button></div></div>
+    <div style="display:grid;gap:22px;min-width:0"><div class="pilulas" role="group" aria-label="Tipo de gancho">${MOLDES.map((x, i) => `<button data-mmolde="${i}" aria-pressed="${i === M.molde}">${e(x.nome)}</button>`).join('')}</div>
+      <div><p class="peq">Molde de gravação · gancho de ${m.nome.toLowerCase()}, presente em ${m.noTopo} dos ${n(D.base.top)} vídeos de maior engajamento da base</p><h1 class="formula" id="formula-m" style="margin-top:6px">${formulaM()}</h1><p class="sub" style="margin-top:8px">Veio de um gancho real: "${e(m.origem)}". Troque as lacunas pelo seu negócio e copie os movimentos do boneco, cena por cena.</p></div>
+      <div class="campos-m">${Object.entries(m.campos).map(([k, v]) => `<label>${ROTULOS[k] || k}<input class="campo" data-mcampo="${k}" value="${e(v)}" maxlength="28"></label>`).join('')}</div>
+      <div><h2>Roteiro em ${L.length} ${L.length === 1 ? 'cena' : 'cenas'}</h2><ul class="roteiro-m" id="rot-m" style="margin-top:8px"></ul>${falta ? `<p class="peq" style="margin-top:8px">${falta === 1 ? 'Falta 1 cena' : `Faltam ${falta} cenas`} em 3D: a geração na Feita está instável e segue tentando. Recarregue a página para ver as novas.</p>` : ''}</div>
+      <div><h2>Vídeos reais com esse gancho</h2><div class="fita-yt" style="margin-top:10px">${m.exemplos.map(([id, canal]) => `<figure><iframe loading="lazy" src="https://www.youtube.com/embed/${id}" title="${e(canal)}" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe><figcaption>${e(canal)}</figcaption></figure>`).join('')}</div></div></div></div>`;
+};
+function pintarMolde() {
+  const L = cenasM(), c = L[M.cena]; if (!c || !$('leg-m')) return;
+  $('dir-m').textContent = c.direcao;
+  $('leg-m').innerHTML = palavrasM(c).map((p) => `<span class="${p.vaga ? 'vaga' : ''}">${e(p.texto)}</span>`).join('');
+  $('trilhos').innerHTML = L.map(() => '<i><b></b></i>').join('');
+  $('rot-m').innerHTML = L.map((x, i) => `<li><button data-mcena="${i}" aria-current="${i === M.cena}"><em>${i + 1}</em><span><b>${e(x.nome)}</b><small>${e(x.direcao)} · "${e(palavrasM(x).map((p) => p.texto).join(' '))}"</small></span></button></li>`).join('');
+}
+function tocarCena(i) {
+  const L = cenasM(), v = $('vm'); if (!v || !L.length) return;
+  M.cena = (i + L.length) % L.length; pintarMolde();
+  v.src = `/moldes/cena-${L[M.cena].id}.mp4`; v.currentTime = 0; if (M.tocando) v.play().catch(() => {});
+}
+function quadroMolde() {
+  const v = $('vm'); if (!v) { M.laco = false; return; } requestAnimationFrame(quadroMolde);
+  const d = v.duration || 5, t = v.currentTime, palavras = $('leg-m').children, barras = $('trilhos').querySelectorAll('b');
+  for (let k = 0; k < palavras.length; k++) palavras[k].classList.toggle('on', t >= 0.35 + k * Math.min(0.42, (d * 0.55) / palavras.length));
+  barras.forEach((b, k) => { b.style.width = (k < M.cena ? 100 : k === M.cena ? Math.min(100, (t / d) * 100) : 0) + '%'; });
+}
+async function iniciarMolde() {
+  try { M.prontas = (await api('molde')).cenas; } catch (x) { avisar(x.message); return; }
+  if (tela() !== 'molde') return;
+  desenharMoldeDeNovo();
+}
+function desenharMoldeDeNovo() { $('tela').innerHTML = `<div class="folha">${V.molde()}</div>`; const v = $('vm'); if (!v) return; v.addEventListener('ended', () => tocarCena(M.cena + 1)); tocarCena(Math.min(M.cena, cenasM().length - 1)); if (!M.laco) { M.laco = true; requestAnimationFrame(quadroMolde); } }
+
+V.agente = () => {
+  const o = S.origem !== null ? C[S.origem] : null;
+  return `<div class="col"><h1>${S.modo === 'gerar_criativo' ? 'Sugestor de vídeo' : 'Perguntar ao agente'}</h1><p class="sub" style="margin:8px 0 18px">${S.modo === 'gerar_criativo' ? 'Diga o assunto. O agente devolve roteiros com os vídeos reais que os inspiraram, e você pode gerar um vídeo de exemplo de cada um.' : 'O agente consulta os vídeos de maior engajamento e redige. Todo número e todo vídeo citado vêm da base.'}</p>
+    ${o ? `<p class="nota-livre" style="margin-bottom:14px">Você veio de "<b>${e(o.frase)}</b>", que deu <b>${selos(o).join(', ').toLowerCase()}</b>. ${temEfeito(o) ? 'É consulta, não regra aprovada: use como pista.' : 'Essa escolha é livre: nos dados ela não fez diferença, então o criativo não precisa se prender a ela.'}</p>` : ''}
+    <form class="pedido" id="form"><textarea class="campo" id="pedido" maxlength="500" placeholder="${S.modo === 'gerar_criativo' ? 'Sobre o que é o vídeo? Ex.: como o dono de restaurante calcula o preço do prato' : 'Escreva a pergunta'}" aria-label="Pedido">${e(S.pedido)}</textarea>
+      <div class="filtros"><select class="campo" id="modo" aria-label="Modo">${Object.entries(MODOS).map(([m, r]) => `<option value="${m}" ${S.modo === m ? 'selected' : ''}>${r}</option>`).join('')}</select><select class="campo" id="segmento" aria-label="Segmento"><option value="">Todos os segmentos</option>${D.opcoes.segmentos.map((s) => `<option value="${e(s)}" ${S.segmento === s ? 'selected' : ''}>${e(valor(s))}</option>`).join('')}</select><button class="btn" id="enviar" style="margin-left:auto" ${S.trabalhando ? 'disabled' : ''}>${S.modo === 'gerar_criativo' ? 'Sugerir vídeos' : 'Perguntar'}</button></div></form>
+    <div id="resposta" style="margin-top:22px">${S.trabalhando ? '<div class="trabalhando"><i></i><span>O agente está trabalhando. Costuma levar de 10 a 40 segundos.</span></div>' : S.resultado ? resposta(S.resultado) : ''}</div>
+    <div class="secao"><h2>Vídeos de exemplo já gerados</h2><div id="galeria"></div></div>
+    <div class="secao"><h2>Pedidos anteriores</h2><div class="rolagem-x" id="lista"><p class="sub">Carregando…</p></div></div></div>`;
+};
+function resposta(s) {
+  const refs = Object.fromEntries(s.reference_posts.map((r) => [r.post_id, r.canal]));
+  return `<div style="display:grid;gap:20px"><p style="font-size:17px;line-height:1.6">${e(s.explanation)}</p><p class="peq">${SINAL[s.confidence_flag] || e(s.confidence_flag)} · execução <span style="font-family:var(--mono)">${e(s.run_id)}</span></p>
+    ${s.creatives.length ? `<div>${s.creatives.map((c, k) => `<div class="criativo"><h3>${e(c.gancho)}</h3><dl><dt>Roteiro</dt><dd>${e(c.roteiro)}</dd>${c.legenda ? `<dt>Legenda</dt><dd>${e(c.legenda)}</dd>` : ''}<dt>Chamada</dt><dd>${e(c.chamada_para_acao)}</dd></dl>${(c.referencias || []).length ? `<div class="exemplos"><b>Vídeos reais que inspiraram este roteiro</b><div class="fita-yt">${c.referencias.map((id) => `<figure><iframe loading="lazy" src="https://www.youtube.com/embed/${encodeURIComponent(id)}" title="${e(refs[id] || 'Short de referência')}" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe><figcaption>${e(refs[id] || '')}</figcaption></figure>`).join('')}</div></div>` : ''}<div class="gerar" id="vid-${k}">${blocoVideo(c, k)}</div></div>`).join('')}</div>` : ''}
+    ${s.reference_posts.length ? `<div><h2>Vídeos de referência</h2><p class="peq" style="margin:2px 0 12px">Os que embasam a resposta, no máximo dois por canal.</p><div class="fita">${s.reference_posts.map((r) => short({ id: r.post_id, titulo: r.titulo, canal: r.canal, engajamento: r.engajamento, posicao: r.posicao })).join('')}</div></div>` : ''}
+    ${s.findings.length ? `<details ${s.creatives.length ? '' : 'open'}><summary>Mais frequente no topo deste recorte</summary><p class="peq" style="margin:2px 0 6px">Frequência é descrição, não prova: o que está "não testada" pode ser igualmente comum fora do topo.</p><div class="rolagem-x"><table class="tab"><thead><tr><th>Característica</th><th class="n">No topo</th><th class="n">Vídeos</th><th>Teste</th></tr></thead><tbody>${s.findings.map((a) => `<tr><td>${e(nome(a.atributo))}</td><td class="n">${pct(a.frequencia_top)}</td><td class="n">${a.n_ocorrencias} de ${a.n_top}</td><td class="peq">${STATUS[a.status] || e(a.status)}</td></tr>`).join('')}</tbody></table></div></details>` : ''}</div>`;
+}
+// vídeo de exemplo de um criativo, gerado pela Feita (gasta créditos; só com clique)
+const doGancho = (c) => S.gerados.find((v) => v.gancho === c.gancho && v.status !== 'failed') || S.gerados.find((v) => v.gancho === c.gancho);
+const player = (v) => `<video class="gerado" controls playsinline preload="metadata" src="${e(v.arquivo)}"></video>`;
+function blocoVideo(c, k) {
+  const v = doGancho(c), cps = S.creditosPorSegundo;
+  if (v && v.status === 'completed') return `<b>Vídeo de exemplo</b>${player(v)}<p class="peq">Gerado por IA (${e(v.modelo)}) a partir do gancho e do roteiro. ${v.segundos} s${v.creditos ? ` · ${v.creditos} créditos` : ''}. É um rascunho visual, não o vídeo final.</p>`;
+  if (v && v.status !== 'failed') return `<b>Vídeo de exemplo</b><div class="trabalhando"><i></i><span>Gerando o vídeo. Costuma levar de 30 a 90 segundos.</span></div>`;
+  return `<b>Vídeo de exemplo</b>${v ? `<p class="aviso">A geração falhou: ${e(v.erro || 'erro desconhecido')}</p>` : ''}<div class="filtros"><select class="campo" id="seg-${k}" aria-label="Duração"><option value="8">8 segundos · cerca de ${8 * cps} créditos</option><option value="4">4 segundos · cerca de ${4 * cps} créditos</option></select><button class="btn" data-gerar="${k}">Gerar vídeo de exemplo</button></div><p class="peq">Uma pessoa gerada por IA fala o gancho em cena. Gasta créditos da sua conta Feita.</p>`;
+}
+function redesenharVideos() { if (!S.resultado) return; S.resultado.creatives.forEach((c, k) => { const el = $('vid-' + k); if (el) el.innerHTML = blocoVideo(c, k); }); galeria(); }
+function galeria() {
+  const el = $('galeria'); if (!el) return; const prontos = S.gerados.filter((v) => v.status === 'completed');
+  el.innerHTML = prontos.length ? `<div class="fita-yt">${prontos.map((v) => `<figure>${player(v)}<figcaption>${e(v.gancho)}</figcaption></figure>`).join('')}</div>` : '<p class="sub">Nenhum vídeo gerado ainda.</p>';
+}
+const vigias = {};
+function vigiar(id) {
+  if (vigias[id]) return;
+  vigias[id] = setInterval(async () => {
+    try { const v = await api('video/' + encodeURIComponent(id)); const i = S.gerados.findIndex((x) => x.id === id); if (i >= 0) S.gerados[i] = v;
+      if (v.status === 'completed' || v.status === 'failed') { clearInterval(vigias[id]); delete vigias[id]; redesenharVideos(); if (v.status === 'completed') avisar('Vídeo de exemplo pronto.'); }
+    } catch (x) { clearInterval(vigias[id]); delete vigias[id]; avisar(x.message); }
+  }, 5000);
+}
+async function gerarVideo(k) {
+  const c = S.resultado.creatives[k], segundos = +$('seg-' + k).value;
+  try { const v = await api('video', { gancho: c.gancho, roteiro: c.roteiro, segundos }); S.gerados.unshift(v); redesenharVideos(); vigiar(v.id); } catch (x) { avisar(x.message); }
+}
+async function carregarVideosGerados() {
+  try { const r = await api('videos'); S.gerados = r.videos; S.creditosPorSegundo = r.creditos_por_segundo; redesenharVideos(); S.gerados.filter((v) => v.status !== 'completed' && v.status !== 'failed').forEach((v) => vigiar(v.id)); } catch (x) { avisar(x.message); }
+}
+async function carregarHistorico() {
+  try {
+    const L = S.execucoes = await api('execucoes');
+    if (!$('lista')) return;
+    $('lista').innerHTML = L.length ? `<table class="tab"><thead><tr><th>Quando</th><th>Pedido</th><th>Modo</th><th class="n">Criativos</th></tr></thead><tbody>${L.map((x, i) => `<tr class="clicavel" data-exec="${i}" tabindex="0"><td class="peq" style="white-space:nowrap">${e(x.quando)}</td><td>${e(x.entrada.query)}</td><td class="peq">${MODOS[x.entrada.mode] || e(x.entrada.mode)}</td><td class="n">${x.saida.creatives.length}</td></tr>`).join('')}</tbody></table>` : '<p class="sub">Nenhum pedido ainda.</p>';
+  } catch (x) { avisar(x.message); }
+}
+async function pedir() {
+  const pedido = $('pedido').value.trim();
+  if (pedido.length < 3) { avisar('Escreva o pedido com pelo menos 3 letras.'); return; }
+  Object.assign(S, { pedido, resultado: null, trabalhando: true }); desenhar(true);
+  try { S.resultado = await api('consultar', { mode: S.modo, query: pedido, segment: S.segmento || null }); } catch (x) { avisar(x.message); }
+  S.trabalhando = false; if (tela() === 'agente') desenhar(true);
+}
+
+// ------------------------------------------------------------------ roteador e eventos
+const tela = () => { const h = location.hash.slice(1); return V[h] ? h : 'maquininha'; };
+function desenhar(manter) {
+  const t = tela(), F = feitas().length;
+  $('nav').innerHTML = TELAS.map(([id, r]) => `<a href="#${id}" ${id === t ? 'aria-current="page"' : ''}>${r}${id === 'extrato' && F ? `<b>${F}</b>` : ''}</a>`).join('');
+  $('base').textContent = `${n(D.base.com_metricas)} Shorts · ${D.base.canais} canais`;
+  $('tela').innerHTML = t === 'maquininha' ? V[t]() : `<div class="folha">${V[t]()}</div>`; S.novo = false;
+  encaixarVisor();
+  if (t === 'videos') { S.pagina = 0; carregarVideos(false); }
+  if (t === 'agente') { carregarHistorico(); carregarVideosGerados(); }
+  if (t === 'molde') iniciarMolde();
+  if (!manter) scrollTo(0, 0);
+}
+const ir = (t) => { if (tela() === t) desenhar(); else location.hash = t; };
+
+document.addEventListener('click', (ev) => {
+  const a = (s) => ev.target.closest(s); let el;
+  if ((el = a('[data-sel]'))) { S.sel = +el.dataset.sel; desenhar(true); }
+  else if ((el = a('[data-palpite]'))) { P[C[S.sel].atributo] = { palpite: el.dataset.palpite, quando: Date.now() }; guardar(); S.novo = true; desenhar(true); }
+  else if ((el = a('[data-ir]'))) { S.sel = +el.dataset.ir; ir('maquininha'); }
+  else if (a('[data-seguinte]')) { const i = C.findIndex((c) => !P[c.atributo]); if (i >= 0) { S.sel = i; desenhar(true); } }
+  else if (a('[data-proxima]')) { const i = C.findIndex((c) => !P[c.atributo]); if (i >= 0) S.sel = i; }
+  else if (a('[data-limpar]')) { P = {}; guardar(); S.aberto = null; desenhar(); avisar('Palpites apagados deste navegador.'); }
+  else if ((el = a('[data-filtro]'))) { S.filtro = el.dataset.filtro; S.aberto = null; desenhar(true); }
+  else if ((el = a('[data-abre]'))) { S.aberto = S.aberto === +el.dataset.abre ? null : +el.dataset.abre; desenhar(true); }
+  else if ((el = a('[data-videos]'))) { S.carac = +el.dataset.videos; ir('videos'); }
+  else if (a('[data-todos]')) { S.carac = null; desenhar(); }
+  else if ((el = a('[data-criar]'))) { const c = C[+el.dataset.criar], tema = TEMAS[c.atributo.split('=')[1]]; Object.assign(S, { origem: +el.dataset.criar, modo: 'gerar_criativo', resultado: null, pedido: c.atributo.startsWith('tema') && tema ? tema : '' }); ir('agente'); }
+  else if ((el = a('[data-mmolde]'))) { M.molde = +el.dataset.mmolde; M.cena = 0; desenharMoldeDeNovo(); }
+  else if ((el = a('[data-mcena]'))) tocarCena(+el.dataset.mcena);
+  else if (a('[data-mtoca]')) { M.tocando = !M.tocando; const v = $('vm'); M.tocando ? v.play().catch(() => {}) : v.pause(); a('[data-mtoca]').textContent = M.tocando ? 'Pausar' : 'Tocar'; }
+  else if (a('[data-minicio]')) tocarCena(0);
+  else if ((el = a('[data-gerar]'))) { el.disabled = true; el.textContent = 'Enviando…'; gerarVideo(+el.dataset.gerar); }
+  else if ((el = a('[data-post]'))) abrirPost(el.dataset.post);
+  else if (a('[data-fechar]')) $('camada').innerHTML = '';
+  else if (a('#mais')) { S.pagina++; carregarVideos(true); }
+  else if ((el = a('[data-exec]'))) { const x = S.execucoes[el.dataset.exec]; Object.assign(S, { modo: x.entrada.mode, segmento: x.entrada.segment || '', pedido: x.entrada.query, resultado: x.saida, origem: null }); desenhar(); }
+});
+document.addEventListener('submit', (ev) => { if (ev.target.id === 'form') { ev.preventDefault(); pedir(); } });
+document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') $('camada').innerHTML = ''; if (ev.key === 'Enter' && ev.target.matches?.('tr[data-exec]')) ev.target.click(); });
+let espera;
+document.addEventListener('input', (ev) => { if (ev.target.dataset.mcampo) { moldeAtual().campos[ev.target.dataset.mcampo] = ev.target.value; pintarMolde(); if ($('formula-m')) $('formula-m').innerHTML = formulaM(); return; }
+  if (ev.target.id === 'f-busca') { clearTimeout(espera); espera = setTimeout(() => { S.filtros.busca = ev.target.value; S.pagina = 0; carregarVideos(false); }, 250); } });
+document.addEventListener('change', (ev) => {
+  const id = ev.target.id;
+  if (id === 'modo') { S.modo = ev.target.value; S.pedido = $('pedido').value; desenhar(true); }
+  else if (id === 'segmento') S.segmento = ev.target.value;
+  else if (id.startsWith('f-') && id !== 'f-busca') { S.filtros[id.slice(2)] = ev.target.type === 'checkbox' ? (ev.target.checked ? '1' : '') : ev.target.value; S.pagina = 0; carregarVideos(false); }
+});
+addEventListener('hashchange', () => desenhar());
+api('painel').then((d) => { D = d; preparar(); const i = C.findIndex((c) => !P[c.atributo]); S.sel = i < 0 ? 0 : i; desenhar(); })
+  .catch((x) => { $('tela').innerHTML = `<div class="aviso"><b>Não foi possível abrir a base.</b> ${e(x.message)}</div>`; });
+</script>
+</body>
+</html>

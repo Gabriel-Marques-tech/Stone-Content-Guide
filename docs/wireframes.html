@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wireframes: Spotify × Stone</title>
+<style>
+:root{--fundo:#0F1411;--lateral:#0A0E0C;--sup:#18201B;--sup2:#26332C;--linha:#2A362F;--txt:#F2F5F3;--mudo:#B4C4BA;--verde:#00A868;--verde2:#3DDC97;--sobre:#04130C;--azul:#3B7BD6;--laranja:#E0892B}
+*{box-sizing:border-box}
+body{margin:0;background:#050806;color:var(--txt);font:14px/1.45 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3{font-family:"Space Grotesk",Inter,system-ui,sans-serif;margin:0}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+/* faixa de opções, fora do mock */
+.opcoes{position:sticky;top:0;z-index:5;background:#050806;border-bottom:1px solid var(--linha);padding:12px 20px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.opcoes b{margin-right:8px}
+.opcoes button{min-height:44px;padding:0 16px;border-radius:22px;border:1px solid var(--linha);background:var(--sup);color:var(--txt)}
+.opcoes button[aria-pressed=true]{background:var(--verde);color:var(--sobre);border-color:var(--verde);font-weight:700}
+.nota{max-width:1280px;margin:16px auto 0;padding:0 20px;color:var(--mudo)}
+.nota strong{color:var(--txt)}
+/* mock */
+.app{max-width:1280px;margin:16px auto 40px;display:flex;flex-wrap:wrap;min-height:820px;background:var(--fundo);border:1px solid var(--linha);border-radius:14px;overflow:hidden}
+.lateral{flex:1 0 220px;max-width:240px;background:var(--lateral);padding:24px 14px;display:flex;flex-direction:column;gap:26px}
+.marca{font:700 18px "Space Grotesk",Inter,sans-serif;padding:0 10px}
+.menu{display:flex;flex-direction:column;gap:2px}
+.menu button{text-align:left;min-height:44px;padding:0 12px;border:0;border-radius:8px;background:none;color:var(--mudo)}
+.menu button[aria-current=page]{background:var(--sup);color:var(--txt);font-weight:600}
+.rotulo{padding:0 12px 6px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mudo)}
+.conteudo{flex:999 1 560px;min-width:0;display:flex;flex-direction:column}
+.tela{display:none;flex:1;padding:28px 32px;flex-direction:column;gap:26px}
+.tela.ativa{display:flex}
+.linha{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.entre{display:flex;justify-content:space-between;align-items:baseline;gap:16px}
+.mudo{color:var(--mudo)}
+.pilula{min-height:44px;padding:0 18px;border-radius:22px;border:1px solid var(--linha);background:var(--sup);color:var(--txt);display:inline-flex;align-items:center}
+.pilula.on{background:var(--txt);color:var(--lateral);font-weight:600;border-color:var(--txt)}
+.primario{min-height:44px;padding:0 22px;border-radius:22px;border:0;background:var(--verde);color:var(--sobre);font-weight:700;display:inline-flex;align-items:center}
+input[type=search],textarea{font:inherit;color:var(--txt);background:var(--sup);border:1px solid var(--linha);border-radius:22px}
+input[type=search]{flex:1 1 280px;max-width:420px;height:44px;padding:0 16px}
+.grade5{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px}
+.grade4{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.cartao{padding:12px;border-radius:10px;background:var(--sup);display:flex;flex-direction:column;gap:10px}
+.capa{aspect-ratio:1/1;border-radius:6px;background:var(--sup2);display:flex;align-items:flex-end;padding:8px;font-size:12px;color:var(--mudo)}
+.capa.redonda{border-radius:50%}
+.mix{display:flex;align-items:center;gap:12px;border-radius:8px;background:var(--sup);overflow:hidden;font-weight:600;min-height:64px}
+.mix i{width:64px;height:64px;flex:none;background:var(--verde)}
+.barra{border-top:1px solid var(--linha);background:var(--lateral);padding:14px 32px;display:flex;flex-wrap:wrap;align-items:center;gap:16px}
+.medidor{flex:1;height:6px;border-radius:3px;background:var(--linha)}
+.medidor span{display:block;height:6px;border-radius:3px;background:var(--verde)}
+.heroi{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-end}
+.heroi .capa{width:200px;flex:none}
+.heroi h2{font-size:44px;line-height:1.05}
+.rolar{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--mudo);text-align:left;padding:8px 10px;border-bottom:1px solid var(--linha)}
+td{padding:12px 10px;border-bottom:1px solid var(--linha)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.selo{display:inline-block;padding:2px 10px;border-radius:12px;background:var(--sup2);font-size:12px}
+.selo.v{background:var(--verde);color:var(--sobre);font-weight:700}
+.duas{display:flex;flex-wrap:wrap;gap:24px}
+.duas>*{flex:1 1 320px;min-width:0}
+.painel{background:var(--sup);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.sinal{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--linha)}
+.sinal:last-child{border-bottom:0}
+.marca-ok,.marca-nao{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px}
+.marca-ok{background:var(--verde);color:var(--sobre)}
+.marca-nao{background:var(--laranja);color:var(--sobre)}
+.grande{font:700 64px/1 "Space Grotesk",Inter,sans-serif}
+.objetivo{flex:1 1 300px;min-height:200px;border-radius:14px;padding:24px;display:flex;flex-direction:column;justify-content:space-between;gap:16px;border:0;text-align:left;color:var(--sobre)}
+.objetivo h3{font-size:30px}
+.slide{border-radius:14px;padding:28px;min-height:220px;display:flex;flex-direction:column;justify-content:space-between;gap:16px;background:var(--sup)}
+.slide.v{background:var(--verde);color:var(--sobre)}
+.slide.a{background:var(--azul);color:#fff}
+textarea{width:100%;min-height:260px;border-radius:12px;padding:14px;resize:vertical}
+</style>
+</head>
+<body>
+
+<div class="opcoes" role="group" aria-label="Opções de tela">
+  <b>Opção:</b>
+  <button type="button" data-ir="t1" aria-pressed="true">1 · Início por prateleiras</button>
+  <button type="button" data-ir="t2" aria-pressed="false">2 · Início por objetivo</button>
+  <button type="button" data-ir="t3" aria-pressed="false">3 · Playlist de tema</button>
+  <button type="button" data-ir="t4" aria-pressed="false">4 · Perfil de canal</button>
+  <button type="button" data-ir="t5" aria-pressed="false">5 · Avaliar roteiro</button>
+  <button type="button" data-ir="t6" aria-pressed="false">6 · Retrospectiva da Stone</button>
+</div>
+<p class="nota" id="nota"></p>
+
+<div class="app">
+  <nav class="lateral" aria-label="Principal">
+    <div class="marca">Conteúdo MPE</div>
+    <div class="menu">
+      <button type="button" data-ir="t1" aria-current="page">Início</button>
+      <button type="button" data-ir="t2">Explorar por objetivo</button>
+      <button type="button" data-ir="t5">Avaliar roteiro</button>
+    </div>
+    <div class="menu">
+      <div class="rotulo">Sua biblioteca</div>
+      <button type="button" data-ir="t3">Geram pedido de contato</button>
+      <button type="button" data-ir="t3">Topo de curtidas</button>
+      <button type="button" data-ir="t4">Perfis em destaque</button>
+      <button type="button" data-ir="t6">Retrospectiva da Stone</button>
+    </div>
+  </nav>
+
+  <div class="conteudo">
+
+    <!-- 1 -->
+    <section class="tela ativa" id="t1" aria-label="Início por prateleiras">
+      <div class="linha">
+        <label for="b1" class="mudo">Buscar</label>
+        <input id="b1" type="search" placeholder="Tema, canal ou gancho">
+        <button type="button" class="pilula on">Tudo</button>
+        <button type="button" class="pilula">Alimentação</button>
+        <button type="button" class="pilula">Varejo</button>
+        <button type="button" class="pilula">Beleza</button>
+      </div>
+      <div>
+        <div class="entre"><h2>Geram pedido de contato</h2><button type="button" class="pilula" data-ir="t3">Mostrar tudo</button></div>
+      </div>
+      <div class="grade5">
+        <div class="cartao"><div class="capa">capa do Short</div><b>Como precificar corretamente no iFood?</b><span class="mudo">Raphael Silva · 21 pedidos</span></div>
+        <div class="cartao"><div class="capa">capa do Short</div><b>4 cursos grátis pra começar bem o seu negócio</b><span class="mudo">Sebrae · 18 pedidos</span></div>
+        <div class="cartao"><div class="capa">capa do Short</div><b>Nova lei do Simples Nacional</b><span class="mudo">InforMEI Tributos · 17 pedidos</span></div>
+        <div class="cartao"><div class="capa">capa do Short</div><b>Agora a DEFIS vai ter multa</b><span class="mudo">Descomplicando o Simples · 13 pedidos</span></div>
+        <div class="cartao"><div class="capa">capa do Short</div><b>Dica de ouro para MEIs que prestam serviço</b><span class="mudo">Accure Digital · 9 pedidos</span></div>
+      </div>
+      <div class="entre"><h2>Mixes por tema</h2><button type="button" class="pilula" data-ir="t2">Mostrar tudo</button></div>
+      <div class="grade4">
+        <button type="button" class="mix" data-ir="t3" style="border:0;color:inherit"><i></i>Maquininha e taxas</button>
+        <button type="button" class="mix" data-ir="t3" style="border:0;color:inherit"><i style="background:var(--azul)"></i>Preço e margem</button>
+        <button type="button" class="mix" data-ir="t3" style="border:0;color:inherit"><i style="background:var(--laranja)"></i>Delivery</button>
+        <button type="button" class="mix" data-ir="t3" style="border:0;color:inherit"><i style="background:var(--mudo)"></i>MEI e Simples</button>
+      </div>
+      <div class="entre"><h2>Perfis em destaque</h2><button type="button" class="pilula" data-ir="t4">Mostrar tudo</button></div>
+      <div class="grade5">
+        <div class="cartao"><div class="capa redonda"></div><b>Gestão de Pizzarias</b><span class="mudo">71 posts no topo</span></div>
+        <div class="cartao"><div class="capa redonda"></div><b>Delivery que Lucra</b><span class="mudo">25 posts no topo</span></div>
+        <div class="cartao"><div class="capa redonda"></div><b>InfinitePay</b><span class="mudo">18 posts no topo</span></div>
+        <div class="cartao"><div class="capa redonda"></div><b>Sebrae Santa Catarina</b><span class="mudo">14 posts no topo</span></div>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section class="tela" id="t2" aria-label="Início por objetivo">
+      <h2 style="font-size:32px">O que você quer que o vídeo faça?</h2>
+      <div class="linha" style="align-items:stretch">
+        <button type="button" class="objetivo" data-ir="t3" style="background:var(--verde)">
+          <h3>Gerar contato</h3>
+          <span>Oferta explícita, chamada para ação e fala direta com o dono. 129 Shorts com pedido de contato nos comentários.</span>
+        </button>
+        <button type="button" class="objetivo" data-ir="t3" style="background:var(--txt)">
+          <h3>Gerar curtida</h3>
+          <span>Ambiente real, tutorial, menos estúdio. 447 Shorts no topo de engajamento.</span>
+        </button>
+        <button type="button" class="objetivo" data-ir="t3" style="background:var(--laranja)">
+          <h3>Gerar dúvida</h3>
+          <span>Finanças, regra ou lei, passo concreto, mais de 60 s. 390 Shorts com interesse.</span>
+        </button>
+      </div>
+      <h2>Navegar por</h2>
+      <div class="grade4">
+        <button type="button" class="mix" data-ir="t3" style="border:0;color:inherit"><i></i>Formato: tutorial</button>
+        <button type="button" class="mix" data-ir="t3" style="border:0;color:inherit"><i></i>Formato: depoimento</button>
+        <button type="button" class="mix" data-ir="t3" style="border:0;color:inherit"><i style="background:var(--azul)"></i>Tema: finanças</button>
+        <button type="button" class="mix" data-ir="t3" style="border:0;color:inherit"><i style="background:var(--azul)"></i>Tema: maquininha</button>
+        <button type="button" class="mix" data-ir="t3" style="border:0;color:inherit"><i style="background:var(--laranja)"></i>Segmento: alimentação</button>
+        <button type="button" class="mix" data-ir="t3" style="border:0;color:inherit"><i style="background:var(--laranja)"></i>Segmento: varejo</button>
+        <button type="button" class="mix" data-ir="t3" style="border:0;color:inherit"><i style="background:var(--mudo)"></i>Informativo</button>
+        <button type="button" class="mix" data-ir="t3" style="border:0;color:inherit"><i style="background:var(--mudo)"></i>Personalidade</button>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="tela" id="t3" aria-label="Playlist de tema">
+      <div class="heroi">
+        <div class="capa" style="background:var(--verde);color:var(--sobre)">capa da playlist</div>
+        <div style="flex:1 1 300px;min-width:0">
+          <span class="mudo">Playlist</span>
+          <h2>Geram pedido de contato</h2>
+          <p class="mudo" style="margin:10px 0 0">129 Shorts · 34 perfis · 320 comentários de intenção · 71% fora do topo de curtidas</p>
+        </div>
+      </div>
+      <div class="linha">
+        <button type="button" class="primario" data-ir="t5">Criar roteiro a partir desta playlist</button>
+        <button type="button" class="pilula">Baixar lista</button>
+      </div>
+      <div class="duas">
+        <div class="rolar" style="flex:2 1 520px">
+          <table>
+            <thead><tr><th>#</th><th>Short</th><th>Formato</th><th class="n">Pedidos</th><th>Topo de curtidas</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td><b>Fale direto comigo no zap</b><br><span class="mudo">Adriano Cavalcante</span></td><td>outro</td><td class="n">74</td><td><span class="selo v">sim</span></td></tr>
+              <tr><td>2</td><td><b>Como precificar corretamente no iFood?</b><br><span class="mudo">Raphael Silva</span></td><td>talking head</td><td class="n">21</td><td><span class="selo">não</span></td></tr>
+              <tr><td>3</td><td><b>4 cursos grátis pra começar bem o seu negócio</b><br><span class="mudo">Sebrae</span></td><td>lista de dicas</td><td class="n">18</td><td><span class="selo">não</span></td></tr>
+              <tr><td>4</td><td><b>Nova lei do Simples Nacional</b><br><span class="mudo">InforMEI Tributos</span></td><td>talking head</td><td class="n">17</td><td><span class="selo">não</span></td></tr>
+              <tr><td>5</td><td><b>Agora a DEFIS vai ter multa</b><br><span class="mudo">Descomplicando o Simples</span></td><td>talking head</td><td class="n">13</td><td><span class="selo">não</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <aside class="painel">
+          <h3>O que esses vídeos têm em comum</h3>
+          <div>Oferta ou benefício explícito<div class="linha"><div class="medidor"><span style="width:78%"></span></div><b>78%</b></div><span class="mudo">55% nos demais</span></div>
+          <div>Chamada para ação<div class="linha"><div class="medidor"><span style="width:83%"></span></div><b>83%</b></div><span class="mudo">67% nos demais</span></div>
+          <div>Fala direto com o dono<div class="linha"><div class="medidor"><span style="width:60%"></span></div><b>60%</b></div><span class="mudo">47% nos demais</span></div>
+          <span class="mudo">Padrões observados, não garantia.</span>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section class="tela" id="t4" aria-label="Perfil de canal">
+      <div class="heroi">
+        <div class="capa redonda">foto do canal</div>
+        <div style="flex:1 1 300px;min-width:0">
+          <span class="mudo">Perfil · marca</span>
+          <h2>Stone</h2>
+          <p class="mudo" style="margin:10px 0 0">120 Shorts na base · 5 no topo de curtidas · 23 comentários lidos · nenhum pedido de contato</p>
+        </div>
+      </div>
+      <div class="linha">
+        <button type="button" class="primario">Comparar com outro perfil</button>
+        <button type="button" class="pilula on">Stone</button>
+        <button type="button" class="pilula">InfinitePay</button>
+        <button type="button" class="pilula">PagBank</button>
+        <button type="button" class="pilula">Sebrae</button>
+      </div>
+      <div class="duas">
+        <div class="painel">
+          <h3>Como este canal faz vídeo</h3>
+          <div>Tem rosto<div class="linha"><div class="medidor"><span style="width:99%"></span></div><b>99%</b></div><span class="mudo">83% no topo dos outros perfis</span></div>
+          <div>Depoimento<div class="linha"><div class="medidor"><span style="width:23%"></span></div><b>23%</b></div><span class="mudo">1% no topo dos outros perfis</span></div>
+          <div>Tutorial<div class="linha"><div class="medidor"><span style="width:1%"></span></div><b>1%</b></div><span class="mudo">17% no topo dos outros perfis</span></div>
+          <div>Mais de 60 s<div class="linha"><div class="medidor"><span style="width:42%"></span></div><b>42%</b></div><span class="mudo">31% no topo dos outros perfis</span></div>
+        </div>
+        <div class="painel">
+          <h3>Populares</h3>
+          <div class="sinal"><span>1</span><div><b>Chega de dinheiro parado: como investir o caixa da sua empresa</b><br><span class="mudo">56,5 reações por mil views</span></div></div>
+          <div class="sinal"><span>2</span><div><b>Conheça a história da Cortaz O pão!</b><br><span class="mudo">45,3 reações por mil views</span></div></div>
+          <div class="sinal"><span>3</span><div><b>Como decolar o seu negócio tendo Stone como banco!</b><br><span class="mudo">35,8 reações por mil views</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 -->
+    <section class="tela" id="t5" aria-label="Avaliar roteiro">
+      <div class="entre"><h2 style="font-size:28px">Avaliar roteiro</h2>
+        <div class="linha"><span class="mudo">Objetivo</span><button type="button" class="pilula on">Gerar contato</button><button type="button" class="pilula">Gerar curtida</button></div>
+      </div>
+      <div class="duas">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <label for="rot"><b>Seu rascunho</b></label>
+          <textarea id="rot">Gancho: Você sabe quanto paga de taxa em cada venda no cartão?
+Roteiro: Especialista em estúdio, olhando para a câmera, explica a diferença entre débito, crédito à vista e parcelado.
+Chamada: Acesse o link na bio.</textarea>
+          <div class="linha"><button type="button" class="primario">Avaliar</button><button type="button" class="pilula">Gerar versão ajustada</button></div>
+        </div>
+        <div class="painel">
+          <div class="linha"><span class="grande">36%</span><div><b>de aderência</b><br><span class="mudo">5 de 14 sinais alinhados</span></div></div>
+          <div class="sinal"><span class="marca-nao" aria-hidden="true">!</span><div><b>Mostre o ambiente real do negócio</b><br><span class="mudo">41% no grupo, 28% no resto · <a href="#" style="color:var(--verde2)">ver Short de exemplo</a></span></div></div>
+          <div class="sinal"><span class="marca-nao" aria-hidden="true">!</span><div><b>Diga o benefício de forma explícita</b><br><span class="mudo">46% no grupo, 32% no resto · <a href="#" style="color:var(--verde2)">ver Short de exemplo</a></span></div></div>
+          <div class="sinal"><span class="marca-nao" aria-hidden="true">!</span><div><b>Evite só fala para a câmera</b><br><span class="mudo">48% no grupo, 61% no resto · <a href="#" style="color:var(--verde2)">ver Short de exemplo</a></span></div></div>
+          <div class="sinal"><span class="marca-ok" aria-hidden="true">ok</span><div><b>Não cita regra ou lei</b><br><span class="mudo">14% no grupo, 20% no resto</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section class="tela" id="t6" aria-label="Retrospectiva da Stone">
+      <div><span class="mudo">Retrospectiva</span><h2 style="font-size:36px">O que a base diz sobre o canal da Stone</h2></div>
+      <div class="grade4" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))">
+        <div class="slide v"><span class="grande">71%</span><b>dos Shorts que geram pedido de contato estão fora do topo de curtidas</b></div>
+        <div class="slide"><span class="grande">0</span><b>comentários de intenção nos 120 Shorts da Stone na base</b></div>
+        <div class="slide a"><span class="grande">23%</span><b>dos Shorts da Stone são depoimento; no topo dos outros perfis é 1%</b></div>
+        <div class="slide"><span class="grande">14% · 5%</span><b>conteúdo de personalidade entra mais no topo e gera menos interesse</b></div>
+        <div class="slide"><span class="grande">10% · 12%</span><b>conteúdo informativo entra menos no topo e gera mais interesse</b></div>
+        <div class="slide v"><span class="grande">6</span><b>criativos prontos para o canal, cada um ligado a Shorts reais</b></div>
+      </div>
+      <div class="linha"><button type="button" class="primario" data-ir="t5">Avaliar um roteiro</button><button type="button" class="pilula">Baixar playbook</button></div>
+    </section>
+
+    <div class="barra" id="barra">
+      <div style="flex:1 1 240px;min-width:0"><b>Roteiro em avaliação: taxas da maquininha</b><br><span class="mudo">Objetivo: gerar contato</span></div>
+      <div class="linha" style="flex:2 1 260px"><span class="mudo">Aderência</span><div class="medidor" role="img" aria-label="Aderência de 36 por cento"><span style="width:36%"></span></div><b>36%</b></div>
+      <button type="button" class="primario" data-ir="t5">Abrir avaliação</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const NOTAS = {
+  t1: "<strong>Início por prateleiras.</strong> A cara mais Spotify: fileiras de cartões com capa. Bom para navegar; exige as capas dos Shorts. A barra de baixo troca o player pelo roteiro em avaliação. Cortável: a fileira de perfis.",
+  t2: "<strong>Início por objetivo.</strong> Alternativa à opção 1: a pessoa escolhe o que quer do vídeo antes de ver conteúdo. Mostra o achado central (contato, curtida e dúvida pedem vídeos diferentes). Cortável: a grade “Navegar por”.",
+  t3: "<strong>Playlist de tema.</strong> Lista de Shorts como faixas, com o painel do que eles têm em comum. É a tela que sustenta qualquer início. Cortável: o botão de baixar.",
+  t4: "<strong>Perfil de canal.</strong> Página de artista: como o canal faz vídeo, comparado ao topo dos outros. Serve para Stone × concorrentes. Cortável inteira se o foco for só criativo.",
+  t5: "<strong>Avaliar roteiro.</strong> O “tocando agora” expandido: rascunho de um lado, aderência e ajustes do outro, cada ajuste com um Short real. Já funciona no terminal. “Gerar versão ajustada” ainda não existe.",
+  t6: "<strong>Retrospectiva da Stone.</strong> Cartões grandes no estilo de retrospectiva anual, um achado por cartão. Boa para abrir a apresentação. Cortável se o tempo apertar."
+};
+function ir(id){
+  document.querySelectorAll(".tela").forEach(t => t.classList.toggle("ativa", t.id === id));
+  document.querySelectorAll(".opcoes button").forEach(b => b.setAttribute("aria-pressed", b.dataset.ir === id));
+  document.querySelectorAll(".menu button").forEach(b => b.removeAttribute("aria-current"));
+  const atual = document.querySelector('.menu button[data-ir="' + id + '"]');
+  if (atual) atual.setAttribute("aria-current", "page");
+  document.getElementById("nota").innerHTML = NOTAS[id];
+  document.getElementById("barra").style.display = id === "t5" ? "none" : "flex";
+  location.hash = id;
+}
+document.addEventListener("click", e => { const b = e.target.closest("[data-ir]"); if (b) ir(b.dataset.ir); });
+ir(NOTAS[location.hash.slice(1)] ? location.hash.slice(1) : "t1");
+</script>
+</body>
+</html>

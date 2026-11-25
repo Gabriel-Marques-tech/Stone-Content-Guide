@@ -1,0 +1,193 @@
+<!doctype html>
+<!-- PROTÓTIPO DESCARTÁVEL. Pergunta: como deve ser a tela inicial ("passar uma crença na maquininha")?
+     Três variantes da mesma tela em /prototipo, trocadas por ?variant=A|B|C, com os dados reais de
+     /api/painel. Só leitura. Quando uma vencer, ela é reescrita em app.html e este arquivo sai. -->
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protótipo · tela inicial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&family=Young+Serif&display=swap">
+<style>
+:root { --verde: #00a868; --verde-fundo: #0b3d2e; --verde-claro: #e3f6ec; --tinta: #10201a; --tinta2: #51605a; --linha: #dfe5e2; --papel: #fffef9; --amarelo: #f2b705; --vermelho: #d9412b; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; color: var(--tinta); }
+button { font: inherit; color: inherit; cursor: pointer; }
+h1, h2, h3, p { margin: 0; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* barra do protótipo: de propósito fora do estilo das variantes */
+.troca { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 99; display: flex; align-items: center; gap: 4px; background: #111; color: #fff; border-radius: 999px; padding: 6px; font: 500 13px system-ui, sans-serif; box-shadow: 0 6px 24px rgb(0 0 0 / .35); }
+.troca button { width: 34px; height: 34px; border-radius: 50%; border: 0; background: #2b2b2b; color: #fff; font-size: 16px; }
+.troca span { padding: 0 12px; white-space: nowrap; }
+
+/* ============ A · A maquininha: um objeto no centro, uma crença por vez ============ */
+.vA { background: #f1f3f2; font: 16px/1.5 'Manrope', system-ui, sans-serif; min-height: 100vh; }
+.vA .topo { display: flex; justify-content: space-between; align-items: center; padding: 20px 32px; font-weight: 800; }
+.vA .topo small { font-weight: 500; color: var(--tinta2); }
+.vA .palco { display: grid; grid-template-columns: minmax(280px, 420px) auto minmax(260px, 340px); gap: 48px; justify-content: center; align-items: start; padding: 16px 32px 120px; }
+.vA h1 { font-size: 34px; font-weight: 800; line-height: 1.1; letter-spacing: -.02em; }
+.vA .intro { color: var(--tinta2); margin: 10px 0 22px; }
+.vA .crencas { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--linha); }
+.vA .crencas button { width: 100%; text-align: left; background: none; border: 0; border-bottom: 1px solid var(--linha); padding: 13px 4px; display: flex; justify-content: space-between; gap: 12px; font-weight: 500; }
+.vA .crencas button:hover { color: var(--verde); }
+.vA .crencas button[aria-pressed="true"] { font-weight: 800; color: #008a56; }
+.vA .crencas i { font-style: normal; color: var(--tinta2); font-size: 13px; font-weight: 500; white-space: nowrap; }
+.vA .aparelho { width: 300px; background: var(--verde-fundo); border-radius: 36px 36px 44px 44px; padding: 22px 22px 30px; box-shadow: 0 30px 60px rgb(11 61 46 / .35), inset 0 2px 0 rgb(255 255 255 / .12); position: sticky; top: 24px; }
+.vA .fenda { height: 10px; background: #062019; border-radius: 6px; margin: 0 26px 14px; }
+.vA .visor { background: #d7f2e3; border-radius: 14px; padding: 16px; min-height: 150px; display: flex; flex-direction: column; gap: 8px; font-family: 'Space Mono', monospace; font-size: 13px; }
+.vA .visor b { font: 800 18px/1.25 'Manrope', sans-serif; }
+.vA .teclas { display: grid; gap: 10px; margin-top: 18px; }
+.vA .teclas button { border: 0; border-radius: 12px; padding: 13px; font-weight: 800; color: #fff; box-shadow: 0 4px 0 rgb(0 0 0 / .28); }
+.vA .teclas button:active { transform: translateY(3px); box-shadow: 0 1px 0 rgb(0 0 0 / .28); }
+.vA .t-sobe { background: var(--verde); } .vA .t-tanto { background: var(--amarelo); color: #3a2c00 !important; } .vA .t-cai { background: var(--vermelho); }
+.vA .marca-ap { text-align: center; color: #7fbfa3; font: 700 12px 'Manrope', sans-serif; letter-spacing: .2em; margin-top: 16px; }
+.vA .saida { min-height: 200px; }
+.vA .cupom { --d: 9px; background: var(--papel); font: 400 13px/1.6 'Space Mono', monospace; padding: 20px 18px calc(var(--d) + 18px); filter: drop-shadow(0 8px 14px rgb(0 0 0 / .14)); animation: imprimir .7s cubic-bezier(.2,.8,.2,1) both; transform-origin: top;
+  -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / calc(2 * var(--d)) 100%; mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / calc(2 * var(--d)) 100%; }
+@keyframes imprimir { from { clip-path: inset(0 0 100% 0); transform: translateY(-24px); } to { clip-path: inset(0); transform: none; } }
+@media (prefers-reduced-motion: reduce) { .vA .cupom { animation: none; } }
+.vA .cupom hr { border: 0; border-top: 1px dashed #9aa7a1; margin: 10px 0; }
+.vA .cupom dl { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; }
+.vA .cupom dd { margin: 0; text-align: right; }
+.vA .cupom .frase { font: 700 15px/1.3 'Manrope', sans-serif; }
+.vA .carimbo { margin-top: 12px; text-align: center; font-weight: 700; letter-spacing: .14em; border: 2px solid; border-radius: 6px; padding: 6px; }
+.vA .espera { color: var(--tinta2); font-size: 14px; border: 1.5px dashed #b9c4bf; border-radius: 12px; padding: 18px; }
+@media (max-width: 1000px) { .vA .palco { grid-template-columns: 1fr; } .vA .aparelho { position: static; margin: 0 auto; } }
+
+/* ============ B · O extrato: lista densa, crenças como lançamentos ============ */
+.vB { background: #fff; font: 15px/1.45 'Hanken Grotesk', system-ui, sans-serif; min-height: 100vh; }
+.vB .col { max-width: 760px; margin: 0 auto; padding: 0 20px 120px; }
+.vB header { padding: 28px 0 8px; display: flex; justify-content: space-between; align-items: baseline; }
+.vB header b { font-size: 15px; } .vB header span { color: var(--tinta2); font-size: 13px; }
+.vB .saldo { padding: 26px 0 22px; border-bottom: 1px solid var(--linha); }
+.vB .saldo small { color: var(--tinta2); font-size: 13px; display: block; }
+.vB .saldo strong { font: 700 44px/1.05 'Hanken Grotesk', sans-serif; letter-spacing: -.03em; display: block; margin: 4px 0 8px; }
+.vB .saldo p { color: var(--tinta2); max-width: 56ch; }
+.vB .filtros { display: flex; gap: 8px; padding: 16px 0 6px; flex-wrap: wrap; }
+.vB .filtros button { border: 1px solid var(--linha); background: #fff; border-radius: 999px; padding: 6px 14px; font-size: 13px; font-weight: 500; }
+.vB .filtros button[aria-pressed="true"] { background: var(--tinta); color: #fff; border-color: var(--tinta); }
+.vB .dia { font: 600 12px 'Hanken Grotesk', sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--tinta2); padding: 22px 0 8px; }
+.vB .lanc { width: 100%; background: none; border: 0; border-bottom: 1px solid var(--linha); display: grid; grid-template-columns: 36px 1fr auto; gap: 14px; align-items: center; padding: 14px 0; text-align: left; }
+.vB .lanc:hover { background: #f6f8f7; }
+.vB .bola { width: 36px; height: 36px; border-radius: 50%; background: #eef1f0; display: grid; place-items: center; font: 600 13px 'IBM Plex Mono', monospace; color: var(--tinta2); }
+.vB .lanc.forte .bola { background: var(--verde-claro); color: #00794c; }
+.vB .lanc b { font-weight: 600; display: block; } .vB .lanc small { color: var(--tinta2); font-size: 13px; }
+.vB .valor { text-align: right; font: 600 16px 'IBM Plex Mono', monospace; color: var(--tinta2); }
+.vB .valor small { display: block; font: 400 12px 'Hanken Grotesk', sans-serif; }
+.vB .lanc.forte .valor { color: #00794c; }
+.vB .abre { padding: 6px 0 22px 50px; border-bottom: 1px solid var(--linha); display: grid; gap: 12px; }
+.vB .abre dl { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px 24px; }
+.vB .abre dt { color: var(--tinta2); font-size: 12.5px; } .vB .abre dd { margin: 0; font: 600 18px 'IBM Plex Mono', monospace; }
+.vB .abre .acoes { display: flex; gap: 10px; flex-wrap: wrap; }
+.vB .abre .acoes button { border: 0; border-radius: 10px; padding: 10px 16px; font-weight: 600; background: var(--verde); color: #fff; }
+.vB .abre .acoes button + button { background: #eef1f0; color: var(--tinta); }
+
+/* ============ C · O cartaz: uma crença por faixa, aposta e carimbo ============ */
+.vC { background: var(--verde); color: #fff; font: 17px/1.5 'Archivo', system-ui, sans-serif; min-height: 100vh; }
+.vC .capa { padding: 9vh 6vw 6vh; }
+.vC .capa small { font: 600 13px 'Archivo', sans-serif; letter-spacing: .16em; text-transform: uppercase; opacity: .85; }
+.vC .capa h1 { font: 900 clamp(48px, 10vw, 148px)/.9 'Archivo', sans-serif; font-stretch: 68%; text-transform: uppercase; letter-spacing: -.01em; margin: 14px 0 20px; }
+.vC .capa p { font: 400 clamp(18px, 2vw, 24px)/1.4 'Young Serif', serif; max-width: 34ch; }
+.vC .faixa { padding: 40px 6vw; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(240px, 1fr); gap: 32px; align-items: center; border-top: 2px solid rgb(255 255 255 / .28); position: relative; }
+.vC .faixa:nth-child(even) { background: #fffef9; color: var(--tinta); border-color: transparent; }
+.vC .faixa:nth-child(4n+3) { background: var(--verde-fundo); }
+.vC .faixa h2 { font: 800 clamp(28px, 4.4vw, 62px)/1 'Archivo', sans-serif; font-stretch: 78%; text-wrap: balance; }
+.vC .faixa .n { font: 400 15px 'Young Serif', serif; opacity: .8; margin-bottom: 10px; }
+.vC .aposta { display: flex; gap: 10px; flex-wrap: wrap; }
+.vC .aposta button { border: 2px solid currentColor; background: none; border-radius: 999px; padding: 12px 22px; font: 700 15px 'Archivo', sans-serif; text-transform: uppercase; letter-spacing: .06em; }
+.vC .aposta button:hover { background: currentColor; }
+.vC .aposta button:hover span { color: var(--verde); mix-blend-mode: difference; }
+.vC .revela { display: grid; gap: 10px; }
+.vC .selo { justify-self: start; font: 900 clamp(22px, 2.6vw, 34px)/1 'Archivo', sans-serif; font-stretch: 70%; text-transform: uppercase; border: 4px solid currentColor; padding: 10px 16px 8px; transform: rotate(-5deg); letter-spacing: .04em; animation: bater .35s cubic-bezier(.3,1.6,.5,1) both; }
+@keyframes bater { from { transform: rotate(-5deg) scale(2.2); opacity: 0; } to { transform: rotate(-5deg) scale(1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .vC .selo { animation: none; } }
+.vC .revela p { font: 400 16px/1.45 'Young Serif', serif; max-width: 40ch; }
+.vC .revela .placar { font: 600 14px 'Archivo', sans-serif; letter-spacing: .04em; opacity: .85; }
+.vC .rodape { padding: 40px 6vw 140px; font: 400 15px 'Young Serif', serif; max-width: 70ch; }
+@media (max-width: 760px) { .vC .faixa { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div id="palco"></div>
+<div class="troca"><button id="ant" aria-label="Variante anterior">←</button><span id="rotulo"></span><button id="prox" aria-label="Próxima variante">→</button></div>
+
+<script>
+const e = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const pct = (v) => Math.round(v * 100) + '%';
+const pts = (v) => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(Math.round(v * 100));
+const VARIANTES = { A: 'A maquininha', B: 'O extrato', C: 'O cartaz' };
+const FRASES = { 'duracao_faixa=31_60s': 'Vídeo de 31 a 60 segundos engaja mais', 'duracao_faixa=ate_30s': 'Vídeo curtinho, de até 30 segundos, engaja mais', 'duracao_faixa=acima_60s': 'Vídeo com mais de um minuto engaja mais', 'formato_video=talking_head': 'Falar olhando para a câmera engaja mais', 'formato_video=tutorial': 'Tutorial engaja mais', 'formato_video=humor_esquete': 'Humor engaja mais', 'formato_video=bastidores': 'Mostrar os bastidores engaja mais', 'formato_video=lista_dicas': 'Lista de dicas engaja mais', 'formato_video=depoimento': 'Depoimento engaja mais', texto_na_tela: 'Colocar texto na tela engaja mais', tem_rosto: 'Tem que aparecer o rosto', cita_regra_ou_lei: 'Falar de regra, imposto ou lei engaja mais', mostra_ambiente_real: 'Mostrar a loja ou a cozinha de verdade engaja mais', prova_social: 'Mostrar cliente ou resultado engaja mais', 'tema_principal=vendas': 'Falar de vendas engaja mais', 'tema_principal=gestao': 'Falar de gestão engaja mais', 'tema_principal=financas': 'Falar de finanças engaja mais', 'tema_principal=marketing': 'Falar de marketing engaja mais', 'tema_principal=ferramentas_maquininha': 'Falar de maquininha engaja mais', 'tema_principal=historia_de_empreendedor': 'Contar história de empreendedor engaja mais', 'tema_principal=motivacao': 'Vídeo motivacional engaja mais' };
+const grupo = (a) => a.startsWith('duracao') ? 'Duração' : a.startsWith('tema') ? 'Tema' : a.startsWith('formato') ? 'Formato' : 'O que aparece';
+let D, C = [], S = { sel: 0, palpite: null, aberto: -1, filtro: 'Todas', apostas: {} };
+
+function preparar() {
+  const calor = D.calor, min = D.regras.efeito_minimo;
+  C = D.exploracao.filter((t) => FRASES[t.atributo]).map((t) => {
+    const j = calor.atributos.indexOf(t.atributo), col = j < 0 ? null : calor.perfis.map((p) => p.valores[j]).filter((v) => v !== null);
+    return { ...t, frase: FRASES[t.atributo], grupo: grupo(t.atributo), real: t.efeito >= min ? 'sobe' : t.efeito <= -min ? 'cai' : 'tanto', sobe: col && col.filter((v) => v > 0.05).length, cai: col && col.filter((v) => v < -0.05).length };
+  });
+}
+const ROT = { sobe: 'SOBE', cai: 'CAI', tanto: 'TANTO FAZ' };
+const placar = (c) => c.sobe === null ? `${c.n_perfis} canais comparados` : `sobe em ${c.sobe} canais · cai em ${c.cai} · de ${c.n_perfis}`;
+
+// ---------------------------------------------------------------- A
+function A() {
+  const c = C[S.sel], feito = S.palpite !== null;
+  return `<div class="vA"><div class="topo"><span>Extrato de Conteúdo</span><small>${D.base.com_metricas.toLocaleString('pt-BR')} Shorts · ${D.base.canais} canais</small></div>
+  <div class="palco">
+    <div><h1>Passe uma crença na maquininha</h1><p class="intro">Escolha uma dica que todo mundo repete, dê o seu palpite e veja se ela se sustenta nos vídeos do mesmo canal.</p>
+      <ul class="crencas">${C.slice(0, 10).map((x, i) => `<li><button data-sel="${i}" aria-pressed="${i === S.sel}">${e(x.frase)}<i>${e(x.grupo)}</i></button></li>`).join('')}</ul></div>
+    <div class="aparelho"><div class="fenda"></div><div class="visor"><span>CRENÇA ${String(S.sel + 1).padStart(2, '0')}</span><b>${e(c.frase)}</b><span>${feito ? 'Palpite registrado.' : 'Qual é o seu palpite?'}</span></div>
+      <div class="teclas"><button class="t-sobe" data-palpite="sobe">Sobe o engajamento</button><button class="t-tanto" data-palpite="tanto">Tanto faz</button><button class="t-cai" data-palpite="cai">Derruba o engajamento</button></div><div class="marca-ap">CONSULTA</div></div>
+    <div class="saida">${feito ? `<div class="cupom"><div style="text-align:center;font-weight:700;letter-spacing:.1em">COMPROVANTE DE CONSULTA</div><hr><p class="frase">${e(c.frase)}</p><hr><dl><dt>no topo</dt><dd>${pct(c.prevalencia_top)}</dd><dt>no resto</dt><dd>${pct(c.prevalencia_resto)}</dd><dt>diferença no canal</dt><dd>${pts(c.efeito)} pts</dd><dt>margem</dt><dd>${pts(c.ic95[0])} a ${pts(c.ic95[1])}</dd><dt>canais</dt><dd>${c.n_perfis}</dd></dl><hr><div>seu palpite: ${ROT[S.palpite]}</div><div>${S.palpite === c.real ? 'bateu com os dados' : 'os dados dizem outra coisa'}</div><div class="carimbo">${ROT[c.real]}</div><p style="margin-top:10px;font-size:11.5px;color:#6b7772">Consulta em metade dos canais. Não é veredito: associação, não causa.</p></div>` : `<div class="espera">O comprovante sai aqui depois do seu palpite.</div>`}</div>
+  </div></div>`;
+}
+
+// ---------------------------------------------------------------- B
+function B() {
+  const fortes = C.filter((c) => c.real !== 'tanto').length, grupos = ['Todas', ...new Set(C.map((c) => c.grupo))];
+  const lista = C.filter((c) => S.filtro === 'Todas' || c.grupo === S.filtro);
+  const porGrupo = [...new Set(lista.map((c) => c.grupo))];
+  return `<div class="vB"><div class="col"><header><b>Extrato de Conteúdo</b><span>${D.base.com_metricas.toLocaleString('pt-BR')} Shorts · ${D.base.canais} canais</span></header>
+    <div class="saldo"><small>Crenças que passaram de ${Math.round(D.regras.efeito_minimo * 100)} pontos</small><strong class="num">${fortes} de ${C.length}</strong><p>${fortes ? 'Poucas dicas repetidas por aí fazem diferença dentro do mesmo canal.' : 'Nenhuma das dicas que todo mundo repete separa os vídeos de maior engajamento dos outros vídeos do mesmo canal.'}</p></div>
+    <div class="filtros">${grupos.map((g) => `<button data-filtro="${e(g)}" aria-pressed="${g === S.filtro}">${e(g)}</button>`).join('')}</div>
+    ${porGrupo.map((g) => `<div class="dia">${e(g)}</div>` + lista.filter((c) => c.grupo === g).map((c) => { const i = C.indexOf(c), forte = c.real !== 'tanto';
+      return `<button class="lanc ${forte ? 'forte' : ''}" data-abre="${i}" aria-expanded="${S.aberto === i}"><span class="bola">${c.real === 'sobe' ? '↑' : c.real === 'cai' ? '↓' : '='}</span><span><b>${e(c.frase)}</b><small>${pct(c.prevalencia_top)} no topo · ${pct(c.prevalencia_resto)} no resto</small></span><span class="valor num">${pts(c.efeito)} pts<small>${forte ? (c.real === 'sobe' ? 'sobe' : 'cai') : 'tanto faz'}</small></span></button>`
+        + (S.aberto === i ? `<div class="abre"><dl><div><dt>Diferença dentro do canal</dt><dd class="num">${pts(c.efeito)} pts</dd></div><div><dt>Margem (95%)</dt><dd class="num">${pts(c.ic95[0])} a ${pts(c.ic95[1])}</dd></div><div><dt>Canal a canal</dt><dd style="font-size:15px">${placar(c)}</dd></div></dl><div class="acoes"><button>Ver os vídeos</button><button>Criar um criativo com isso</button></div></div>` : ''); }).join('')).join('')}
+  </div></div>`;
+}
+
+// ---------------------------------------------------------------- C
+function Cv() {
+  return `<div class="vC"><div class="capa"><small>Extrato de Conteúdo · ${D.base.com_metricas.toLocaleString('pt-BR')} Shorts de ${D.base.canais} canais</small><h1>Você apostaria nisso?</h1><p>Dicas de conteúdo que todo empreendedor já ouviu. Aposte antes de ver o que os vídeos dizem.</p></div>
+  ${C.slice(0, 7).map((c, i) => { const ap = S.apostas[i];
+    return `<section class="faixa"><div><p class="n">Crença ${i + 1}</p><h2>${e(c.frase)}</h2></div><div>${ap === undefined ? `<div class="aposta"><button data-aposta="${i}:sim"><span>Aposto que sim</span></button><button data-aposta="${i}:nao"><span>Aposto que não</span></button></div>` : `<div class="revela"><span class="selo">${ROT[c.real]}</span><p>${pct(c.prevalencia_top)} dos vídeos do topo têm isso, contra ${pct(c.prevalencia_resto)} dos outros vídeos do mesmo canal. Diferença de ${pts(c.efeito)} pontos.</p><span class="placar">${placar(c)} · ${(ap === 'sim') === (c.real === 'sobe') ? 'você acertou' : 'a aposta não bateu'}</span></div>`}</div></section>`; }).join('')}
+  <p class="rodape">Cada faixa compara os vídeos de maior engajamento com os outros vídeos do mesmo canal, em metade dos canais da base. É consulta, não veredito: associação, não causa.</p></div>`;
+}
+
+// ---------------------------------------------------------------- troca de variante
+const atual = () => { const v = new URLSearchParams(location.search).get('variant'); return VARIANTES[v] ? v : 'A'; };
+function desenhar() {
+  const v = atual();
+  document.getElementById('palco').innerHTML = { A, B, C: Cv }[v]();
+  document.getElementById('rotulo').textContent = `${v} · ${VARIANTES[v]}`;
+}
+function trocar(passo) { const k = Object.keys(VARIANTES), v = k[(k.indexOf(atual()) + passo + k.length) % k.length]; history.replaceState(null, '', '?variant=' + v); scrollTo(0, 0); desenhar(); }
+document.getElementById('ant').onclick = () => trocar(-1);
+document.getElementById('prox').onclick = () => trocar(1);
+addEventListener('keydown', (ev) => { if (ev.target.matches('input, textarea, [contenteditable]')) return; if (ev.key === 'ArrowLeft') trocar(-1); if (ev.key === 'ArrowRight') trocar(1); });
+document.addEventListener('click', (ev) => {
+  const a = (s) => ev.target.closest(s); let el;
+  if ((el = a('[data-sel]'))) { S.sel = +el.dataset.sel; S.palpite = null; desenhar(); }
+  else if ((el = a('[data-palpite]'))) { S.palpite = el.dataset.palpite; desenhar(); }
+  else if ((el = a('[data-filtro]'))) { S.filtro = el.dataset.filtro; S.aberto = -1; desenhar(); }
+  else if ((el = a('[data-abre]'))) { S.aberto = S.aberto === +el.dataset.abre ? -1 : +el.dataset.abre; desenhar(); }
+  else if ((el = a('[data-aposta]'))) { const [i, v] = el.dataset.aposta.split(':'); S.apostas[i] = v; desenhar(); }
+});
+fetch('/api/painel').then((r) => r.json()).then((d) => { D = d; preparar(); if (new URLSearchParams(location.search).get('demo')) { S.palpite = 'sobe'; S.aberto = 0; S.apostas = { 0: 'sim', 1: 'nao' }; } desenhar(); });
+</script>
+</body>
+</html>
