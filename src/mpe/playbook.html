@@ -25,6 +25,8 @@ button{font:inherit;color:inherit;cursor:pointer}h1,h2,h3,p,ul{margin:0}ul{paddi
 .sec{padding-top:56px}.sec h2{font-size:clamp(30px,3.4vw,44px)}.sub{color:var(--mudo);margin:8px 0 20px;max-width:56ch}.linha{display:flex;justify-content:space-between;align-items:end;gap:18px;flex-wrap:wrap;margin-bottom:18px}
 .chec{display:grid;grid-template-columns:minmax(230px,.8fr) 2fr;gap:18px}.susto{background:var(--noite);color:#fff;border-radius:26px;padding:26px;display:flex;flex-direction:column;justify-content:space-between;gap:20px}.susto .g{font-size:104px;color:var(--lima)}
 .caiu{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}.caiu li{background:var(--pedra);border-radius:20px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;gap:14px}.caiu b{line-height:1.2}.caiu span{display:block;font-size:15px;color:var(--mudo)}.caiu strong{font:800 30px/1 var(--tit);font-stretch:80%}
+.rad{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:14px}.rad li{background:var(--pedra);border-radius:22px;padding:22px}.rad em{display:inline-block;font:700 14px/1 var(--corpo);font-style:normal;border-radius:999px;padding:8px 12px;background:#fff}.rad .alta em{background:var(--lima)}.rad .queda em{background:var(--noite);color:#fff}.rad b{display:block;font:800 24px/1.05 var(--tit);font-stretch:82%;margin:12px 0 16px}
+.per{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}.per strong{display:block;font:800 32px/1 var(--tit);font-stretch:78%}.per span{font-size:14px;color:var(--mudo)}
 .barras{display:grid;gap:8px}.b{display:grid;grid-template-columns:40px minmax(120px,190px) minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:center;padding:6px 0}.b img{width:40px;aspect-ratio:9/13;object-fit:cover;border-radius:8px}.b>b::first-letter{text-transform:uppercase}.b>b{line-height:1.15}.b>b small{display:block;font-weight:500;color:var(--mudo);font-size:14px}
 .t{display:flex;align-items:center;gap:10px;font-weight:700}.t i{height:22px;border-radius:6px;background:var(--verde);min-width:3px}.t.p i{background:var(--lima);box-shadow:inset 0 0 0 1.5px #86B325}.t em{font-style:normal;color:var(--mudo);font-weight:500;font-size:14px;white-space:nowrap}
 .leg{display:grid;grid-template-columns:40px minmax(120px,190px) minmax(0,1fr) minmax(0,1fr);gap:16px;font-weight:700;color:var(--mudo);font-size:15px;margin-bottom:4px}
@@ -41,6 +43,7 @@ details{border-top:2px solid var(--pedra)}summary{min-height:56px;display:flex;a
 <div class="firmes" id="firmes" aria-live="polite"></div></div></header>
 <main>
 <section class="sec c"><h2 class="cond">Não passou na checagem</h2><p class="sub" id="subc"></p><div class="chec"><div class="susto"><span class="g cond" id="pf"></span><b>do topo não fala de negócio: é corte de cabelo, pizza, festa</b></div><ul class="caiu" id="caiu"></ul></div></section>
+<section class="sec c" id="radar" hidden><h2 class="cond">Radar: o que está mudando</h2><p class="sub" id="subr"></p><ul class="rad" id="rad"></ul></section>
 <section class="sec c"><div class="linha"><h2 class="cond">Onde aparece</h2><div class="esc claro" role="group" aria-label="Recorte"><button type="button" data-rec="tema_principal" aria-pressed="true">Tema</button><button type="button" data-rec="formato_video" aria-pressed="false">Formato</button><button type="button" data-rec="segmento" aria-pressed="false">Segmento</button></div></div><div class="leg" aria-hidden="true"><span></span><span></span><span>Entra no topo</span><span>Recebe pedido</span></div><div class="barras" id="barras"></div></section>
 <section class="sec c"><h2 class="cond">Mais pedidos de contato</h2><p class="sub">Vídeos reais, um por canal. Toque para assistir.</p><div class="prat" id="ex"></div></section>
 <section class="sec c"><h2 class="cond">Quem mais aparece no topo</h2><p class="sub">Três canais ocupam metade das vagas. Por isso cada canal pesa igual nos números acima.</p><div class="prat" id="perfis"></div></section>
@@ -65,6 +68,13 @@ function barras() {
   const l = D.recortes[rec], mt = Math.max(...l.map((x) => x.topo)), mp = Math.max(...l.map((x) => x.pedido), .001);
   $("barras").innerHTML = l.map((x) => '<div class="b"><img alt="" loading="lazy" src="' + capa(x.capa) + '"><b>' + e(x.nome) + "<small>" + mil(x.posts) + ' vídeos</small></b><span class="t"><i style="width:' + 58 * x.topo / mt + '%"></i>' + p1(x.topo) + (x.maior_canal >= .5 ? "<em>" + pct(x.maior_canal) + " de um canal</em>" : "") + '</span><span class="t p"><i style="width:' + 58 * x.pedido / mp + '%"></i>' + p1(x.pedido) + "<em>" + x.pedidos + (x.pedidos === 1 ? " vídeo" : " vídeos") + "</em></span></div>").join("");
 }
+function radar() {
+  const R = {subindo:["alta", "Em alta"], caindo:["queda", "Em queda"], indicio_alta:["alta", "Indício de alta"], indicio_queda:["queda", "Indício de queda"]}, pt = (x) => (x > 0 ? "+" : "") + Math.round(x * 100);
+  const l = (D.radar || []).filter((x) => R[x.tendencia]).slice(0, 6); if (!D.radar || !D.radar.length) return;
+  $("radar").hidden = false;
+  $("subr").textContent = "Pontos de diferença entre o topo e o resto, em três períodos com o mesmo número de vídeos. " + (l.some((x) => /^(subindo|caindo)$/.test(x.tendencia)) ? "Indício é mudança grande ainda dentro da margem de erro." : "Por enquanto são só indícios: a mudança é grande, mas ainda cabe na margem de erro.");
+  $("rad").innerHTML = l.length ? l.map((x) => '<li class="' + R[x.tendencia][0] + '"><em>' + R[x.tendencia][1] + "</em><b>" + e(x.nome) + '</b><div class="per">' + x.periodos.map((v, i) => "<div><strong>" + pt(v) + "</strong><span>" + e(D.periodos[i][0]) + "<br>a " + e(D.periodos[i][1]) + "</span></div>").join("") + "</div></li>").join("") : "<li><b>Nada mudou de forma clara</b></li>";
+}
 const cartao = (id, titulo, sub, et, n) => '<a class="cp" target="_blank" rel="noopener" href="https://www.youtube.com/shorts/' + encodeURIComponent(id) + '"><img alt="" loading="lazy" src="' + capa(id) + '"><em class="' + (n ? "n" : "") + '">' + e(et) + "</em><div><b>" + e(titulo) + "</b><small>" + e(sub) + "</small></div></a>";
 document.addEventListener("click", (ev) => {
   const a = ev.target.closest("[data-obj]"), r = ev.target.closest("[data-rec]");
@@ -74,7 +84,7 @@ document.addEventListener("click", (ev) => {
 (async () => {
   try {
     const r = await fetch("/api/playbook"); D = await r.json(); if (!r.ok) throw new Error(D.erro);
-    $("pf").textContent = pct(D.topo_fora_do_publico); firmes(); barras();
+    $("pf").textContent = pct(D.topo_fora_do_publico); firmes(); barras(); radar();
     $("ex").innerHTML = D.exemplos.map((x) => cartao(x.id, x.titulo, x.canal, x.pedidos + (x.pedidos === 1 ? " pedido" : " pedidos"))).join("");
     $("perfis").innerHTML = D.perfis.map((x) => cartao(x.capa, x.canal, x.tema + " · " + x.formato.toLowerCase(), x.no_topo + " no topo", x.fora)).join("");
     $("fonte").innerHTML = "<p>" + mil(D.posts) + " Shorts de " + D.canais + " canais e " + mil(D.comentarios) + " comentários, pela API oficial do YouTube. Topo: os " + D.topo + " posts com mais (curtidas + comentários) ÷ seguidores. Contato: " + D.com_pedido + " posts com " + D.pedidos + " comentários pedindo preço, link ou contato; são " + p1(D.no_topo) + " dos posts do topo e " + p1(D.fora_do_topo) + " dos demais.</p><p style='margin-top:10px'>Um padrão só aparece no alto se a diferença passa de 8 pontos, sobram 5 com peso igual por canal e isso se repete sem os vídeos fora de tema de negócio. A marca na barra são os outros vídeos; no contato, em características de fala, os outros são posts do topo sem pedido.</p>";

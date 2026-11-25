@@ -181,6 +181,14 @@ function dados() {
   const s = atual.saida, c = s.creatives[versao];
   return {s, c, objetivo:atual.entrada.objetivo || "engajamento", refs:c.referencias.map((id) => s.reference_posts.find((r) => r.post_id === id)).filter(Boolean)};
 }
+// o que o agente trouxe de pedidos anteriores, do radar e da própria conferência
+function aprendeu(s) {
+  const l = [];
+  (s.lessons || []).forEach((x) => l.push("<b>Aviso de erro repetido:</b> " + e(x) + "."));
+  if (s.revisions) l.push("<b>Revisado:</b> " + (s.revisions === 1 ? "uma versão foi reescrita" : s.revisions + " versões foram reescritas") + " porque a conferência sentiu falta de um padrão.");
+  if ((s.trends || []).length) l.push("<b>Radar:</b> " + e(s.trends.join("; ")) + ". Indício não é regra.");
+  return l.length ? '<details class="dt"><summary>O que ela aprendeu antes de escrever</summary><div class="antes" style="margin:0"><ul>' + l.map((x) => "<li><span>" + x + "</span></li>").join("") + "</ul></div></details>" : "";
+}
 function desenhar() {
   const {s, c, objetivo, refs} = dados(); ref = Math.min(ref, refs.length - 1);
   const usados = (s.patterns || []).filter((p) => (c.padroes || []).includes(p.atributo)).slice(0, 3);
@@ -201,7 +209,7 @@ function desenhar() {
     + (usados.length ? '<div class="nums" style="margin:16px 0 24px">' + usados.map((p) => '<div class="num"><b>' + e(CURTO[p.atributo] || p.conselho) + "</b>" + boneco(BON[p.atributo] || "rosto") + '<div><span class="g cond">' + pct(p.no_grupo) + '</span><div class="bar"><i style="width:' + pct(p.no_grupo) + '"></i><u style="left:' + pct(p.nos_outros) + '"></u></div><small style="margin-top:8px">outros ' + pct(p.nos_outros) + "</small></div></div>").join("") + "</div>" : "")
     + '<details class="dt"><summary>Legenda</summary><div id="legenda" contenteditable="true" spellcheck="false" aria-label="Legenda">' + paragrafos(c.legenda.split(/\n+/).filter(Boolean)) + "</div></details>"
     + '<details class="dt"><summary>Antes de gravar' + (pend.length ? "&nbsp;<mark>" + pend.length + (pend.length === 1 ? " pendência" : " pendências") + "</mark>" : "") + '</summary><div class="antes" style="margin:0"><ul>' + cuidado.map((x) => "<li><span>" + x + "</span></li>").join("") + "</ul></div></details>"
-    + '<details class="dt"><summary>De onde vêm os números</summary><div>' + (usados.length ? "<p>Percentual dos " + GRUPO[objetivo] + " que fazem isso; a marca branca são os outros vídeos. Cada canal pesa igual. " + notas(usados) + "</p>" : "<p>A conferência não achou nesta versão nenhum dos padrões medidos para este objetivo.</p>") + "</div></details></div>"
+    + '<details class="dt"><summary>De onde vêm os números</summary><div>' + (usados.length ? "<p>Percentual dos " + GRUPO[objetivo] + " que fazem isso; a marca branca são os outros vídeos. Cada canal pesa igual. " + notas(usados) + "</p>" : "<p>A conferência não achou nesta versão nenhum dos padrões medidos para este objetivo.</p>") + "</div></details>" + aprendeu(s) + "</div>"
     + '<aside class="prova" id="prova" aria-label="Vídeos que inspiraram"></aside></div>';
   filme(); prova();
 }

@@ -57,6 +57,7 @@ class Padrao(BaseModel):
     n: int
     n_outros: int
     leitura: str
+    tendencia: str = Field(default="sem_sinal", description="do radar; indício não é regra")
 
 
 class Cena(BaseModel):
@@ -86,4 +87,7 @@ class Saida(BaseModel):
     explanation: str
     patterns: list[Padrao] = []
     scope: str = Field(default="", description="de quantos posts saíram as frequências")
+    lessons: list[str] = Field(default=[], description="erros repetidos lembrados neste pedido")
+    trends: list[str] = Field(default=[], description="o que o radar marcou, dito ao agente")
+    revisions: int = Field(default=0, description="criativos que melhoraram na revisão")
     run_id: str = ""

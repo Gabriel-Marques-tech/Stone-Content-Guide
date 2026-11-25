@@ -2,7 +2,7 @@
 
 import re
 
-from mpe import hipoteses, motor
+from mpe import hipoteses, motor, radar
 from mpe.consulta import (
     achados,
     canais_fora_do_publico,
@@ -342,6 +342,8 @@ def tela(df) -> dict:
         "com_pedido": int(df["lead"].sum()), "no_topo": t["topo"], "fora_do_topo": t["fora"],
         "topo_fora_do_publico": float(topo["tema_principal"].eq("outro").mean()),
         "objetivos": objetivos, "recortes": recortes, "perfis": perfis, "exemplos": exemplos,
+        "radar": [{**r, "nome": rotulo_de(r["atributo"])} for r in radar.radar(df)],
+        "periodos": radar.datas(df),
     }  # fmt: skip
 
 

@@ -1,4 +1,4 @@
-# Mapeamento de conteúdo para MPEs (Stone × Inteli Academy)
+# Lapida: Mapeamento de conteúdo para MPEs (Stone × Inteli Academy)
 
 > **Estado em 24/11/2026:** base, ranking, rubrica (visual na base inteira; fala em 423 dos 447
 > posts de alto desempenho), indicador de lead, agente, avaliador de criativo, MCP e playbook
@@ -74,10 +74,25 @@ oficial. Não há modelo preditivo nem publicação automática.
    entre execuções.
 
 ## Arquitetura
-LangGraph: interpretar → consultar → redigir → verificar, com registro em `execucoes`. O LLM redige;
+LangGraph: interpretar → consultar → lembrar → redigir → verificar → revisar, com registro em `execucoes`. O LLM redige;
 números e posts vêm da base, e criativo que cita post fora das referências é descartado. As
 frequências saem dos posts do assunto pedido (título, descrição e transcrição); se o assunto tem
 menos de 5 posts no topo, o agente usa o topo inteiro e diz isso na resposta.
+
+### Revisão, memória e radar
+- **Memória** (`src/mpe/memoria.py`): o que os 40 roteiros mais recentes do objetivo mais deixaram de
+  fora vira aviso no próximo pedido, e some quando o erro para.
+- **Revisão** (`agente.revisar`): se a segunda leitura não acha um padrão, o roteiro é reescrito uma
+  vez e conferido de novo; só troca se ganhou padrão sem perder nenhum. Em 16 pedidos com e sem
+  (32 roteiros de cada lado, 25/11/2026): 25 completos sem, 32 com. O primeiro rascunho ficou igual
+  nos dois (25 e 25), então o ganho veio da revisão, e não da memória. Quem confere é a mesma IA:
+  mede aderência aos padrões, não resultado. Tempo mediano de 65 para 79 s (máximo de 118).
+- **Radar** (`src/mpe/radar.py`): três períodos com o mesmo número de posts e topo refeito em cada um.
+  Hoje só há indícios (negócio de verdade em alta; tutorial e texto na tela em queda), todos dentro
+  da margem de erro. O agente usa para desempatar, nunca como regra.
+- **Atualização** (`scripts/atualizar.py`): coleta, quadros, comentários e o que mudou nos padrões,
+  com cópia do banco e volta automática se falhar. Não inclui a fala dos vídeos novos.
+- `MPE_APRENDE=0` desliga memória, radar e revisão; `MPE_REVISAR=0` só a revisão.
 
 ## Instalação e execução
 Requer `uv` e `YOUTUBE_API_KEY` e `GEMINI_API_KEY` em `.env` (na falta, lê `../Galaxies/.env`).
@@ -106,6 +121,9 @@ crédito acaba.
     uv run python scripts/demo.py
     uv run mpe-mcp                           # servidor MCP
     uv run pytest
+
+Apresentação: `uv run python apresentacao/servir.py` (http://127.0.0.1:8020). As capas do mural não
+estão no repositório: sem elas aparecem blocos de cor.
 
 Plataforma: `uv run mpe-app` (http://127.0.0.1:8010). Um fluxo: pede-se um tema e um objetivo
 (contato ou engajamento) e saem dois criativos editáveis, os Shorts que os inspiraram tocando ao

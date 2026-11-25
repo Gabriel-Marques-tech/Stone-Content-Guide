@@ -69,17 +69,14 @@ def _versao() -> float:
 
 def dados() -> dict:
     """Base aberta e resumo do painel, recalculados só quando o arquivo do banco muda."""
+    global _memoria
     versao = _versao()
     if _memoria.get("versao") != versao:
         with banco() as con:
             df = base_completa(con)
             resumo = painel.montar(con, df, auditoria=False)
-        _memoria.update(versao=versao, df=df, painel=resumo)
-        _memoria.pop("auditoria", None)
-        _memoria.pop("matriz", None)
-        _memoria.pop("duvidas", None)
-        _memoria.pop("playbook", None)
-        _memoria.pop("firmes", None)
+        # dicionário novo, em vez de limpar o antigo: outro pedido pode estar no meio dele
+        _memoria = {"versao": versao, "df": df, "painel": resumo}
     return _memoria
 
 
